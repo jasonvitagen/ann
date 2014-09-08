@@ -1,8 +1,49 @@
 body {
-  padding: 50px;
+	margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+
+
+/* Margin
+----------------------------------------------------- */
+.bottom-margin-8 { margin: 0 0 8px 0; }
+
+
+/* Logo
+----------------------------------------------------- */
+#logo { font-size: 45px; }
+
+
+/* Strap Line
+----------------------------------------------------- */
+#strapline {
+	height: 24px;
+	border-bottom: 1px solid silver;
+}
+
+
+/* Navigation Menu
+----------------------------------------------------- */
+#navigation-menus {  }
+#navigation-menus ul {
+	margin: 0;
+	padding: 0;
+}
+#navigation-menus li {
+	display: inline-block;
+	height: 16px;
+	border: 1px solid pink;
+}
+
+
+/* Item
+*----------------------------------------------------- */
+.item { }
+.item img { width: 100%; }
+.item-title {  }
+.item-tags { float: left; }
+.item-date { float: left; }
