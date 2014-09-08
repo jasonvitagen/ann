@@ -14,6 +14,12 @@ var engine = require('ejs').__express;
 // require redis dependencies
 var redis = require('redis');
 
+// require passport dependencies
+var session  = require('cookie-session');
+var passport = require('passport');
+var flash    = require('connect-flash');
+var mongoose = require('mongoose');
+
 var app = express();
 
 // view engine setup
@@ -27,6 +33,11 @@ app.engine('ejs', engine);
 var redisClient = redis.createClient();
 require('./setup/redisClient').setup(redisClient);
 
+// setup passport
+require('./setup/passport.js')(passport);
+mongoose.connect('mongodb://localhost:27017/ann');
+var authRoutes = require('./routes/auth.js')(passport);
+
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -35,8 +46,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
+// setup passport middlewares
+app.use(session({secret : 'iLoveAnn'}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
 app.use('/', routes);
 app.use('/users', users);
+
+// Setup passport route
+app.use('/auth', authRoutes);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

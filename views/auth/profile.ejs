@@ -1,0 +1,67 @@
+<% include ../layouts/header.ejs %>
+
+<div class="grid">
+	<div class="unit w-1-1">
+		<h3>Profile</h3>
+	</div>
+</div>
+
+<div class="grid">
+	<div class="unit w-4-5">
+		<h4>Local</h4>
+		Id: <%= user._id %><br>
+		Email: <%= user.local.email %><br>
+		Password: <%= user.local.password %><br>
+	</div>
+	<div class="unit w-1-5">
+		<% if (!user.local.email) { %>
+			<a href="/auth/connect/local">Link Local</a>
+		<% } else { %>
+			<a href="/auth/unconnect/local">Unlink Local</a>
+		<% } %>
+	</div>
+</div>
+
+<div class="grid">
+	<div class="unit w-4-5">
+		<h4>Facebook</h4>
+		Id: <%= user.facebook.id %><br>
+		Token: <%= user.facebook.token %><br>
+		Email: <%= user.facebook.email %><br>
+		Name: <%= user.facebook.name %></br>
+	</div>
+	<div class="unit w-1-5">
+		<% if (!user.facebook.token) { %>
+			<a href="/auth/connect/facebook">Link Facebook</a>
+		<% } else { %>
+			<a href="/auth/unconnect/facebook">Unlink Facebook</a>
+		<% } %>
+	</div>
+
+</div>
+
+<div class="grid">
+	<div class="unit w-4-5">
+		<h4>Google</h4>
+		Id: <%= user.google.id %><br>
+		Token: <%= user.google.token %><br>
+		Email: <%= user.google.email %><br>
+		Name: <%= user.google.name %><br>
+	</div>
+	<div class="unit w-1-5">
+		<% if (!user.google.token) { %>
+			<a href="/auth/connect/google">Link Google</a>
+		<% } else { %>
+			<a href="/auth/unconnect/google">Unlink Google</a>
+		<% } %>
+	</div>
+</div>
+
+<div class="grid">
+	<div class="unit w-1-1">
+		<a href="/auth/logout">Logout</a>
+		<a href="/">Back</a>
+	</div>
+</div>
+
+<% include ../layouts/footer.ejs %>
