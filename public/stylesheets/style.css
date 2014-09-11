@@ -8,26 +8,45 @@ a {
 }
 
 
-/* Margin
------------------------------------------------------ */
-.bottom-margin-8 { margin: 0 0 8px 0; }
+/* Global Styling
+-------------------------------- */
+h2 { 
+	font-size: 16px;
+	font-weight: normal;
+	color: #555;
+	line-height: 24px;
+}
+.clear { clear: both; }
 
+
+
+/* Margin
+-------------------------------- */
+.bottom-margin-8 { margin: 0 0 8px 0; }
+.margin-left-8 { margin: 0 0 0 8px; }
+.margin-left-16 { margin: 0 0 0 16px; }
 
 /* Logo
------------------------------------------------------ */
+-------------------------------- */
 #logo { font-size: 45px; }
 
 
 /* Strap Line
------------------------------------------------------ */
+-------------------------------- */
 #strapline {
 	height: 24px;
 	border-bottom: 1px solid silver;
 }
 
+.auth-links {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
 
 /* Navigation Menu
------------------------------------------------------ */
+-------------------------------- */
 #navigation-menus {  }
 #navigation-menus ul {
 	margin: 0;
@@ -41,8 +60,9 @@ a {
 
 
 /* Item
-*----------------------------------------------------- */
+*-------------------------------- */
 .item { }
+.item h2 { margin: 8px 0 8px 0; }
 .item img { width: 100%; }
 .item-title {  }
 .item-tags { float: left; }
