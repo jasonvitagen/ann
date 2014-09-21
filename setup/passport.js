@@ -4,7 +4,7 @@ var FacebookStrategy = require('passport-facebook').Strategy; // facebook strate
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy; // google strategy
 
 // User Model
-var User = require('../models/User.js');
+var User = require('../models/mongo/User.js');
 
 // Load Auth Configuration
 var authConfiguration = require('../config/auth.js');
@@ -72,6 +72,7 @@ module.exports = function (passport) {
 						
 						newUser.local.email    = email;
 						newUser.local.password = newUser.hashPassword(password);
+						newUser.local.name = req.body.name;
 
 						newUser.save(function (err) {
 							if (err) {

@@ -1,23 +1,29 @@
 <% include ../layouts/header.ejs %>
 
-
-<h2 id="eye" class="sectionHead">Local Login</h2>
-
-<form method="post">
-	<div class="input text required">
-		<label for="email">Username</label>
-		<input type="text" name="email" maxlength="50" id="email" required="required">
+<div class="grid">
+	<div class="unit w-1-1">
+		<h3>Local Login</h3>
 	</div>
-	<div class="input password required">
-		<label for="password">Password</label>
-		<input type="password" name="password" id="password" required="required">
-	</div>
-	<div class="submit">
-		<input class="btn btn-primary" type="submit" value="Login">
-	</div>
-</form>
+</div>
 
-<a href="/">Back</a>
 
+<div class="grid">
+	<div class="unit w-1-1">
+
+		<form method="post">
+			<label for="email">Email:</label>
+			<input type="text" name="email">
+			<label for="password">Password:</label>
+			<input type="password" name="password">
+			<input type="submit" value="Sign In">
+		</form>
+	</div>
+</div>
+
+<div class="grid">
+	<div class="unit w-1-1">
+		<a href="/">Back</a>
+	</div>
+</div>
 
 <% include ../layouts/footer.ejs %>

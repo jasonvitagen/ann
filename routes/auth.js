@@ -1,26 +1,27 @@
 // Dependencies
 var express = require('express');
 var router  = express.Router();
+var authMiddlewares = require('./middlewares/auth');
 
 module.exports = function (passport) {
 
 	// Local Login
-	router.get('/local-login', function (req, res) {
+	router.get('/local-login', authMiddlewares.isNotLoggedIn, function (req, res) {
 		res.render('auth/local-login', { title: 'Local Login', message: req.flash('message') });
 	});
 
-	router.post('/local-login', passport.authenticate('local-login', {
+	router.post('/local-login', authMiddlewares.isNotLoggedIn, passport.authenticate('local-login', {
 		successRedirect : '/auth/profile',
 		failureRedirect : '/auth/local-login',
 		failureFlash    : true
 	}));
 
 	// Local Signup
-	router.get('/local-signup', function (req, res) {
+	router.get('/local-signup', authMiddlewares.isNotLoggedIn, function (req, res) {
 		res.render('auth/local-signup', { title: 'Local Signup', message: req.flash('message') });
 	});
 
-	router.post('/local-signup', passport.authenticate('local-signup', {
+	router.post('/local-signup', authMiddlewares.isNotLoggedIn, passport.authenticate('local-signup', {
 		successRedirect : '/',
 		failureRedirect : '/auth/local-signup',
 		failureFlash    : true
@@ -111,8 +112,8 @@ module.exports = function (passport) {
 
 
 	// Profile
-	router.get('/profile', isLoggedIn, function (req, res) {
-		res.render('auth/profile', { title: 'Profile', user: req.user });
+	router.get('/profile', authMiddlewares.isLoggedIn, function (req, res) {
+		res.render('auth/profile', { title: 'Profile', user: req.user, message : req.flash('message') });
 	});
 
 	// Logout
@@ -121,24 +122,6 @@ module.exports = function (passport) {
 		req.flash('message', 'You have been logged out');
 		res.redirect('/');
 	});
-
-	// Route middleware to make sure user is logged in
-	function isLoggedIn (req, res, next) {
-		if (req.isAuthenticated()) {
-			return next();
-		}
-		req.flash('message', 'Please login first');
-		res.redirect('/');
-	}
-
-	// Route middleware to make sure user is admin
-	function isAdmin (req, res, next) {
-		if (req.user.role === 'admin') {
-			return next();
-		}
-		req.flash('message', 'Only admin');
-		res.redirect('/');
-	}
 
 	return router;
 }

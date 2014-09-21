@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var categoryRoutes = require('./routes/category');
+var articleRoutes = require('./routes/article');
 
 // require ejs dependencies
 var engine = require('ejs').__express;
@@ -33,6 +35,9 @@ app.engine('ejs', engine);
 var redisClient = redis.createClient();
 require('./setup/redisClient').setup(redisClient);
 
+// setup models
+var Article = require('./models/redis/Article').setup(redisClient);
+
 // setup passport
 require('./setup/passport.js')(passport);
 mongoose.connect('mongodb://localhost:27017/ann');
@@ -57,6 +62,10 @@ app.use('/users', users);
 
 // Setup passport route
 app.use('/auth', authRoutes);
+// setup category route
+app.use('/category', categoryRoutes);
+// setup article route
+app.use('/article', articleRoutes);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

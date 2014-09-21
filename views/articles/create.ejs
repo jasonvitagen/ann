@@ -1,0 +1,19 @@
+<% include ../layouts/article/header.ejs %>
+
+<div class="grid">
+	<div class="unit w-1-1">
+		<form method="post">
+			<label for="title">Title</label><br>
+			<input type="text" name="title" id="title"><br>
+			<label for="title">Thumbnail</label><br>
+			<input type="text" name="thumbnail" id="thumbnail"><br>
+			<label for="content">Content</label><br>
+			<textarea name="content" id="content" cols="30" rows="10"></textarea>
+			<br>
+			<input type="submit" value="Create">
+		</form>
+	</div>
+</div>
+
+
+<% include ../layouts/footer.ejs %>
