@@ -28,6 +28,9 @@ Article.getArticleById = function (id, callback) {
 Article.getArticlesByIdList = function (idList, callback) {
 	var count = 0;
 	var articles = [];
+	if (idList.length <= 0) {
+		callback(articles);
+	}
 	for (var i = 0, len = idList.length; i < len; i++) {
 		var id = idList[i];
 		client.hgetall(id, function (err, response) {
@@ -63,6 +66,7 @@ Article.getAllArticles = function (number, size, callback) {
 Article.prototype.save = function (user) {
 	client.incr(config.keyNames.global.article.key, function (err, reply) {
 		var articleId = config.keyNames.article.getId(reply);
+		article.id = articleId;
 		client.hmset(articleId, article);
 		article = {};
 

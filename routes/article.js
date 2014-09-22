@@ -22,8 +22,14 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
 	Article.getUserArticles(req.user, 0, 10, function (response) {
-		console.log(response);
 		res.render('articles/my-articles.ejs', {});
+	});
+});
+
+router.get('/r/:id', function (req, res) {
+	console.log(req.params.id);
+	Article.getArticleById(req.params.id, function (article) {
+		res.render('articles/view', { article : article });
 	});
 });
 
