@@ -1,19 +1,18 @@
-<% include ../layouts/article/header.ejs %>
+<% include ../layouts/article/create/header.ejs %>
 
-<div class="grid">
+<div class="grid" id="article-create">
 	<div class="unit w-1-1">
 		<form method="post">
 			<label for="title">Title</label><br>
-			<input type="text" name="title" id="title"><br>
+			<input type="text" name="title" id="title"><br><br>
 			<label for="title">Thumbnail</label><br>
-			<input type="text" name="thumbnail" id="thumbnail"><br>
-			<label for="content">Content</label><br>
-			<textarea name="content" id="content" cols="30" rows="10"></textarea>
+			<input type="text" name="thumbnail" id="thumbnail"><br><br>
+			<label for="content" class="margin-bottom-16">Content</label><br><br>
+			<textarea name="content" id="content" class="editable" cols="30" rows="10"></textarea>
 			<br>
 			<input type="submit" value="Create">
 		</form>
 	</div>
 </div>
 
-
-<% include ../layouts/footer.ejs %>
+<% include ../layouts/article/create/footer.ejs %>
