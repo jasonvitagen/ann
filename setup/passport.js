@@ -2,6 +2,10 @@
 var LocalStrategy    = require('passport-local').Strategy; // local strategy
 var FacebookStrategy = require('passport-facebook').Strategy; // facebook strategy
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy; // google strategy
+var RememberMeStrategy = require('passport-remember-me').Strategy;
+
+var utils = require('utils');
+
 
 // User Model
 var User = require('../models/mongo/User.js');
@@ -219,5 +223,32 @@ module.exports = function (passport) {
 
 		});
 	}));
+
+	// Configure Passport Remember Me
+	passport.use(new RememberMeStrategy(
+		function (token, done) {
+			console.log(token);
+			User.findOne({ 'rememberMeToken' : token }, function (err, user) {
+				if (err) {
+					return done(err);
+				}
+
+				if (!user) {
+					return done(null, false);
+				}
+
+				return done(null, user);
+			});
+		},
+		function (user, done) {
+			var token = utils.randomString(64);
+			User.findByIdAndUpdate(user.id, {$set : { rememberMeToken : token }}, function (err) {
+				if (err) {
+					return done(err);
+				}
+				return done(null, token);
+			});
+		}
+	));
 
 }

@@ -1,4 +1,5 @@
 var config = require('../../config/redis');
+var moment = require('moment');
 
 var client = null;
 
@@ -15,14 +16,17 @@ function Article (title, thumbnail, content, user) {
 	article.thumbnail = thumbnail;
 	article.content = content;
 	article.created = new Date();
+	article.createdShort = moment().format('D-M-YYYY');
 	article.authorName = user.facebook.name || user.google.name || user.local.name;
 	article.authorEmail = user.facebook.email || user.google.email || user.local.email;
+	article.views = 0;
 }
 
 Article.getArticleById = function (id, callback) {
 	client.hgetall(id, function (err, response) {
 		callback(response);
 	});
+	client.hincrby(id, 'views', 1);
 }
 
 Article.getArticlesByIdList = function (idList, callback) {

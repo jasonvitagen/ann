@@ -2,6 +2,7 @@
 var express = require('express');
 var router  = express.Router();
 var authMiddlewares = require('./middlewares/auth');
+var rememberMeMiddlewares = require('./middlewares/remember-me');
 
 module.exports = function (passport) {
 
@@ -11,10 +12,11 @@ module.exports = function (passport) {
 	});
 
 	router.post('/local-login', authMiddlewares.isNotLoggedIn, passport.authenticate('local-login', {
-		successRedirect : '/auth/profile',
 		failureRedirect : '/auth/local-login',
 		failureFlash    : true
-	}));
+	}), rememberMeMiddlewares.generateTokenAndSetCookie, function (req, res) {
+		res.redirect('/auth/profile');
+	});
 
 	// Local Signup
 	router.get('/local-signup', authMiddlewares.isNotLoggedIn, function (req, res) {
@@ -22,10 +24,11 @@ module.exports = function (passport) {
 	});
 
 	router.post('/local-signup', authMiddlewares.isNotLoggedIn, passport.authenticate('local-signup', {
-		successRedirect : '/',
 		failureRedirect : '/auth/local-signup',
 		failureFlash    : true
-	}));
+	}), rememberMeMiddlewares.generateTokenAndSetCookie, function (req, res) {
+		res.redirect('/auth/profile');
+	});
 
 	// Local Connect
 	router.get('/connect/local', function (req, res) {
@@ -46,9 +49,10 @@ module.exports = function (passport) {
 
 	// Facebook Callback
 	router.get('/facebook/callback', passport.authenticate('facebook', {
-		successRedirect: '/auth/profile',
 		failureRedirect: '/'
-	}));
+	}), rememberMeMiddlewares.generateTokenAndSetCookie, function (req, res) {
+		res.redirect('/auth/profile');
+	});
 
 	// Facebook Connect
 	router.get('/connect/facebook', passport.authorize('facebook', { scope: 'email' }));
@@ -66,9 +70,10 @@ module.exports = function (passport) {
 
 	// Google Callback
 	router.get('/google/callback', passport.authenticate('google', {
-		successRedirect: '/auth/profile',
 		failureRedirect: '/'
-	}));
+	}), rememberMeMiddlewares.generateTokenAndSetCookie, function (req, res) {
+		res.redirect('/auth/profile');
+	});
 
 	// Google Connect
 	router.get('/connect/google', passport.authorize('google', { scope: ['email', 'profile']}));
@@ -118,6 +123,7 @@ module.exports = function (passport) {
 
 	// Logout
 	router.get('/logout', function (req, res) {
+		res.clearCookie('remember_me');
 		req.logout();
 		req.flash('message', 'You have been logged out');
 		res.redirect('/');
