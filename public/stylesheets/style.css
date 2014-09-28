@@ -71,8 +71,9 @@ h2 {
 *-------------------------------- */
 .item { }
 .item h2 { margin: 8px 0 8px 0; }
+.item .thumbnail { max-height: 220px; overflow: hidden; }
 .item img { width: 100%; }
-.item-title {  }
+.item-title { max-height: 60px; overflow: hidden; }
 .item-tags { float: left; }
 .item-date { float: left; }
 
