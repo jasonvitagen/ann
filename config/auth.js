@@ -10,6 +10,12 @@ module.exports = {
 		clientID     : '590029598018-vp9i426v1n8safvic32bdbkk03b9s4md.apps.googleusercontent.com',
 		clientSecret : 'saOzer8OmPvjUGBmUZjeBAf8',
 		callbackURL  : 'http://localhost:3000/auth/google/callback'
+	},
+
+	renrenAuth : {
+		clientID     : 'e834917ff1c9450486bc878dae9ded48',
+		clientSecret : '0940202e5a16472b840911026b937f30',
+		callbackURL  : 'http://localhost:3000/auth/renren/callback'
 	}
 
 };

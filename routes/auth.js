@@ -84,6 +84,25 @@ module.exports = function (passport) {
 		failureRedirect: '/'
 	}));
 
+	// RenRen Login
+	router.get('/renren-login', passport.authenticate('renren'));
+
+	// RenRen Callback
+	router.get('/renren/callback', passport.authenticate('renren', {
+		failureRedirect: '/'
+	}), rememberMeMiddlewares.generateTokenAndSetCookie, function (req, res) {
+		res.redirect('/auth/profile');
+	});
+
+	// RenRen Connect
+	router.get('/connect/renren', passport.authorize('renren', {  }));
+
+	// RenRen Connect Callback
+	router.get('/connect/renren/callback', passport.authorize('renren', {
+		successRedirect: '/auth/profile',
+		failureRedirect: '/'
+	}));
+
 	// UNLINK ACCOUNTS
 	//----------------------------------------------------------------------------
 

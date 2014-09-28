@@ -28,6 +28,12 @@ var userSchema = mongoose.Schema({
 		email       : String,
 		name        : String
 	},
+	renren: {
+		id          : String,
+		token       : String,
+		email       : String,
+		name        : String
+	},
 	role: String,
 	rememberMeToken : String      
 

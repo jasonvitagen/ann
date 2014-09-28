@@ -11,9 +11,11 @@ function setup (redisClient) {
 	return Article;
 }
 
-function Article (title, thumbnail, content, user) {
+function Article (title, thumbnail, category, content, user) {
 	article.title = title;
 	article.thumbnail = thumbnail;
+	console.log(category);
+	article.category = category;
 	article.content = content;
 	article.created = new Date();
 	article.createdShort = moment().format('D-M-YYYY');
@@ -59,7 +61,7 @@ Article.getUserArticles = function (user, number, size, callback) {
 Article.getAllArticles = function (number, size, callback) {
 	var articlesId = config.keyNames.articles.key;
 	var startIndex = number * size;
-	var endIndex = startIndex + size;
+	var endIndex = startIndex + size - 1;
 	client.lrange([articlesId, startIndex, endIndex], function (err, idList) {
 		Article.getArticlesByIdList(idList, function (articles) {
 			callback(articles);
@@ -72,7 +74,6 @@ Article.prototype.save = function (user) {
 		var articleId = config.keyNames.article.getId(reply);
 		article.id = articleId;
 		client.hmset(articleId, article);
-		article = {};
 
 		var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
 		client.zadd([userArticlesId, new Date().getTime(), articleId], function (err, response) {
@@ -80,6 +81,11 @@ Article.prototype.save = function (user) {
 
 		var articlesId = config.keyNames.articles.key;
 		client.lpush(articlesId, articleId);
+
+		var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
+		client.sadd(categoryArticlesId, articleId);
+
+		article = {};
 	});
 }
 

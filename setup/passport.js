@@ -3,6 +3,8 @@ var LocalStrategy    = require('passport-local').Strategy; // local strategy
 var FacebookStrategy = require('passport-facebook').Strategy; // facebook strategy
 var GoogleStrategy   = require('passport-google-oauth').OAuth2Strategy; // google strategy
 var RememberMeStrategy = require('passport-remember-me').Strategy;
+var RenrenStrategy = require('passport-renren').Strategy;
+var WeiBoStrategy = require('passport-weibo').Strategy;
 
 var utils = require('utils');
 
@@ -211,6 +213,122 @@ module.exports = function (passport) {
 				user.google.token = token;
 				user.google.name  = profile.displayName;
 				user.google.email = profile.emails[0].value;
+
+				user.save(function (err) {
+					if (err) {
+						throw err;
+					}
+					done(null, user);
+				});
+
+			}
+
+		});
+	}));
+
+	// Configure RenRen Login
+	passport.use('renren', new RenrenStrategy({
+	    clientID : authConfiguration.renrenAuth.clientID,
+	    clientSecret : authConfiguration.renrenAuth.clientSecret,
+	    callbackURL : authConfiguration.renrenAuth.callbackURL,
+		passReqToCallback : true
+	},
+	function (req, token, refreshToken, profile, done) {
+		process.nextTick(function () {
+
+			if (!req.user) {
+
+				User.findOne({ 'renren.id': profile.id }, function (err, user) {
+					if (err) {
+						return done(err);
+					}
+
+					if (user) {
+						return done(null, user);
+					} else {
+						var newUser = new User();
+
+						newUser.renren.id    = profile.id;
+						newUser.renren.token = token;
+						newUser.renren.name  = profile.displayName;
+						newUser.renren.email = profile.emails && profile.emails.length > 0 && profile.emails[0].value;
+
+						newUser.save(function (err) {
+							if (err) {
+								throw err;
+							}
+							return done(null, newUser);
+						});
+					}
+
+				});
+
+			} else {
+
+				var user = req.user;
+
+				user.renren.id    = profile.id;
+				user.renren.token = token;
+				user.renren.name  = profile.displayName;
+				user.renren.email = profile.emails && profile.emails.length > 0 && profile.emails[0].value;
+
+				user.save(function (err) {
+					if (err) {
+						throw err;
+					}
+					done(null, user);
+				});
+
+			}
+
+		});
+	}));
+
+	// Configure WeiBo Login
+	passport.use('weibo', new RenrenStrategy({
+	    clientID : authConfiguration.renrenAuth.clientID,
+	    clientSecret : authConfiguration.renrenAuth.clientSecret,
+	    callbackURL : authConfiguration.renrenAuth.callbackURL,
+		passReqToCallback : true
+	},
+	function (req, token, refreshToken, profile, done) {
+		process.nextTick(function () {
+
+			if (!req.user) {
+
+				User.findOne({ 'renren.id': profile.id }, function (err, user) {
+					if (err) {
+						return done(err);
+					}
+
+					if (user) {
+						return done(null, user);
+					} else {
+						var newUser = new User();
+
+						newUser.renren.id    = profile.id;
+						newUser.renren.token = token;
+						newUser.renren.name  = profile.displayName;
+						newUser.renren.email = profile.emails && profile.emails.length > 0 && profile.emails[0].value;
+
+						newUser.save(function (err) {
+							if (err) {
+								throw err;
+							}
+							return done(null, newUser);
+						});
+					}
+
+				});
+
+			} else {
+
+				var user = req.user;
+
+				user.renren.id    = profile.id;
+				user.renren.token = token;
+				user.renren.name  = profile.displayName;
+				user.renren.email = profile.emails && profile.emails.length > 0 && profile.emails[0].value;
 
 				user.save(function (err) {
 					if (err) {

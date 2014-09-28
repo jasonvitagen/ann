@@ -4,9 +4,54 @@
 	<div class="unit w-1-1">
 		<form method="post">
 			<label for="title">Title</label><br>
-			<input type="text" name="title" id="title"><br><br>
-			<label for="title">Thumbnail</label><br>
-			<input type="text" name="thumbnail" id="thumbnail"><br><br>
+			<input type="text" name="title" id="title" value="<%= typeof formBody.title != 'undefined' && formBody.title || '' %>"><br><br>
+			<label for="thumbnail">Thumbnail</label><br>
+			<input type="text" name="thumbnail" id="thumbnail" value="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>"><br><br>
+			<label for="category">Category</label><br>
+			<select name="category" id="category">
+				<%
+					function getCategoryRecursively (categories, parentKey, selectedCategory) {
+						console.log(selectedCategory);
+						for (categoryKey in categories) {
+							if (categories[categoryKey] == null) {
+								var optionValue = parentKey != null && parentKey + ':' + categoryKey || categoryKey;
+
+				%>
+								<option value="<%= optionValue %>"
+				<%
+									if (selectedCategory == optionValue) {
+				%>
+										selected
+				<%
+									}
+				%>
+								>
+									<%= categoryKey %>
+								</option>
+				<%
+							} else if (typeof categories[categoryKey] == "object") {
+								var optionValue = parentKey != null && parentKey + ':' + categoryKey || categoryKey;
+				%>
+								<option value="<%= optionValue %>"
+				<%
+									if (selectedCategory == optionValue) {
+				%>
+										selected
+				<%
+									}
+				%>
+								>
+									<%= categoryKey %>
+								</option>
+				<%
+								getCategoryRecursively(categories[categoryKey], categoryKey, selectedCategory);
+							}
+						}
+					}
+					getCategoryRecursively(categories, null, formBody.category || '');
+				%>
+			</select>
+			<br><br>
 			<label for="content" class="margin-bottom-16">Content</label><br><br>
 			<textarea name="content" id="content" class="editable" cols="30" rows="10"></textarea>
 			<br>

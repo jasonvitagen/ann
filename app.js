@@ -23,6 +23,7 @@ var flash    = require('connect-flash');
 var mongoose = require('mongoose');
 
 var app = express();
+app.set('trust proxy', true);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

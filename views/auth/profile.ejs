@@ -59,6 +59,23 @@
 </div>
 
 <div class="grid">
+	<div class="unit w-4-5">
+		<h4>RenRen</h4>
+		Id: <%= user.renren.id %><br>
+		Token: <%= user.renren.token %><br>
+		Email: <%= user.renren.email %><br>
+		Name: <%= user.renren.name %><br>
+	</div>
+	<div class="unit w-1-5">
+		<% if (!user.renren.token) { %>
+			<a href="/auth/connect/renren">Link RenRen</a>
+		<% } else { %>
+			<a href="/auth/unconnect/renren">Unlink RenRen</a>
+		<% } %>
+	</div>
+</div>
+
+<div class="grid">
 	<div class="unit w-1-1">
 		<a href="/auth/logout">Logout</a>
 		<a href="/">Back</a>
