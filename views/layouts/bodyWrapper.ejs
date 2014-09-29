@@ -10,7 +10,7 @@
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));</script>
 
-	<% if (message) { %>
+	<% if (typeof message == 'object' && message) { %>
 		<div><%= message %></div>
 	<% } %>
 	<div id="strapline" class="bottom-margin-8">
