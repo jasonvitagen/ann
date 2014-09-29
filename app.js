@@ -17,7 +17,7 @@ var engine = require('ejs').__express;
 var redis = require('redis');
 
 // require passport dependencies
-var session  = require('cookie-session');
+var session  = require('express-session');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var mongoose = require('mongoose');
