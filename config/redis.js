@@ -33,6 +33,7 @@ module.exports = {
 		category : {
 			articles : {
 				getId : function (name) {
+					console.log(name);
 					return entityNames.category + ':' + name + ':' + entityNames.articles;
 				}
 			}

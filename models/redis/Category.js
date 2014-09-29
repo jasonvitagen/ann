@@ -1,3 +1,7 @@
+var config = require('../../config/redis');
+var Article = require('./Article').Article;
+
+
 var categories = {
 	'影片' : null,
 	'生活' : {
@@ -30,6 +34,31 @@ var categories = {
 	'女性专区' : null
 }
 
+var client = null;
+
+function setup (redisClient) {
+	client = redisClient;
+	return Category;
+}
+
+function Category () {
+
+}
+
+Category.getArticlesByCategory = function (categoryId, number, size, callback) {
+	var categoryArticlesId = config.keyNames.category.articles.getId(categoryId);
+	var startIndex = number * size;
+	var endIndex = startIndex + size - 1;
+	client.zrange([categoryArticlesId, startIndex, endIndex], function (err, idList) {
+		Article.getArticlesByIdList(idList, function (articles) {
+			console.log(articles);
+			callback(articles);
+		});
+	});
+}
+
 module.exports = {
-	categories : categories
+	categories : categories,
+	setup : setup,
+	Category : Category
 }

@@ -53,8 +53,10 @@ Article.getUserArticles = function (user, number, size, callback) {
 	var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
 	var startIndex = number * size;
 	var endIndex = startIndex + size;
-	client.zrange([userArticlesId, startIndex, endIndex], function (err, response) {
-		callback(response);
+	client.zrange([userArticlesId, startIndex, endIndex], function (err, idList) {
+		Article.getArticlesByIdList(idList, function (articles) {
+			callback(articles);
+		});
 	});
 }
 
@@ -71,6 +73,7 @@ Article.getAllArticles = function (number, size, callback) {
 
 Article.prototype.save = function (user) {
 	client.incr(config.keyNames.global.article.key, function (err, reply) {
+		
 		var articleId = config.keyNames.article.getId(reply);
 		article.id = articleId;
 		client.hmset(articleId, article);
@@ -83,7 +86,10 @@ Article.prototype.save = function (user) {
 		client.lpush(articlesId, articleId);
 
 		var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
-		client.sadd(categoryArticlesId, articleId);
+		console.log(article.category);
+		console.log(categoryArticlesId);
+		client.zadd([categoryArticlesId, new Date().getTime(), articleId], function (err, response) {
+		});
 
 		article = {};
 	});

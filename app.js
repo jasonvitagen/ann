@@ -38,6 +38,7 @@ require('./setup/redisClient').setup(redisClient);
 
 // setup models
 var Article = require('./models/redis/Article').setup(redisClient);
+var Category = require('./models/redis/Category').setup(redisClient);
 
 // setup passport
 require('./setup/passport.js')(passport);

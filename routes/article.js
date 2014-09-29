@@ -5,7 +5,7 @@ var authMiddlewares = require('./middlewares/auth');
 var Category = require('../models/redis/Category');
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
-	res.render('articles/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
+	res.render('article/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
 });
 
 router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
@@ -14,7 +14,7 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 		!req.body.content) {
 		console.log(req.body);
 		req.flash('message', 'Fields cannot be blank');
-		res.render('articles/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
+		res.render('article/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
 		return;
 	}
 	var article = new Article(req.body.title, req.body.thumbnail, req.body.category, req.body.content, req.user);
@@ -23,20 +23,20 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 });
 
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
-	Article.getUserArticles(req.user, 0, 10, function (response) {
-		res.render('articles/my-articles.ejs', {});
+	Article.getUserArticles(req.user, 0, 10, function (articles) {
+		console.log(articles);
+		res.render('article/my-articles.ejs', { articles : articles });
 	});
 });
 
-router.get('/r/:id', function (req, res) {
-	console.log(req.params.id);
-	Article.getArticleById(req.params.id, function (article) {
-		res.render('articles/view', { 
+router.get('/:articleId', function (req, res) {
+	Article.getArticleById(req.params.articleId, function (article) {
+		res.render('article/view', { 
 			article : article,
 			facebookShare : true,
-			pageTitle : article.title,
-			pageImage : article.thumbnail,
-			pageDescription : article.content,
+			pageTitle : article && article.title || '',
+			pageImage : article && article.thumbnail || '',
+			pageDescription : article && article.content || '',
 			pageUrl : req.protocol + '://' + req.get('host') + req.originalUrl
 		});
 	});
