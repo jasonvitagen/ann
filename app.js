@@ -17,7 +17,7 @@ var engine = require('ejs').__express;
 var redis = require('redis');
 
 // require passport dependencies
-var session  = require('express-session');
+var session  = require('cookie-session');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var mongoose = require('mongoose');
@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 app.use(session({secret : 'iLoveAnn'}));
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(passport.authenticate('remember-me'));
+app.use(passport.authenticate('remember-me'));
 app.use(flash());
 
 app.use('/', routes);
