@@ -14,7 +14,6 @@ function setup (redisClient) {
 function Article (title, thumbnail, category, content, user) {
 	article.title = title;
 	article.thumbnail = thumbnail;
-	console.log(category);
 	article.category = category;
 	article.content = content;
 	article.created = new Date();
@@ -25,6 +24,7 @@ function Article (title, thumbnail, category, content, user) {
 }
 
 Article.getArticleById = function (id, callback) {
+	id = config.keyNames.article.getId(id);
 	client.hgetall(id, function (err, response) {
 		callback(response);
 	});
@@ -75,7 +75,7 @@ Article.prototype.save = function (user) {
 	client.incr(config.keyNames.global.article.key, function (err, reply) {
 		
 		var articleId = config.keyNames.article.getId(reply);
-		article.id = articleId;
+		article.id = reply;
 		client.hmset(articleId, article);
 
 		var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
@@ -86,13 +86,28 @@ Article.prototype.save = function (user) {
 		client.lpush(articlesId, articleId);
 
 		var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
-		console.log(article.category);
-		console.log(categoryArticlesId);
 		client.zadd([categoryArticlesId, new Date().getTime(), articleId], function (err, response) {
 		});
 
 		article = {};
 	});
+}
+
+Article.delete = function (user, articleId) {
+	var articleId = config.keyNames.article.getId(articleId);
+	client.del(articleId, function (err, response) {
+		console.log(response);
+	});
+
+	var articlesId = config.keyNames.articles.key;
+	client.lrem(articlesId, 0, articleId);
+
+	var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
+	client.zrem(userArticlesId, articleId);
+
+	var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
+	client.zrem(categoryArticlesId, articleId);
+
 }
 
 

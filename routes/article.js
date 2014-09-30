@@ -42,5 +42,9 @@ router.get('/:articleId', function (req, res) {
 	});
 });
 
+router.post('/delete', authMiddlewares.isLoggedIn, function (req, res) {
+	Article.delete(req.user, req.body.articleId);
+	res.redirect('/article/my-articles');
+});
 
 module.exports = router;

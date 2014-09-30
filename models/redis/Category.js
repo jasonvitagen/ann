@@ -47,11 +47,12 @@ function Category () {
 
 Category.getArticlesByCategory = function (categoryId, number, size, callback) {
 	var categoryArticlesId = config.keyNames.category.articles.getId(categoryId);
+	console.log(categoryArticlesId);
 	var startIndex = number * size;
 	var endIndex = startIndex + size - 1;
 	client.zrange([categoryArticlesId, startIndex, endIndex], function (err, idList) {
+		console.log(idList);
 		Article.getArticlesByIdList(idList, function (articles) {
-			console.log(articles);
 			callback(articles);
 		});
 	});
