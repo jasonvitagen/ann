@@ -5,14 +5,13 @@ var authMiddlewares = require('./middlewares/auth');
 var Category = require('../models/redis/Category');
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
-	res.render('article/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
+	res.render('article/create', { message : req.flash('message'), categories : Category.categories, categoriesCN : Category.categoriesCN, formBody : req.body });
 });
 
 router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 	if (!req.body.title ||
 		!req.body.thumbnail ||
 		!req.body.content) {
-		console.log(req.body);
 		req.flash('message', 'Fields cannot be blank');
 		res.render('article/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
 		return;
@@ -21,11 +20,10 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 	article.save(req.user);
 	res.redirect('/');
 });
-
+ 
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
 	Article.getUserArticles(req.user, 0, 10, function (articles) {
-		console.log(articles);
-		res.render('article/my-articles.ejs', { articles : articles });
+		res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
 	});
 });
 
@@ -42,8 +40,8 @@ router.get('/:articleId', function (req, res) {
 	});
 });
 
-router.post('/delete', authMiddlewares.isLoggedIn, function (req, res) {
-	Article.delete(req.user, req.body.articleId);
+router.post('/delete', authMiddlewares.isLoggedIn, authMiddlewares.isArticleBelongedToUser, function (req, res) {
+	Article.delete(req.user, req.body.articleId, req.body.articleCategory);
 	res.redirect('/article/my-articles');
 });
 

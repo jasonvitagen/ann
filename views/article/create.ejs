@@ -14,7 +14,7 @@
 						console.log(selectedCategory);
 						for (categoryKey in categories) {
 							if (categories[categoryKey] == null) {
-								var optionValue = parentKey != null && parentKey + ':' + categoryKey || categoryKey;
+								var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
 
 				%>
 								<option value="<%= optionValue %>"
@@ -30,7 +30,7 @@
 								</option>
 				<%
 							} else if (typeof categories[categoryKey] == "object") {
-								var optionValue = parentKey != null && parentKey + ':' + categoryKey || categoryKey;
+								var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
 				%>
 								<option value="<%= optionValue %>"
 				<%
