@@ -27,6 +27,13 @@ router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
 	});
 });
 
+router.get('/random/:number?', function (req, res) {
+	var number = req.params.number || 5;
+	Article.getRandomArticles(number, function (articles) {
+		res.json(articles);
+	});
+});
+
 router.get('/:articleId', function (req, res) {
 	Article.getArticleById(req.params.articleId, function (article) {
 		res.render('article/view', { 

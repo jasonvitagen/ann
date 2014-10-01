@@ -125,6 +125,15 @@ Article.isUserHasArticle = function (user, articleId, callback) {
 	});
 }
 
+Article.getRandomArticles = function (number, callback) {
+	var articlesInSetId = config.keyNames.articles.set.key;
+	client.srandmember([articlesInSetId, number], function (err, articles) {
+		Article.getArticlesByIdList(articles, function (articles) {
+			callback(articles);
+		});
+	});
+}
+
 
 module.exports = {
 	setup : setup,
