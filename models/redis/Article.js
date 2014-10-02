@@ -109,7 +109,9 @@ Article.prototype.save = function (user) {
 		}
 
 		function saveArticleIdToCategoryArticles (done) {
+			console.log(article.category);
 			var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
+			console.log(categoryArticlesId);
 			client.zadd([categoryArticlesId, new Date().getTime(), articleId], function (err, response) {
 				if (err) { done(err); }
 				else { done(); }
@@ -134,9 +136,9 @@ Article.prototype.save = function (user) {
 			} else {
 				console.log('save article success');
 			}
+			article = {};
 		});
 
-		article = {};
 	});
 }
 
@@ -221,8 +223,6 @@ Article.isUserHasArticle = function (user, articleId, callback) {
 Article.getRandomArticles = function (number, callback) {
 	var articlesInSetId = config.keyNames.articles.set.key;
 	client.srandmember([articlesInSetId, number], function (err, articlesId) {
-		console.log(err);
-		console.log(articlesId);
 		Article.getArticlesByIdList(articlesId, function (articles) {
 			callback(articles);
 		});
