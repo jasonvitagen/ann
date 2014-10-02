@@ -13,7 +13,7 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 		!req.body.thumbnail ||
 		!req.body.content) {
 		req.flash('message', 'Fields cannot be blank');
-		res.render('article/create', { message : req.flash('message'), categories : Category.categories, formBody : req.body });
+		res.render('article/create', { message : req.flash('message'), categories : Category.categories, categoriesCN : Category.categoriesCN, formBody : req.body });
 		return;
 	}
 	var article = new Article(req.body.title, req.body.thumbnail, req.body.category, req.body.content, req.user);

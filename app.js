@@ -70,9 +70,7 @@ app.use('/category', categoryRoutes);
 // setup article route
 app.use('/article', articleRoutes);
 
-app.all('*', function (req, res, next) {
-    res.redirect('/');
-});
+
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
@@ -104,6 +102,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;

@@ -1,5 +1,6 @@
 var config = require('../../config/redis');
 var moment = require('moment');
+var async = require('async');
 
 var client = null;
 
@@ -32,21 +33,15 @@ Article.getArticleById = function (id, callback) {
 }
 
 Article.getArticlesByIdList = function (idList, callback) {
-	var count = 0;
 	var articles = [];
-	if (idList.length <= 0) {
-		callback(articles);
-	}
-	for (var i = 0, len = idList.length; i < len; i++) {
-		var id = idList[i];
+	async.each(idList, function (id, done) {
 		client.hgetall(id, function (err, response) {
 			articles.push(response);
-			count++;
-			if (count == len) {
-				callback(articles);
-			}
+			done();
 		});
-	}
+	}, function (err) {
+		callback(articles);
+	});
 }
 
 Article.getUserArticles = function (user, number, size, callback) {
@@ -76,20 +71,65 @@ Article.prototype.save = function (user) {
 		
 		var articleId = config.keyNames.article.getId(reply);
 		article.id = reply;
-		client.hmset(articleId, article);
 
-		var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
-		client.zadd([userArticlesId, new Date().getTime(), articleId], function (err, response) {
-		});
+		function saveArticleToArticleId (done) {
+			client.hmset(articleId, article, function (err, response) {
+				if (err) { done(err); }
+				else { console.log('article saved'); done(); }
+			});
+		}
 
-		var articlesInListId = config.keyNames.articles.list.key;
-		client.lpush(articlesInListId, articleId);
+		// Store Procedures
+		function saveArticleIdToUserArticles (done) {
+			var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
+			client.zadd([userArticlesId, new Date().getTime(), articleId], function (err, response) {
+				if (err) { done(err); }
+				else { done(); }
+			});
+		}
 
-		var articlesInSetId = config.keyNames.articles.set.key;
-		client.sadd(articlesInSetId, articleId);
+		function saveArticleIdToArticlesInList (done) {
+			var articlesInListId = config.keyNames.articles.list.key;
+			client.lpush([articlesInListId, articleId], function (err, response) {
+				if (err) { done(err); }
+				else { done(); }
+			});
+		}
 
-		var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
-		client.zadd([categoryArticlesId, new Date().getTime(), articleId], function (err, response) {
+		function saveArticleIdToArticlesInSet (done) {
+			var articlesInSetId = config.keyNames.articles.set.key;
+			client.sadd([articlesInSetId, articleId], function (err, response) {
+				if (err) { done(err); }
+				else { done(); }
+			});
+		}
+
+		function saveArticleIdToCategoryArticles (done) {
+			var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
+			client.zadd([categoryArticlesId, new Date().getTime(), articleId], function (err, response) {
+				if (err) { done(err); }
+				else { done(); }
+			});
+		}
+
+		function asyncStoreProcedures (done) {
+			async.parallel([saveArticleIdToUserArticles, saveArticleIdToArticlesInList, saveArticleIdToArticlesInSet, saveArticleIdToCategoryArticles], function (err, results) {
+				if (err) {
+					console.log(err);
+					done(err);
+				} else {
+					console.log('save article id async store procedures success');
+					done();
+				}
+			});
+		}
+
+		async.series([saveArticleToArticleId, asyncStoreProcedures], function (err, results) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log('save article success');
+			}
 		});
 
 		article = {};
@@ -99,17 +139,66 @@ Article.prototype.save = function (user) {
 Article.delete = function (user, articleId, articleCategory) {
 
 	var articleId = config.keyNames.article.getId(articleId);
-	client.del(articleId, function (err, response) {
+
+	function deleteArticleFromArticleId (done) {
+		client.del(articleId, function (err, response) {
+			if (err) { done(err); }
+			else { console.log('article removed'); done(); }
+		});
+	}
+
+	// Store Procedures
+	function deleteArticleIdFromUserArticles (done) {
+		var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
+		client.zrem([userArticlesId, articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(null, 1); }
+		});
+	}
+
+	function deleteArticleIdFromArticlesInList (done) {
+		var articlesInListId = config.keyNames.articles.list.key;
+		client.lrem([articlesInListId, 0, articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(null, 2); }
+		});
+	}
+
+	function deleteArticleIdFromArticlesInSet (done) {
+		var articlesInSetId = config.keyNames.articles.set.key;
+		client.srem([articlesInSetId, articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(null, 3); }
+		});
+	}
+
+	function deleteArticleIdFromCategoryArticles (done) {
+		var categoryArticlesId = config.keyNames.category.articles.getId(articleCategory);
+		client.zrem([categoryArticlesId, articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(null, 4); }
+		});
+	}
+
+	function asyncStoreProcedures (done) {
+		async.parallel([deleteArticleIdFromUserArticles, deleteArticleIdFromArticlesInList, deleteArticleIdFromArticlesInSet, deleteArticleIdFromCategoryArticles], function (err, results) {
+			if (err) {
+				console.log(err);
+				done(err);
+			} else {
+				console.log('delete article id async store procedures success');
+				done();
+			}
+		});
+	}
+
+	async.series([deleteArticleFromArticleId, asyncStoreProcedures], function (err, results) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log('delete article success');
+		}
 	});
-
-	var articlesId = config.keyNames.articles.key;
-	client.lrem(articlesId, 0, articleId);
-
-	var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
-	client.zrem(userArticlesId, articleId);
-
-	var categoryArticlesId = config.keyNames.category.articles.getId(articleCategory);
-	client.zrem(categoryArticlesId, articleId);
 
 }
 
@@ -127,8 +216,10 @@ Article.isUserHasArticle = function (user, articleId, callback) {
 
 Article.getRandomArticles = function (number, callback) {
 	var articlesInSetId = config.keyNames.articles.set.key;
-	client.srandmember([articlesInSetId, number], function (err, articles) {
-		Article.getArticlesByIdList(articles, function (articles) {
+	client.srandmember([articlesInSetId, number], function (err, articlesId) {
+		console.log(err);
+		console.log(articlesId);
+		Article.getArticlesByIdList(articlesId, function (articles) {
 			callback(articles);
 		});
 	});

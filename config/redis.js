@@ -22,7 +22,7 @@ module.exports = {
 		},
 		articles : {
 			list : {
-				key : entityNames.articles + ':' + 'all' + ':' + 'list'	
+				key : entityNames.articles + ':' + 'all' + ':' + 'list'
 			},
 			set : {
 				key : entityNames.articles + ':' + 'all' + ':' + 'set'
