@@ -34,37 +34,10 @@ router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
 });
 
 router.get('/random/:number?', function (req, res) {
-	// var number = req.params.number || 5;
-	// Article.getRandomArticles(number, function (articles) {
-	// 	res.json(articles);
-	// });
-	res.json([
-{
-title: "1",
-thumbnail: "1",
-category: "movie",
-content: "<p>1</p>",
-created: "Wed Oct 01 2014 22:45:59 GMT-0400 (EDT)",
-createdShort: "1-10-2014",
-authorName: "Jason C",
-authorEmail: "jasonvitagen@gmail.com",
-views: "151",
-id: "10001"
-},
-{
-title: "2",
-thumbnail: "2",
-category: "movie",
-content: "<p>2</p>",
-created: "Wed Oct 01 2014 22:46:08 GMT-0400 (EDT)",
-createdShort: "1-10-2014",
-authorName: "Jason C",
-authorEmail: "jasonvitagen@gmail.com",
-views: "127",
-id: "10002"
-}
-])
-	
+	var number = req.params.number || 5;
+	Article.getRandomArticles(number, function (articles) {
+		res.json(articles);
+	});
 });
 
 router.get('/:articleId', function (req, res) {
