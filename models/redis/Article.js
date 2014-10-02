@@ -1,6 +1,7 @@
 var config = require('../../config/redis');
 var moment = require('moment');
 var async = require('async');
+var sanitizer = require('./articleSanitizer');
 
 var client = null;
 
@@ -12,15 +13,18 @@ function setup (redisClient) {
 	return Article;
 }
 
-function Article (title, thumbnail, category, content, user) {
-	article.title = title;
-	article.thumbnail = thumbnail;
-	article.category = category;
-	article.content = content;
+function Article (articleData) {
+
+	articleData = sanitizer(articleData);
+
+	article.title = articleData.title;
+	article.thumbnail = articleData.thumbnail;
+	article.category = articleData.category;
+	article.content = articleData.content;
 	article.created = new Date();
 	article.createdShort = moment().format('D-M-YYYY');
-	article.authorName = user.facebook.name || user.google.name || user.local.name;
-	article.authorEmail = user.facebook.email || user.google.email || user.local.email;
+	article.authorName = articleData.user.facebook.name || articleData.user.google.name || articleData.user.local.name;
+	article.authorEmail = articleData.user.facebook.email || articleData.user.google.email || articleData.user.local.email;
 	article.views = 0;
 }
 

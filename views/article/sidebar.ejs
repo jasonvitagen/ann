@@ -1,0 +1,13 @@
+<div id="sidebar">
+	
+</div>
+
+<script>
+
+	setTimeout(function () {
+		ajaxGet('/article/random', function (articles) {
+			document.getElementById('sidebar').innerHTML = getSidebarHtml(articles);
+		});
+	}, 0);
+
+</script>

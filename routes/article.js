@@ -16,7 +16,13 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 		res.render('article/create', { message : req.flash('message'), categories : Category.categories, categoriesCN : Category.categoriesCN, formBody : req.body });
 		return;
 	}
-	var article = new Article(req.body.title, req.body.thumbnail, req.body.category, req.body.content, req.user);
+	var article = new Article({
+		title     : req.body.title,
+		thumbnail : req.body.thumbnail,
+		category  : req.body.category,
+		content   : req.body.content,
+		user      : req.user
+	});
 	article.save(req.user);
 	res.redirect('/');
 });
@@ -28,10 +34,37 @@ router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
 });
 
 router.get('/random/:number?', function (req, res) {
-	var number = req.params.number || 5;
-	Article.getRandomArticles(number, function (articles) {
-		res.json(articles);
-	});
+	// var number = req.params.number || 5;
+	// Article.getRandomArticles(number, function (articles) {
+	// 	res.json(articles);
+	// });
+	res.json([
+{
+title: "1",
+thumbnail: "1",
+category: "movie",
+content: "<p>1</p>",
+created: "Wed Oct 01 2014 22:45:59 GMT-0400 (EDT)",
+createdShort: "1-10-2014",
+authorName: "Jason C",
+authorEmail: "jasonvitagen@gmail.com",
+views: "151",
+id: "10001"
+},
+{
+title: "2",
+thumbnail: "2",
+category: "movie",
+content: "<p>2</p>",
+created: "Wed Oct 01 2014 22:46:08 GMT-0400 (EDT)",
+createdShort: "1-10-2014",
+authorName: "Jason C",
+authorEmail: "jasonvitagen@gmail.com",
+views: "127",
+id: "10002"
+}
+])
+	
 });
 
 router.get('/:articleId', function (req, res) {

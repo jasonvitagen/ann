@@ -26,6 +26,7 @@ h2 {
 /* Margin
 -------------------------------- */
 .bottom-margin-8 { margin: 0 0 8px 0; }
+.bottom-margin-16 { margin: 0 0 16px 0; }
 .margin-left-8 { margin: 0 0 0 8px; }
 .margin-left-16 { margin: 0 0 0 16px; }
 
@@ -81,3 +82,10 @@ h2 {
 /* Article Create
 *-------------------------------- */
 #article-create textarea { width: 98%; height: 400px; }
+
+
+/* Sidebar
+*-------------------------------- */
+#sidebar {  }
+#sidebar ul { list-style-type: none; margin: 0; padding: 0; }
+#sidebar ul li { }
