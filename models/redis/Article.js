@@ -222,7 +222,7 @@ Article.isUserHasArticle = function (user, articleId, callback) {
 
 Article.getRandomArticles = function (number, callback) {
 	var articlesInSetId = config.keyNames.articles.set.key;
-	client.srandmember([articlesInSetId, number], function (err, articlesId) {
+	client.srandmember([articlesInSetId, number + 1], function (err, articlesId) {
 		Article.getArticlesByIdList(articlesId, function (articles) {
 			callback(articles);
 		});

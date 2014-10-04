@@ -18,29 +18,35 @@
 
 	function getSidebarHtml (articles) {
 		var html = '';
-		html += '<ul>';
+		html += '<ul class="ul-reset">';
 		for (var i = 0; i < articles.length; i++) {
 			var article = articles[i];
 			console.log(article);
 			html += '<li class="bottom-margin-16">' +
-					 	'<div class="thumbnail">' +
-					 		'<a href="/article/' +
-					 			article.id +
-					 		'">' +
-					 			'<img src="' +
-					 				article.thumbnail +
-					 			'" alt="">' +
-					 			'</a>' +
-					 	'</div>' +
-					 	'<div class="item-title">' +
-					 		'<a href="/article/' +
-					 			article.id +
-					 		'">' +
-					 			'<h2>' +
-					 				article.title +
-					 			'</h2>' +
-					 		'</a>' +
-					 	'</div>' +
+						'<div class="item"' +
+						 	'<div class="thumbnail">' +
+						 		'<a href="/article/' +
+						 			article.id +
+						 			'/' +
+						 			article.title +
+						 		'">' +
+						 			'<img src="' +
+						 				article.thumbnail +
+						 			'" alt="">' +
+						 			'</a>' +
+						 	'</div>' +
+						 	'<div class="item-title">' +
+						 		'<a href="/article/' +
+						 			article.id +
+						 			'/' +
+						 			article.title +
+						 		'">' +
+						 			'<h2>' +
+						 				article.title +
+						 			'</h2>' +
+						 		'</a>' +
+						 	'</div>' +
+						'</div>' +
 					'</li>';
 		}
 		html += '</ul>';
@@ -48,7 +54,20 @@
 	}
 
 
+	function removeElementInList (list, property, condition) {
+		console.log('sfd', list);
+		for (var i = 0; i < list.length; i++) {
+			var element = list[i];
+			if (element[property] == condition) {
+				list.splice(i, 1);
+				break;
+			}
+		}
+	}
+
+
 	window.ajaxGet = ajaxGet;
 	window.getSidebarHtml = getSidebarHtml;
+	window.removeElementInList = removeElementInList;
 
 })();

@@ -1,8 +1,9 @@
 <% include ../layouts/header.ejs %>
 
 
-<div class="grid">
-	<div class="unit w-4-5">
+<div class="grid" id="article-view">
+	<div class="unit golden-large">
+		<p class="hidden" id="articleId"><%= article.id %></p>
 		<h1><%= article.title %></h1>
 		<br>
 		<br>
@@ -13,9 +14,15 @@
 		<br>
 		<br>
 		<%- article.content %>
+		<br>
+		<br>
+		<div id="prev-and-next-related-articles" class="hidden"></div>
+		<br>
+		<br>
+		<div id="bottom-related-articles"></div>
 	</div>
 
-	<div class="unit w-1-5">
+	<div class="unit golden-small">
 		<% include sidebar.ejs %>
 	</div>
 </div>

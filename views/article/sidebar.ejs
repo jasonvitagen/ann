@@ -1,3 +1,11 @@
+<div class="fb-like" 
+	 data-href="https://mobile360.net"
+	 data-layout="box_count"
+	 data-action="like"
+	 data-show-faces="true"
+	 data-share="false">
+</div>
+<div class="bottom-margin-16"></div>
 <div id="sidebar">
 	
 </div>
@@ -5,8 +13,22 @@
 <script>
 
 	setTimeout(function () {
-		ajaxGet('/article/random', function (articles) {
-			document.getElementById('sidebar').innerHTML = getSidebarHtml(articles);
+
+		<% 
+			var sidebarRelatedArticlesAmount = viewVariables.view.relatedArticles.sidebar.amount,
+				prevAndNextRelatedArticlesAmount = viewVariables.view.relatedArticles.prevAndNext.amount,
+				bottomRelatedArticlesAmount = viewVariables.view.relatedArticles.bottom.amount,
+				totalRelatedArticles = sidebarRelatedArticlesAmount + prevAndNextRelatedArticlesAmount + bottomRelatedArticlesAmount; 
+
+				console.log(bottomRelatedArticlesAmount);
+		%>
+
+		ajaxGet('/article/random/<%= totalRelatedArticles %>', function (articles) {
+			removeElementInList(articles, 'id', document.getElementById('articleId').innerHTML);
+			document.getElementById('sidebar').innerHTML = getSidebarHtml(articles.splice(0, <%= sidebarRelatedArticlesAmount %>));
+			document.getElementById('prev-and-next-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= prevAndNextRelatedArticlesAmount %>));
+			document.getElementById('bottom-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= bottomRelatedArticlesAmount %>));
+
 		});
 	}, 0);
 

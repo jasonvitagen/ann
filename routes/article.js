@@ -28,7 +28,7 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 });
  
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
-	Article.getUserArticles(req.user, 0, 10, function (articles) {
+	Article.getUserArticles(req.user, 0, 100, function (articles) {
 		res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
 	});
 });
@@ -40,7 +40,7 @@ router.get('/random/:number?', function (req, res) {
 	});
 });
 
-router.get('/:articleId', function (req, res) {
+router.get('/:articleId/:title?', function (req, res) {
 	Article.getArticleById(req.params.articleId, function (article) {
 		res.render('article/view', { 
 			article : article,

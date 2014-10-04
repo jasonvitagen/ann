@@ -45,6 +45,10 @@ require('./setup/passport.js')(passport);
 mongoose.connect('mongodb://localhost:27017/ann');
 var authRoutes = require('./routes/auth.js')(passport);
 
+// setup views variables
+require('./setup/viewsVariables.js')(app);;
+
+
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
