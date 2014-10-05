@@ -3,10 +3,7 @@
 
 <div class="grid" id="article-view">
 	<div class="unit golden-large">
-		<p class="hidden" id="articleId"><%= article.id %></p>
 		<h1><%= article.title %></h1>
-		<br>
-		<br>
 		<%= article.createdShort || '' %>
 		<br>
 		<br>
@@ -19,7 +16,16 @@
 		<div id="prev-and-next-related-articles" class="hidden"></div>
 		<br>
 		<br>
+		<h3>Don't Miss These !</h3>
 		<div id="bottom-related-articles"></div>
+		<br>
+		<br>
+		<div class="fb-comments" 
+			 data-href="<%= pageUrl %>"
+			 data-numposts="8"
+			 data-width="100%"
+			 data-colorscheme="light">
+		</div>
 	</div>
 
 	<div class="unit golden-small">

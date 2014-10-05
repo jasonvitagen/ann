@@ -8,8 +8,7 @@ a {
 }
 
 
-/* Global Styling
--------------------------------- */
+/* Global Styling */
 h2 { 
 	font-size: 16px;
 	font-weight: normal;
@@ -27,20 +26,17 @@ h2 {
 
 .ul-reset { list-style-type: none; margin: 0; padding: 0; }
 
-/* Margin
--------------------------------- */
+/* Margin */
 .bottom-margin-8 { margin: 0 0 8px 0; }
 .bottom-margin-16 { margin: 0 0 16px 0; }
 .margin-left-8 { margin: 0 0 0 8px; }
 .margin-left-16 { margin: 0 0 0 16px; }
 
-/* Logo
--------------------------------- */
+/* Logo */
 #logo { font-size: 45px; }
 
 
-/* Strap Line
--------------------------------- */
+/* Strap Line */
 #strapline {
 	min-height: 24px;
 	border-bottom: 1px solid silver;
@@ -52,15 +48,13 @@ h2 {
 	list-style-type: none;
 }
 
-/* Auth Login Links
-*-------------------------------- */
+/* Auth Login Links */
 #auth-links {
 	margin: 4px 0 0 0;
 	padding: 0;
 }
 
-/* Navigation Menu
--------------------------------- */
+/* Navigation Menu */
 #navigation-menus {  }
 #navigation-menus ul {
 	margin: 0;
@@ -72,8 +66,7 @@ h2 {
 	border: 1px solid pink;
 }
 
-/* Index Item
-*-------------------------------- */
+/* Index Item */
 .item { }
 .item h2 { margin: 8px 0 8px 0; }
 .item .thumbnail { height: 160px; max-height: 160px; }
@@ -87,16 +80,14 @@ h2 {
 /* Article */
 
 /* Article - Override Gridism */
-#article-view .golden-small { width: 32.2716%; }
+#article-view .golden-small { width: 32.2716%; padding-left: 30px; }
 #article-view .golden-large { width: 67.7283%; }
 
 /* Article - Create
-*-------------------------------- */
 #article-create textarea { width: 98%; height: 400px; }
 
 
-/* Article - Sidebar
-*-------------------------------- */
+/* Article - Sidebar */
 #sidebar { }
 #sidebar ul { }
 #sidebar ul li { }
@@ -104,16 +95,23 @@ h2 {
 
 /* Article - Related Articles */
 
-/* Prev And Next
-*-------------------------------- */
+/* Prev And Next */
 #prev-and-next-related-articles {}
 #prev-and-next-related-articles li { float: left; }
 
-/* Bottom
-*-------------------------------- */
+/* Bottom */
 #bottom-related-articles {}
-#bottom-related-articles li { display: inline-block; width: 27.33%; margin-right: 8px; }
+#bottom-related-articles li { display: inline-block; width: 31.00%; margin-right: 8px; }
 
 
+/* Footer */
+footer { height: 200px; }
 
+
+.fb_iframe_widget,
+.fb_iframe_widget span,
+.fb_iframe_widget span iframe[style] {
+  min-width: 100% !important;
+  width: 100% !important;
+}
 

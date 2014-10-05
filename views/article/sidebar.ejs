@@ -6,6 +6,7 @@
 	 data-share="false">
 </div>
 <div class="bottom-margin-16"></div>
+<h3>Related</h3>
 <div id="sidebar">
 	
 </div>
@@ -19,17 +20,15 @@
 				prevAndNextRelatedArticlesAmount = viewVariables.view.relatedArticles.prevAndNext.amount,
 				bottomRelatedArticlesAmount = viewVariables.view.relatedArticles.bottom.amount,
 				totalRelatedArticles = sidebarRelatedArticlesAmount + prevAndNextRelatedArticlesAmount + bottomRelatedArticlesAmount; 
-
-				console.log(bottomRelatedArticlesAmount);
 		%>
 
-		ajaxGet('/article/random/<%= totalRelatedArticles %>', function (articles) {
-			removeElementInList(articles, 'id', document.getElementById('articleId').innerHTML);
+		ajaxGet('/article/random/<%= totalRelatedArticles %>', {}, function (articles) {
+			removeElementInList(articles, 'id', <%= articleId %>);
 			document.getElementById('sidebar').innerHTML = getSidebarHtml(articles.splice(0, <%= sidebarRelatedArticlesAmount %>));
 			document.getElementById('prev-and-next-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= prevAndNextRelatedArticlesAmount %>));
 			document.getElementById('bottom-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= bottomRelatedArticlesAmount %>));
-
 		});
+
 	}, 0);
 
 </script>
