@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Article = require('../models/redis/Article').Article;
-var webFrontIndexConfig = require('../config/webFront/index');
+var webFrontIndexConfig = require('../config/webfront/index');
 
 /* GET home page. */
 router.get('/', function(req, res) {
