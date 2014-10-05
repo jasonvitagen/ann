@@ -12,23 +12,28 @@
 </div>
 
 <script>
+	
+	document.onreadystatechange = function () {
 
-	setTimeout(function () {
+		if (document.readyState == 'interactive') {
+			<% 
+				var sidebarRelatedArticlesAmount = viewVariables.view.relatedArticles.sidebar.amount,
+					prevAndNextRelatedArticlesAmount = viewVariables.view.relatedArticles.prevAndNext.amount,
+					bottomRelatedArticlesAmount = viewVariables.view.relatedArticles.bottom.amount,
+					totalRelatedArticles = sidebarRelatedArticlesAmount + prevAndNextRelatedArticlesAmount + bottomRelatedArticlesAmount; 
+			%>
 
-		<% 
-			var sidebarRelatedArticlesAmount = viewVariables.view.relatedArticles.sidebar.amount,
-				prevAndNextRelatedArticlesAmount = viewVariables.view.relatedArticles.prevAndNext.amount,
-				bottomRelatedArticlesAmount = viewVariables.view.relatedArticles.bottom.amount,
-				totalRelatedArticles = sidebarRelatedArticlesAmount + prevAndNextRelatedArticlesAmount + bottomRelatedArticlesAmount; 
-		%>
+			ajaxGet('/article/random/<%= totalRelatedArticles %>', {}, function (articles) {
+				removeElementInList(articles, 'id', <%= articleId %>);
+				document.getElementById('sidebar').innerHTML = getSidebarHtml(articles.splice(0, <%= sidebarRelatedArticlesAmount %>));
+				document.getElementById('prev-and-next-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= prevAndNextRelatedArticlesAmount %>));
+				document.getElementById('bottom-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= bottomRelatedArticlesAmount %>));
+			});
+		}
+		
+	}
+	
 
-		ajaxGet('/article/random/<%= totalRelatedArticles %>', {}, function (articles) {
-			removeElementInList(articles, 'id', <%= articleId %>);
-			document.getElementById('sidebar').innerHTML = getSidebarHtml(articles.splice(0, <%= sidebarRelatedArticlesAmount %>));
-			document.getElementById('prev-and-next-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= prevAndNextRelatedArticlesAmount %>));
-			document.getElementById('bottom-related-articles').innerHTML = getSidebarHtml(articles.splice(0, <%= bottomRelatedArticlesAmount %>));
-		});
 
-	}, 0);
 
 </script>
