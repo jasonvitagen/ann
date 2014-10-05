@@ -1,4 +1,4 @@
-var webFrontIndexConfig = require('../config/webFront/index');
+var webFrontIndexConfig = require('../config/webfront/index');
 var articleConfig = require('../config/webfront/article');
 
 
