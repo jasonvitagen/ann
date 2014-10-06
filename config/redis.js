@@ -4,7 +4,8 @@ var entityNames = {
 	user : 'user',
 	users : 'users',
 	category : 'category',
-	categories : 'categories'
+	categories : 'categories',
+	pendingConfirmation : 'pendingConfirmation'
 }
 
 module.exports = {
@@ -39,6 +40,13 @@ module.exports = {
 			articles : {
 				getId : function (name) {
 					return entityNames.category + ':' + name + ':' + entityNames.articles;
+				}
+			}
+		},
+		pending : {
+			pendingConfirmation : {
+				zset : {
+					articles : entityNames.pendingConfirmation + ':' + entityNames.articles + ':' + 'all' + ':' + 'zset'
 				}
 			}
 		}

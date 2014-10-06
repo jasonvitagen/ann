@@ -31,7 +31,11 @@ function Article (articleData) {
 Article.getArticleById = function (id, callback) {
 	id = config.keyNames.article.getId(id);
 	client.hgetall(id, function (err, response) {
-		callback(response);
+		if (err) {
+			callback(err);
+		} else {
+			callback(null, response);
+		}
 	});
 	client.hincrby(id, 'views', 1);
 }
@@ -70,7 +74,169 @@ Article.getAllArticles = function (number, size, callback) {
 	});
 }
 
-Article.prototype.save = function (user) {
+Article.getAllPendingConfirmationArticles = function (number, size, callback) {
+	var pendingConfirmationArticlesId = config.keyNames.pending.pendingConfirmation.zset.articles;
+	var startIndex = number * size;
+	var endIndex = startIndex + size - 1;
+	client.zrange([pendingConfirmationArticlesId, startIndex, endIndex], function (err, idList) {
+		Article.getArticlesByIdList(idList, function (articles) {
+			callback(articles);
+		});
+	});
+}
+
+Article.prototype.saveForPendingConfirmation = function (user, callback) {
+	client.incr(config.keyNames.global.article.key, function (err, reply) {
+
+		var articleId = config.keyNames.article.getId(reply);
+		article.id = reply;
+
+		function saveArticleToArticleId (done) {
+			client.hmset(articleId, article, function (err, response) {
+				if (err) { done(err); }
+				else { console.log('article saved'); done(); }
+			});
+		}
+
+		function saveArticleIdToPendingConfirmationArticlesInZset (done) {
+			var pendingConfirmationArticlesInZsetId = config.keyNames.pending.pendingConfirmation.zset.articles;
+			console.log(pendingConfirmationArticlesInZsetId);
+			client.zadd([pendingConfirmationArticlesInZsetId, new Date().getTime(), articleId], function (err, response) {
+				if (err) { done(err); }
+				else { done(); }
+			});
+		}
+
+		function asyncStoreProcedures (done) {
+			async.parallel([saveArticleIdToPendingConfirmationArticlesInZset], function (err, results) {
+				if (err) {
+					console.log(err);
+					done(err);
+				} else {
+					console.log('save pending article async store procedures success');
+					done();
+				}
+			});
+		}
+
+		async.series([saveArticleToArticleId, asyncStoreProcedures], function (err, results) {
+			article = {};
+			if (err) {
+				console.log(err);
+				return callback(err);
+			} else {
+				console.log('save article to pending confirmation success');
+				return callback();
+			}
+		});
+
+	});
+}
+
+Article.confirmArticle = function (rawArticleId, callback) {
+
+	var pendingConfirmationArticlesInZsetId = config.keyNames.pending.pendingConfirmation.zset.articles;
+	var	article;
+
+	articleId = config.keyNames.article.getId(rawArticleId);
+
+	function checkIsArticleIdAvailableInPendingArticlesZset (done) {
+		client.zrank([pendingConfirmationArticlesInZsetId, articleId], function (err, response) {
+			if (err) {
+				done(err);
+			} else {
+				if (response == null) {
+					console.log('is null');
+					done('article does not exist');
+				} else {
+					done();
+				}
+			}
+		});
+	}
+
+	function getArticle (done) {
+		Article.getArticleById(rawArticleId, function (err, response) {
+			if (err) {
+				done(err);
+			} else {
+				if (response == null) {
+					done('no article exists');
+				} else {
+					article = response;
+					done();
+				}
+			}
+		});
+	}
+
+	// Store Procedures
+	function saveArticleIdToUserArticles (done) {
+		var userArticlesId = config.keyNames.user.articles.getId(article.authorEmail);
+		client.zadd([userArticlesId, new Date().getTime(), articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(); }
+		});
+	}
+
+	function saveArticleIdToArticlesInList (done) {
+		var articlesInListId = config.keyNames.articles.list.key;
+		client.lpush([articlesInListId, articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(); }
+		});
+	}
+
+	function saveArticleIdToArticlesInSet (done) {
+		var articlesInSetId = config.keyNames.articles.set.key;
+		client.sadd([articlesInSetId, articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(); }
+		});
+	}
+
+	function saveArticleIdToCategoryArticles (done) {
+		var categoryArticlesId = config.keyNames.category.articles.getId(article.category);
+		client.zadd([categoryArticlesId, new Date().getTime(), articleId], function (err, response) {
+			if (err) { done(err); }
+			else { done(); }
+		});
+	}
+
+	function asyncStoreProcedures (done) {
+		async.parallel([saveArticleIdToUserArticles, saveArticleIdToArticlesInList, saveArticleIdToArticlesInSet, saveArticleIdToCategoryArticles], function (err, results) {
+			if (err) {
+				console.log(err);
+				done(err);
+			} else {
+				done();
+			}
+		});
+	}
+
+	function deleteArticleIdFromPendingArticlesZset (done) {
+	 client.zrem([pendingConfirmationArticlesInZsetId, articleId], function (err, response) {
+	 	if (err) {
+	 		done(err);
+	 	} else {
+	 		done();
+	 	}
+	 });
+	}
+
+
+
+	async.series([checkIsArticleIdAvailableInPendingArticlesZset, getArticle, asyncStoreProcedures, deleteArticleIdFromPendingArticlesZset], function (err, results) {
+		if (err) {
+			return callback(err);
+		} else {
+			return callback();
+		}
+	});
+
+}
+
+Article.prototype.save = function (user, callback) {
 	client.incr(config.keyNames.global.article.key, function (err, reply) {
 		
 		var articleId = config.keyNames.article.getId(reply);
@@ -131,12 +297,14 @@ Article.prototype.save = function (user) {
 		}
 
 		async.series([saveArticleToArticleId, asyncStoreProcedures], function (err, results) {
+			article = {};
 			if (err) {
 				console.log(err);
+				return callback(err);
 			} else {
 				console.log('save article success');
+				return callback();
 			}
-			article = {};
 		});
 
 	});

@@ -23,8 +23,25 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 		content   : req.body.content,
 		user      : req.user
 	});
-	article.save(req.user);
-	res.redirect('/');
+	if (req.user.role == 'admin') {
+		article.save(req.user, function (err) {
+			if (err) {
+				req.flash('message', 'There is a problem in creating your article');
+			} else {
+				req.flash('message', 'Your article has been created successfully');
+			}
+			res.redirect('/');
+		});
+	} else {
+		article.saveForPendingConfirmation(req.user, function (err) {
+			if (err) {
+				req.flash('message', 'There is a problem in creating your article');
+			} else {
+				req.flash('message', 'Your article has been created for confirmation');
+			}
+			res.redirect('/');	
+		});
+	}
 });
  
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
@@ -41,14 +58,17 @@ router.get('/random/:number?', function (req, res) {
 });
 
 router.get('/:articleId/:title?', function (req, res) {
-	Article.getArticleById(req.params.articleId, function (article) {
+	Article.getArticleById(req.params.articleId, function (err, article) {
+		if (err) {
+			return res.redirect('/');
+		}
 		if (article) {
 			res.locals.pageUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 			res.locals.facebookShare = true;
 			res.locals.articleId = article.id;
 			res.locals.pageTitle = article.title;
 			res.locals.pageThumbnail = article.thumbnail;
-			res.locals.pageDescription = article.title;
+			res.locals.pageDescription = '';
 		}
 		res.render('article/view', { 
 			article : article

@@ -9,7 +9,7 @@ router.get('/:categoryId/:categoryId2?', function (req, res) {
 	var param2 = req.params.categoryId2 && category.categoriesCN[req.params.categoryId2] && ':' + category.categoriesCN[req.params.categoryId2] || '';
 	var categoryId = param1 + param2;
 
-	category.Category.getArticlesByCategory(categoryId, 0, 10, function (articles) {
+	category.Category.getArticlesByCategory(categoryId, 0, 20, function (articles) {
 		res.render('category/articles', {
 			articles : articles
 		});

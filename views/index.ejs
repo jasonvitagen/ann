@@ -1,7 +1,9 @@
 <% include layouts/header.ejs %>
 
 <div id="article-list" class="grid no-gutters">
-	<% articles.forEach(function (article) { %>
+	<% articles.forEach(function (article) {
+		if (article) {
+	%>
 		<div class="unit w-1-3">
 			<div class="item">
 				<div class="thumbnail">
@@ -28,7 +30,7 @@
 				<div class="clear"></div>
 			</div>
 		</div>
-	<% }) %>
+	<% }}) %>
 </div>
 
 <script>

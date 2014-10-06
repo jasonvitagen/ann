@@ -9,6 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var categoryRoutes = require('./routes/category');
 var articleRoutes = require('./routes/article');
+var adminRoutes = require('./routes/admin');
 
 // require ejs dependencies
 var engine = require('ejs').__express;
@@ -73,6 +74,8 @@ app.use('/auth', authRoutes);
 app.use('/category', categoryRoutes);
 // setup article route
 app.use('/article', articleRoutes);
+// setup admin route
+app.use('/admin', adminRoutes);
 
 
 

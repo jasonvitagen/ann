@@ -21,32 +21,34 @@
 		html += '<ul class="ul-reset">';
 		for (var i = 0; i < articles.length; i++) {
 			var article = articles[i];
-			html += '<li class="bottom-margin-16">' +
-						'<div class="item">' +
-						 	'<div class="thumbnail">' +
-						 		'<a href="/article/' +
-						 			article.id +
-						 			'/' +
-						 			article.title +
-						 		'">' +
-						 			'<img src="' +
-						 				article.thumbnail +
-						 			'" alt="">' +
-						 			'</a>' +
-						 	'</div>' +
-						 	'<div class="item-title">' +
-						 		'<a href="/article/' +
-						 			article.id +
-						 			'/' +
-						 			article.title +
-						 		'">' +
-						 			'<h2>' +
-						 				article.title +
-						 			'</h2>' +
-						 		'</a>' +
-						 	'</div>' +
-						'</div>' +
-					'</li>';
+			if (article) {
+				html += '<li class="bottom-margin-16">' +
+							'<div class="item">' +
+							 	'<div class="thumbnail">' +
+							 		'<a href="/article/' +
+							 			article.id +
+							 			'/' +
+							 			article.title +
+							 		'">' +
+							 			'<img src="' +
+							 				article.thumbnail +
+							 			'" alt="">' +
+							 			'</a>' +
+							 	'</div>' +
+							 	'<div class="item-title">' +
+							 		'<a href="/article/' +
+							 			article.id +
+							 			'/' +
+							 			article.title +
+							 		'">' +
+							 			'<h2>' +
+							 				article.title +
+							 			'</h2>' +
+							 		'</a>' +
+							 	'</div>' +
+							'</div>' +
+						'</li>';	
+			}
 		}
 		html += '</ul>';
 		return html;
@@ -56,42 +58,44 @@
 		var html = '';
 		for (var i = 0; i < articles.length; i++) {
 			var article = articles[i];
-			html += '<div class="unit w-1-3">' +
-						'<div class="item">' +
-							'<div class="thumbnail">' +
-								'<a href="/article/' +
-									article.id +
-									'/' +
-									article.title +
-								'">' +
-									'<img src="' +
-										article.thumbnail +
-									'" alt="">' +
-								'</a>' +
-							'</div>' +
-							'<div class="item-title">' +
-								'<a href="/article/' +
-									article.id + 
-									'/' + 
-									article.title +
-								'">' +
-									'<h2>' +
+			if (article) {
+				html += '<div class="unit w-1-3">' +
+							'<div class="item">' +
+								'<div class="thumbnail">' +
+									'<a href="/article/' +
+										article.id +
+										'/' +
 										article.title +
-									'</h2>' +
-								'</a>' +
+									'">' +
+										'<img src="' +
+											article.thumbnail +
+										'" alt="">' +
+									'</a>' +
+								'</div>' +
+								'<div class="item-title">' +
+									'<a href="/article/' +
+										article.id + 
+										'/' + 
+										article.title +
+									'">' +
+										'<h2>' +
+											article.title +
+										'</h2>' +
+									'</a>' +
+								'</div>' +
+								'<div class="item-tags">' +
+								'</div>' +
+								'<div class="item-date">' +
+									article.createdShort +
+								'</div>' +
+								'<div class="clear"></div>' +
+								'<div>' +
+									article.views +
+								'</div>' +
+								'<div class="clear"></div>' +
 							'</div>' +
-							'<div class="item-tags">' +
-							'</div>' +
-							'<div class="item-date">' +
-								article.createdShort +
-							'</div>' +
-							'<div class="clear"></div>' +
-							'<div>' +
-								article.views +
-							'</div>' +
-							'<div class="clear"></div>' +
-						'</div>' +
-					'</div>';
+						'</div>';
+			}
 		}
 		return html;
 	}
@@ -115,9 +119,11 @@
 	function removeElementInList (list, property, condition) {
 		for (var i = 0; i < list.length; i++) {
 			var element = list[i];
-			if (element[property] == condition) {
-				list.splice(i, 1);
-				break;
+			if (element) {
+				if (element[property] == condition) {
+					list.splice(i, 1);
+					break;
+				}
 			}
 		}
 	}
