@@ -55,7 +55,7 @@ Article.getArticlesByIdList = function (idList, callback) {
 Article.getUserArticles = function (user, number, size, callback) {
 	var userArticlesId = config.keyNames.user.articles.getId(user.facebook.email || user.google.email || user.local.email);
 	var startIndex = number * size;
-	var endIndex = startIndex + size;
+	var endIndex = startIndex + size - 1;
 	client.zrange([userArticlesId, startIndex, endIndex], function (err, idList) {
 		Article.getArticlesByIdList(idList, function (articles) {
 			callback(articles);

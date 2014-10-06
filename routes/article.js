@@ -3,6 +3,8 @@ var router = express.Router();
 var Article = require('../models/redis/Article').Article;
 var authMiddlewares = require('./middlewares/auth');
 var Category = require('../models/redis/Category');
+var webFrontIndexConfig = require('../config/webfront/index');
+
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
 	res.render('article/create', { message : req.flash('message'), categories : Category.categories, categoriesCN : Category.categoriesCN, formBody : req.body });
@@ -45,8 +47,14 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 });
  
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
-	Article.getUserArticles(req.user, 0, 100, function (articles) {
+	Article.getUserArticles(req.user, 0, webFrontIndexConfig.articlesSize, function (articles) {
 		res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
+	});
+});
+
+router.get('/my-articles/more/:number', authMiddlewares.isLoggedIn, function (req, res) {
+	Article.getUserArticles(req.user, req.params.number, webFrontIndexConfig.articlesSize, function (articles) {
+		res.json(articles);
 	});
 });
 
