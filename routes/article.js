@@ -42,12 +42,14 @@ router.get('/random/:number?', function (req, res) {
 
 router.get('/:articleId/:title?', function (req, res) {
 	Article.getArticleById(req.params.articleId, function (article) {
-		res.locals.pageUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-		res.locals.facebookShare = true;
-		res.locals.articleId = article.id;
-		res.locals.pageTitle = article.title;
-		res.locals.pageThumbnail = article.thumbnail;
-		res.locals.pageDescription = article.title;
+		if (article) {
+			res.locals.pageUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+			res.locals.facebookShare = true;
+			res.locals.articleId = article.id;
+			res.locals.pageTitle = article.title;
+			res.locals.pageThumbnail = article.thumbnail;
+			res.locals.pageDescription = article.title;
+		}
 		res.render('article/view', { 
 			article : article
 		});

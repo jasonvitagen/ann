@@ -22,7 +22,7 @@
 		for (var i = 0; i < articles.length; i++) {
 			var article = articles[i];
 			html += '<li class="bottom-margin-16">' +
-						'<div class="item"' +
+						'<div class="item">' +
 						 	'<div class="thumbnail">' +
 						 		'<a href="/article/' +
 						 			article.id +

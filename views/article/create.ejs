@@ -8,54 +8,56 @@
 			<label for="thumbnail">Thumbnail</label><br>
 			<input type="text" name="thumbnail" id="thumbnail" value="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>"><br><br>
 			<label for="category">Category</label><br>
-			<select name="category" id="category">
-				<%
-					function getCategoryRecursively (categories, parentKey, selectedCategory) {
-						console.log(selectedCategory);
-						for (categoryKey in categories) {
-							if (categories[categoryKey] == null) {
-								var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
+			<div class="select">
+				<select name="category" id="category">
+					<%
+						function getCategoryRecursively (categories, parentKey, selectedCategory) {
+							console.log(selectedCategory);
+							for (categoryKey in categories) {
+								if (categories[categoryKey] == null) {
+									var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
 
-				%>
-								<option value="<%= optionValue %>"
-				<%
-									if (selectedCategory == optionValue) {
-				%>
-										selected
-				<%
-									}
-				%>
-								>
-									<%= categoryKey %>
-								</option>
-				<%
-							} else if (typeof categories[categoryKey] == "object") {
-								var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
-				%>
-								<option value="<%= optionValue %>"
-				<%
-									if (selectedCategory == optionValue) {
-				%>
-										selected
-				<%
-									}
-				%>
-								>
-									<%= categoryKey %>
-								</option>
-				<%
-								getCategoryRecursively(categories[categoryKey], categoryKey, selectedCategory);
+					%>
+									<option value="<%= optionValue %>"
+					<%
+										if (selectedCategory == optionValue) {
+					%>
+											selected
+					<%
+										}
+					%>
+									>
+										<%= categoryKey %>
+									</option>
+					<%
+								} else if (typeof categories[categoryKey] == "object") {
+									var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
+					%>
+									<option value="<%= optionValue %>"
+					<%
+										if (selectedCategory == optionValue) {
+					%>
+											selected
+					<%
+										}
+					%>
+									>
+										<%= categoryKey %>
+									</option>
+					<%
+									getCategoryRecursively(categories[categoryKey], categoryKey, selectedCategory);
+								}
 							}
 						}
-					}
-					getCategoryRecursively(categories, null, formBody.category || '');
-				%>
-			</select>
+						getCategoryRecursively(categories, null, formBody.category || '');
+					%>
+				</select>
+			</div>
 			<br><br>
 			<label for="content" class="margin-bottom-16">Content</label><br><br>
 			<textarea name="content" id="content" class="editable" cols="30" rows="10"></textarea>
 			<br>
-			<input type="submit" value="Create">
+			<input type="submit" value="Create" class="button">
 		</form>
 	</div>
 </div>
