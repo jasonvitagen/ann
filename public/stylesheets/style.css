@@ -144,8 +144,8 @@ h2 {
 .item { }
 .item h2 { margin: 8px 0 8px 0; font-weight: normal }
 .item a { color: #555; }
-.item .thumbnail { height: 160px; max-height: 160px; }
-.item img { width: 100%; height: 100%; }
+.item .thumbnail { height: 160px; max-height: 160px; overflow: hidden; }
+.item img { width: 100%; }
 .item-title { max-height: 58px; min-height: 58px; overflow: hidden; }
 .item-tags { float: left; }
 .item-date { float: left; }
