@@ -45,10 +45,14 @@ Article.getArticlesByIdList = function (idList, callback) {
 	async.each(idList, function (id, done) {
 		client.hgetall(id, function (err, response) {
 			articles.push(response);
-			done();
+			done(err);
 		});
 	}, function (err) {
-		callback(articles);
+		if (err) {
+			callback(err);
+		} else {
+			callback(null, articles);
+		}
 	});
 }
 
@@ -57,7 +61,7 @@ Article.getUserArticles = function (user, number, size, callback) {
 	var startIndex = number * size;
 	var endIndex = startIndex + size - 1;
 	client.zrange([userArticlesId, startIndex, endIndex], function (err, idList) {
-		Article.getArticlesByIdList(idList, function (articles) {
+		Article.getArticlesByIdList(idList, function (err, articles) {
 			callback(articles);
 		});
 	});
@@ -68,7 +72,7 @@ Article.getAllArticles = function (number, size, callback) {
 	var startIndex = number * size;
 	var endIndex = startIndex + size - 1;
 	client.lrange([articlesId, startIndex, endIndex], function (err, idList) {
-		Article.getArticlesByIdList(idList, function (articles) {
+		Article.getArticlesByIdList(idList, function (err, articles) {
 			callback(articles);
 		});
 	});
@@ -79,7 +83,7 @@ Article.getAllPendingConfirmationArticles = function (number, size, callback) {
 	var startIndex = number * size;
 	var endIndex = startIndex + size - 1;
 	client.zrange([pendingConfirmationArticlesId, startIndex, endIndex], function (err, idList) {
-		Article.getArticlesByIdList(idList, function (articles) {
+		Article.getArticlesByIdList(idList, function (err, articles) {
 			callback(articles);
 		});
 	});
@@ -100,7 +104,6 @@ Article.prototype.saveForPendingConfirmation = function (user, callback) {
 
 		function saveArticleIdToPendingConfirmationArticlesInZset (done) {
 			var pendingConfirmationArticlesInZsetId = config.keyNames.pending.pendingConfirmation.zset.articles;
-			console.log(pendingConfirmationArticlesInZsetId);
 			client.zadd([pendingConfirmationArticlesInZsetId, new Date().getTime(), articleId], function (err, response) {
 				if (err) { done(err); }
 				else { done(); }
@@ -390,10 +393,14 @@ Article.isUserHasArticle = function (user, articleId, callback) {
 
 Article.getRandomArticles = function (number, callback) {
 	var articlesInSetId = config.keyNames.articles.set.key;
-	client.srandmember([articlesInSetId, number + 1], function (err, articlesId) {
-		Article.getArticlesByIdList(articlesId, function (articles) {
-			callback(articles);
-		});
+	client.srandmember([articlesInSetId, number], function (err, articlesId) {
+		if (err) {
+			callback(err);
+		} else {
+			Article.getArticlesByIdList(articlesId, function (err, articles) {
+				callback(null, articles);
+			});
+		}
 	});
 }
 

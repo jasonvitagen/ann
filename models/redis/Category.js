@@ -78,8 +78,12 @@ Category.getArticlesByCategory = function (categoryId, number, size, callback) {
 	var startIndex = number * size;
 	var endIndex = startIndex + size - 1;
 	client.zrange([categoryArticlesId, startIndex, endIndex], function (err, idList) {
-		Article.getArticlesByIdList(idList, function (articles) {
-			callback(articles);
+		Article.getArticlesByIdList(idList, function (err, articles) {
+			if (err) {
+				callback(err);
+			} else {
+				callback(null, articles);
+			}
 		});
 	});
 }

@@ -124,7 +124,12 @@ select:focus {
 .margin-left-16 { margin: 0 0 0 16px; }
 
 /* Logo */
-#logo { font-size: 45px; }
+.logo {
+	margin: 0 -.5em;
+	padding: 0 .5em;
+	font-size: 45px;
+	font-weight: bold;
+}
 
 
 /* Strap Line */
@@ -138,19 +143,6 @@ select:focus {
 	box-shadow: inset 0 -1px rgba(255,255,255,0.05),0 1px rgba(0,0,0,0.05);
 }
 
-#strapline a {
-	text-decoration: none;
-	font-size: 11.5px;
-	padding: 6px;
-	color: #fff;
-}
-
-#strapline a:hover {
-	text-decoration: none;
-	background: rgba(255,255,255,0.2);
-	border-radius: 5px;
-}
-
 .auth-links {
 	margin: 0;
 	padding: 0;
@@ -161,6 +153,18 @@ select:focus {
 #auth-links {
 	margin: 4px 0 0 0;
 	padding: 0;
+}
+
+#auth-links a {
+	text-decoration: none;
+	font-size: 11.5px;
+	padding: 6px;
+	color: #fff;
+}
+#auth-links a:hover {
+	text-decoration: none;
+	background: rgba(255,255,255,0.2);
+	border-radius: 5px;
 }
 
 #auth-links li {
@@ -184,7 +188,7 @@ select:focus {
 	box-shadow: inset 0 -1px rgba(255,255,255,0.05),0 1px rgba(0,0,0,0.05);
 }
 #auth-links li ul a {
-	color: black;
+	color: #fff;
 	line-height: 35px;
 }
 

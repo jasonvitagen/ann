@@ -60,7 +60,7 @@ router.get('/my-articles/more/:number', authMiddlewares.isLoggedIn, function (re
 
 router.get('/random/:number?', function (req, res) {
 	var number = req.params.number || 5;
-	Article.getRandomArticles(number, function (articles) {
+	Article.getRandomArticles(number, function (err, articles) {
 		res.json(articles);
 	});
 });
