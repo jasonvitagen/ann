@@ -14,6 +14,10 @@ module.exports = {
 			}
 		}
 
+	},
+
+	save : {
+		maxArticleContentLength : 2000
 	}
 
 

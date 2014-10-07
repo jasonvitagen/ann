@@ -4,10 +4,16 @@
 <div class="grid" id="article-view">
 	<div class="unit golden-large">
 		<h1><%= article.title %></h1>
-		<%= article.createdShort || '' %>
+		刊登日期： <%= article.createdShort || '' %>
 		<br>
 		<br>
 		<%= article.authorName %>
+		<br>
+		<br>
+		<a href="/category/<%= article.categoryUrl %>"><%= article.categoryName %></a>
+		<br>
+		<br>
+		<div class="fb-share-button" data-href="<%= pageUrl %>"></div>
 		<br>
 		<br>
 		<%- article.content %>

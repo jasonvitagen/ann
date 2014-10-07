@@ -2,6 +2,8 @@ var config = require('../../config/redis');
 var moment = require('moment');
 var async = require('async');
 var sanitizer = require('./articleSanitizer');
+var category = require('../../config/webfront/categories');
+
 
 var client = null;
 
@@ -20,6 +22,20 @@ function Article (articleData) {
 	article.title = articleData.title;
 	article.thumbnail = articleData.thumbnail;
 	article.category = articleData.category;
+	article.categoryName = (function () {
+		var lastCategory = articleData.category.split(':');
+		var categoryName = category.categoriesEN[lastCategory[lastCategory.length - 1]];
+		return categoryName;
+	})();
+	article.categoryUrl = (function (categoryId) {
+		var categories = categoryId.split(':');
+		var url = '';
+		for (var i = 0; i < categories.length; i++) {
+			var c = category.categoriesEN[categories[i]];
+			url += c + '/';
+		}
+		return url;
+	})(articleData.category);
 	article.content = articleData.content;
 	article.created = new Date();
 	article.createdShort = moment().format('D-M-YYYY');
