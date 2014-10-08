@@ -1,14 +1,14 @@
 module.exports = {
 
 	facebookAuth: {
-		clientID     : '1377222465898438',
-		clientSecret : 'eab793cc5c27fd9355ef401932b6c4e5',
+		clientID     : '360743747418295',
+		clientSecret : 'c2ad59bc947e8591989360de6fecc6f2',
 		callbackURL  : 'http://mobile360.net/auth/facebook/callback'
 	},
 	
 	googleAuth: {
-		clientID     : '590029598018-vp9i426v1n8safvic32bdbkk03b9s4md.apps.googleusercontent.com',
-		clientSecret : 'saOzer8OmPvjUGBmUZjeBAf8',
+		clientID     : '636394376141-f689jkrrtq3f3ce9lspp5hokm69cl2sm.apps.googleusercontent.com',
+		clientSecret : 'vDWcB-RsiEc-ZY1znLTzjSBW',
 		callbackURL  : 'http://mobile360.net/auth/google/callback'
 	},
 
