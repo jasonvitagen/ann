@@ -17,6 +17,11 @@ h2 {
 	line-height: 24px;
 }
 
+h1 {
+	font-size: 36px;
+	font-weight: normal;
+}
+
 .horizontal-list li {
 	display: inline-block;
 }
@@ -115,7 +120,21 @@ select:focus {
 	box-sizing: border-box;
 }
 	
-
+.category-badge {
+	color: #fff;
+	background-color: #3bafda;
+	border-color: #3bafda;
+	display: inline;
+	padding: .2em .6em .3em;
+	font-size: 90%;
+	font-weight: 700;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25em;
+}
 
 /* Margin */
 .bottom-margin-8 { margin: 0 0 8px 0; }
