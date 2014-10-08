@@ -1,6 +1,6 @@
 module.exports = {
 
-	siteName : '',
+	siteName : 'Mobile360 趣味新闻',
 
 	articlesSize : 9,
 
