@@ -315,6 +315,8 @@ select:focus {
 
 /* Article - Styling */
 #article-view h2 { margin: 0; }
+.article-view-date { font-size: 12px; }
+
 
 @media screen and (max-width: 569px) {
 	#article-view .item .thumbnail { max-height: 160px; min-height: initial; }
