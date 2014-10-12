@@ -290,7 +290,7 @@ select:focus {
 .item h2 { margin: 8px 0 8px 0; font-weight: normal }
 .item a { color: #555; }
 .item .thumbnail {  max-height: 160px; overflow: hidden; }
-.item img { width: 100%; }
+.item img { width: 100%; height: auto !important; }
 .item-title { max-height: 58px; min-height: 58px; overflow: hidden; }
 .item-tags { float: left; }
 .item-date { float: left; }
