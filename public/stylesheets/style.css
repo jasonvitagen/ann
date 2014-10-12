@@ -290,7 +290,7 @@ select:focus {
 .item h2 { margin: 8px 0 8px 0; font-weight: normal }
 .item a { color: #555; }
 .item .thumbnail {  max-height: 160px; overflow: hidden; }
-.item img { width: 100%; height: auto !important; }
+.item img { width: 100%; }
 .item-title { max-height: 58px; min-height: 58px; overflow: hidden; }
 .item-tags { float: left; }
 .item-date { float: left; }
@@ -315,8 +315,8 @@ select:focus {
 
 /* Article - Styling */
 #article-view h2 { margin: 0; }
+#article-view img { height: auto !important; }
 .article-view-date { font-size: 12px; }
-
 
 @media screen and (max-width: 569px) {
 	#article-view .item .thumbnail { max-height: 160px; min-height: initial; }
