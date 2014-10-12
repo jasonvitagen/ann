@@ -54,7 +54,7 @@
 					ajaxGet('/article/my-articles/more/' + number, {}, function (articles) {
 						if (articles.length > 0) {
 							number++;
-							var moreHtml = getMoreIndexHtml(articles);
+							var moreHtml = getMoreMyArticlesIndexHtml(articles);
 							appendMoreIndexHtml(document.getElementById('article-list'), moreHtml);
 
 							setTimeout(function () {

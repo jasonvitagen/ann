@@ -100,6 +100,64 @@
 		return html;
 	}
 
+	function getMoreMyArticlesIndexHtml (articles) {
+		var html = '';
+		for (var i = 0; i < articles.length; i++) {
+			var article = articles[i];
+			if (article) {
+				html += '<div class="unit w-1-3">' +
+							'<div class="item">' +
+								'<div class="thumbnail">' +
+									'<a href="/article/' +
+										article.id +
+										'/' +
+										article.title +
+									'">' +
+										'<img src="' +
+											article.thumbnail +
+										'" alt="">' +
+									'</a>' +
+								'</div>' +
+								'<div class="item-title">' +
+									'<a href="/article/' +
+										article.id + 
+										'/' + 
+										article.title +
+									'">' +
+										'<h2>' +
+											article.title +
+										'</h2>' +
+									'</a>' +
+								'</div>' +
+								'<div class="item-tags">' +
+								'</div>' +
+								'<div class="item-date">' +
+									article.createdShort +
+								'</div>' +
+								'<div>' +
+									'<form method="post" action="delete">' +
+										'<input type="hidden" name="articleId" value="' +
+											article.id +
+										'">' +
+										'<input type="hidden" name="articleCategory" value="' +
+											article.category +
+										'">' +
+										'<button type="submit">Delete</button>' +
+									'</form>' +
+								'</div>' +
+								'<div class="clear"></div>' +
+								'<div>' +
+									article.views +
+								'</div>' +
+								'<div class="clear"></div>' +
+							'</div>' +
+						'</div>';
+			}
+		}
+		return html;
+	}
+
+
 	function appendMoreIndexHtml (containerElement, moreIndexHtml) {
 		var frag = document.createDocumentFragment();
 		var p = document.createElement('p');
@@ -143,6 +201,7 @@
 	window.registerScrollTopListener = registerScrollTopListener;
 	window.getMoreIndexHtml = getMoreIndexHtml;
 	window.appendMoreIndexHtml = appendMoreIndexHtml;
+	window.getMoreMyArticlesIndexHtml = getMoreMyArticlesIndexHtml;
 	
 
 })();
