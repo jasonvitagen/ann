@@ -1,13 +1,14 @@
-var express = require('express');
-var router = express.Router();
-var Article = require('../models/redis/Article').Article;
+var express  = require('express');
+var router   = express.Router();
+var Article  = require('../models/redis/Article').Article;
+var category = require('../config/webfront/categories2');
+var mongoConfig = require('../config/mongo');
 var authMiddlewares = require('./middlewares/auth');
-var category = require('../config/webfront/categories');
 var webFrontIndexConfig = require('../config/webfront/index');
 
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
-	res.render('article/create', { message : req.flash('message'), categories : category.categories, categoriesCN : category.categoriesCN, formBody : req.body });
+	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 });
 
 router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
@@ -15,7 +16,7 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 		!req.body.thumbnail ||
 		!req.body.content) {
 		req.flash('message', 'Fields cannot be blank');
-		res.render('article/create', { message : req.flash('message'), categories : category.categories, categoriesCN : category.categoriesCN, formBody : req.body });
+		res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 		return;
 	}
 	var article = new Article({

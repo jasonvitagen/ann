@@ -49,6 +49,7 @@ var authRoutes = require('./routes/auth.js')(passport);
 // setup webfront variables
 require('./setup/webFront.js')(app);;
 
+require('./helpers/categoriesTranslator').translate('dancing');
 
 app.use(favicon());
 app.use(logger('dev'));

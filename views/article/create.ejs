@@ -12,10 +12,9 @@
 				<select name="category" id="category">
 					<%
 						function getCategoryRecursively (categories, parentKey, selectedCategory) {
-							console.log(selectedCategory);
 							for (categoryKey in categories) {
 								if (categories[categoryKey] == null) {
-									var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
+									var optionValue = parentKey != null && parentKey + mongoConfig.categoriesHierarchyDelimiter + categoryKey || categoryKey;
 
 					%>
 									<option value="<%= optionValue %>"
@@ -27,11 +26,11 @@
 										}
 					%>
 									>
-										<%= categoryKey %>
+										<%= categoriesTranslator.translate(categoryKey) %>
 									</option>
 					<%
 								} else if (typeof categories[categoryKey] == "object") {
-									var optionValue = parentKey != null && categoriesCN[parentKey] + ':' + categoriesCN[categoryKey] || categoriesCN[categoryKey];
+									var optionValue = parentKey != null && parentKey + mongoConfig.categoriesHierarchyDelimiter + categoryKey || categoryKey;
 					%>
 									<option value="<%= optionValue %>"
 					<%
@@ -42,14 +41,14 @@
 										}
 					%>
 									>
-										<%= categoryKey %>
+										<%= categoriesTranslator.translate(categoryKey) %>
 									</option>
 					<%
 									getCategoryRecursively(categories[categoryKey], categoryKey, selectedCategory);
 								}
 							}
 						}
-						getCategoryRecursively(categories, null, formBody.category || '');
+						getCategoryRecursively(categoriesStructure, null, formBody.category || '');
 					%>
 				</select>
 			</div>
