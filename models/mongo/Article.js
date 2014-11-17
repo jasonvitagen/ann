@@ -17,25 +17,35 @@ var articleSchema = mongoose.Schema({
 		default : moment().format(webfrontArticleConfig.view.beautifiedCreatedDateTimeFormat) 
 	},
 	authorName  : {
-		type : String
+		type : String,
+		required : webfrontArticleConfig.save.validationMessages.articleAuthorNameRequiredMsg
 	},
-	authorEmail : String,
+	authorEmail : {
+		type : String,
+		required : webfrontArticleConfig.save.validationMessages.articleAuthorEmailRequiredMsg
+	},
 	title : {
 		type     : String,
+		required : webfrontArticleConfig.save.validationMessages.articleTitleRequiredMsg,
 		validate : [
 			{ validator : mongoConfig.validators.maxLength(webfrontArticleConfig.save.articleTitleAllowedLength), msg : webfrontArticleConfig.save.articleTitleLengthExceedsMsg }
 		]
 	},
 	thumbnail : {
 		type     : String,
+		required : webfrontArticleConfig.save.validationMessages.articleThumbnailRequiredMsg,
 		validate : [
 			{ validator : mongoConfig.validators.maxLength(webfrontArticleConfig.save.articleThumbnailAllowedLength), msg : webfrontArticleConfig.save.articleThumbnailLengthExceeds }
 		]
 	},
-	category : String,
+	category : {
+		type : String,
+		required : webfrontArticleConfig.save.validationMessages.articleCategoryRequiredMsg
+	},
 	categoryUrl : String,
 	content : {
 		type     : String,
+		required : webfrontArticleConfig.save.validationMessages.articleContentRequiredMsg,
 		validate : [
 			{ validator : mongoConfig.validators.maxLength(webfrontArticleConfig.save.articleContentAllowedLength), msg : webfrontArticleConfig.save.articleContentLengthExceeds }
 		]

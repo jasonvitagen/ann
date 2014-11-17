@@ -1,50 +1,19 @@
-var express  = require('express');
-var router   = express.Router();
-var Article  = require('../models/redis/Article').Article;
-var category = require('../config/webfront/categories2');
-var mongoConfig = require('../config/mongo');
-var authMiddlewares = require('./middlewares/auth');
-var webFrontIndexConfig = require('../config/webfront/index');
+var express  = require('express')
+	, router   = express.Router()
+	, Article  = require('../models/redis/Article').Article
+	, category = require('../config/webfront/categories2')
+	, mongoConfig = require('../config/mongo')
+	, authMiddlewares = require('./middlewares/auth')
+	, webFrontIndexConfig = require('../config/webfront/index')
+	, articleRoutesBehaviors = require('./articleRoutesBehaviors');
 
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
-	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
+	articleRoutesBehaviors.get.create.v1(req, res);
 });
 
 router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
-	if (!req.body.title ||
-		!req.body.thumbnail ||
-		!req.body.content) {
-		req.flash('message', 'Fields cannot be blank');
-		res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
-		return;
-	}
-	var article = new Article({
-		title     : req.body.title,
-		thumbnail : req.body.thumbnail,
-		category  : req.body.category,
-		content   : req.body.content,
-		user      : req.user
-	});
-	if (req.user.role == 'admin') {
-		article.save(req.user, function (err) {
-			if (err) {
-				req.flash('message', 'There is a problem in creating your article');
-			} else {
-				req.flash('message', 'Your article has been created successfully');
-			}
-			res.redirect('/');
-		});
-	} else {
-		article.saveForPendingConfirmation(req.user, function (err) {
-			if (err) {
-				req.flash('message', 'There is a problem in creating your article');
-			} else {
-				req.flash('message', 'Your article has been created for confirmation');
-			}
-			res.redirect('/');	
-		});
-	}
+	articleRoutesBehaviors.post.create.v2(req, res);
 });
  
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {

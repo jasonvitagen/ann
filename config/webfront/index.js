@@ -1,6 +1,6 @@
 module.exports = {
 
-	siteName : 'Mobile360 趣味新闻',
+	siteName : '',
 
 	articlesSize : 9,
 
@@ -8,6 +8,6 @@ module.exports = {
 
 	categoryBaseUrlName : 'category',
 
-	categoriesLanguage : 'cn' // use value from categories2 config --> tranlationKeys
+	categoriesLanguage : 'en' // use value from categories2.js --> categoriesTranslations
 
 }

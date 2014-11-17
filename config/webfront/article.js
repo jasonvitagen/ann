@@ -19,22 +19,38 @@ module.exports = {
 	},
 
 	save : {
+
 		articleViewDefaultValue : 0,
 
 		articleTitleAllowedLength     : 200,
 		articleThumbnailAllowedLength : 500,
 		articleContentAllowedLength   : 2000,
 
-		articleTitleRequiredMsg       : 'Article Title Is Required',
-		articleThumbnailRequiredMsg   : 'Article Thumbnail Is Required',
-		articleContentRequiredMsg     : 'Article Content Is Required',
+		maxArticleContentLength       : 2000,
 
-		articleTitleLengthExceedsMsg  : 'Article Title Length Exceeds',
-		articleThumbnailLengthExceeds : 'Article Thumbnail Length Exceeds',
-		articleContentLengthExceeds   : 'Article Content Length Exceeds',
+		validationMessages : {
+			articleAuthorNameRequiredMsg  : 'Article Author Name Is Required',
+			articleAuthorEmailRequiredMsg : 'Article Author Email Is Required',
+			articleTitleRequiredMsg       : 'Article Title Is Required',
+			articleThumbnailRequiredMsg   : 'Article Thumbnail Is Required',
+			articleContentRequiredMsg     : 'Article Content Is Required',
+			articleCategoryRequiredMsg    : 'Article Category Is Required',
+			articleContentRequiredMsg     : 'Article Content Is Required',
 
-		maxArticleContentLength       : 2000
-	},
+			articleTitleLengthExceedsMsg  : 'Article Title Length Exceeds',
+			articleThumbnailLengthExceeds : 'Article Thumbnail Length Exceeds',
+			articleContentLengthExceeds   : 'Article Content Length Exceeds'
+		},
+
+		successMessage : 'Article has been created successfully',
+		failedMessage : 'Failed to create article',
+
+		redirections : {
+			articleCreatedFailed : '/',
+			articleCreatedSuccessful : '/'
+		}
+
+	}
 
 
 }

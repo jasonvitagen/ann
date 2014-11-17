@@ -33,15 +33,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.engine('ejs', engine);
 
-var articleTestModel = require('./models/mongo/Article').model;
-
-var a1 = new articleTestModel({
-    authorName : 'dfdsf'
-});
-a1.save(function (err) {
-    console.log(err);
-});
-
 // setup redis
 var redisClient = redis.createClient();
 require('./setup/redisClient').setup(redisClient);
