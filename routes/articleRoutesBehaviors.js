@@ -5,17 +5,15 @@ var RedisArticle = require('../models/redis/Article').Article
 	, webfrontArticleConfig = require('../config/webfront/article')
 	, routeBehaviors = {};
 	
+
 routeBehaviors.get = {};
 routeBehaviors.get.create = {};
-
-routeBehaviors.post = {};
-routeBehaviors.post.create = {};
-
-
 routeBehaviors.get.create.v1 = function (req, res) {
 	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 }
 
+routeBehaviors.post = {};
+routeBehaviors.post.create = {};
 routeBehaviors.post.create.v1 = function (req, res) {
 	if (!req.body.title ||
 		!req.body.thumbnail ||

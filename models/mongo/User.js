@@ -39,6 +39,12 @@ var userSchema = mongoose.Schema({
 
 });
 
+// Define Indexes
+userSchema.index({ 'local.email' : 1 });
+userSchema.index({ 'facebook.email' : 1 });
+userSchema.index({ 'google.email' : 1 });
+userSchema.index({ 'renren.email' : 1 });
+
 // Add Methods
 // Hash password
 userSchema.methods.hashPassword = function (password) {

@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
 	, moment = require('moment')
-	, categorySchema = require('./Category').schema
 	, webfrontArticleConfig = require('../../config/webfront/article')
 	, mongoConfig = require('../../config/mongo')
 	, articlePrePostSaveBehaviors = require('./articlePrePostSaveBehaviors');
