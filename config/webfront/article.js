@@ -31,6 +31,7 @@ module.exports = {
 		validationMessages : {
 			articleAuthorNameRequiredMsg  : 'Article Author Name Is Required',
 			articleAuthorEmailRequiredMsg : 'Article Author Email Is Required',
+			articleAuthorIdRequiredMsg    : 'Article Author Id Is Required',
 			articleTitleRequiredMsg       : 'Article Title Is Required',
 			articleThumbnailRequiredMsg   : 'Article Thumbnail Is Required',
 			articleContentRequiredMsg     : 'Article Content Is Required',
@@ -50,6 +51,19 @@ module.exports = {
 			articleCreatedSuccessful : '/'
 		}
 
+	},
+
+	pagination : {
+
+		myArticles : {
+			startNumber : 0,
+			size : 9
+		}
+
+	},
+
+	notificationMessages : {
+		getMyArticlesFailed : "Something's wrong while retrieving your articles"
 	}
 
 

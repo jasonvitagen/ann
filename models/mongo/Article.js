@@ -15,6 +15,10 @@ var articleSchema = mongoose.Schema({
 		type    : String, 
 		default : moment().format(webfrontArticleConfig.view.beautifiedCreatedDateTimeFormat) 
 	},
+	authorId : {
+		type : String,
+		required : webfrontArticleConfig.save.validationMessages.articleAuthorIdRequiredMsg
+	},
 	authorName  : {
 		type : String,
 		required : webfrontArticleConfig.save.validationMessages.articleAuthorNameRequiredMsg
