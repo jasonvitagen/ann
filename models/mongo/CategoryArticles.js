@@ -12,23 +12,25 @@ var categoryArticlesSchema = mongoose.Schema({
 // Define indexes
 categoryArticlesSchema.index({ name : 1 });
 
-categoryArticlesSchema.statics.addArticleToRelatedCategory = function (doc) {
+categoryArticlesSchema.statics.addArticleToRelatedCategory = function (doc, callback) {
 	this
 		.findOne({ name : doc.category })
 		.exec(function (err, category) {
-			if (err) return err;
+			if (err) callback(err);
 			if (category) {
-				category.articles.push(doc);
+				category.articles.unshift(doc);
 				category.save(function (err) {
-					if (err) return err;
+					if (err) callback(err);
+					callback();
 				});
 			} else {
 				var category = new categoryArticlesModel({
 					name : doc.category
 				});
-				category.articles.push(doc);
+				category.articles.unshift(doc);
 				category.save(function (err) {
-					if (err) return err;
+					if (err) callback(err);
+					callback();
 				});
 			}
 		});

@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
 
 
 var articleSchema = mongoose.Schema({
-
+	articleId : String,
 	created	: { 
 		type    : Date, 
 		default : Date.now
@@ -62,6 +62,20 @@ var articleSchema = mongoose.Schema({
 
 articlePrePostSaveBehaviors.setupPreSave(articleSchema);
 articlePrePostSaveBehaviors.setupPostSave(articleSchema);
+
+articleSchema.statics.getArticleById = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	this.findOne(
+		{
+
+		}
+	);
+
+}
 
 module.exports = {
 	schema : articleSchema,

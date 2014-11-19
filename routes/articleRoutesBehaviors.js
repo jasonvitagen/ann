@@ -1,5 +1,5 @@
 var RedisArticle = require('../models/redis/Article').Article
-	, MongoArticle = require('../models/mongo/Article').model
+	, Article = require('../models/mongo/Article').model
 	, category = require('../config/webfront/categories2')
 	, mongoConfig = require('../config/mongo')
 	, PaginationLogic = require('../helpers/PaginationLogic')
@@ -11,6 +11,8 @@ var RedisArticle = require('../models/redis/Article').Article
 routeBehaviors.get = {};
 routeBehaviors.get.create = {};
 routeBehaviors.get.myArticles = {};
+routeBehaviors.get.myArticlesMore = {};
+routeBehaviors.get.getArticleById = {};
 
 routeBehaviors.get.create.v1 = function (req, res) {
 	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
@@ -29,20 +31,68 @@ routeBehaviors.get.myArticles.v2 = function (req, res) {
 
 	userArticles.getUserArticles({
 		startIndex : paginationLogic.getStartIndex(),
-		size : paginationLogic.getSize()
+		size       : paginationLogic.getSize(),
+		authorId   : req.user._id
 	}, function (err, articles) {
 		if (err) {
 			req.flash('message', webfrontArticleConfig.notificationMessages.getMyArticlesFailed);
 			res.render('article/my-articles.ejs', { articles : [], message : req.flash('message') });
 		} else {
-			console.log(articles);
+			console.log('sao gong');
 			res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
 		}
 	});
 }
+routeBehaviors.get.myArticlesMore.v1 = function (req, res) {
+	Article.getUserArticles(req.user, req.params.number, webFrontIndexConfig.articlesSize, function (articles) {
+		res.json(articles);
+	});
+}
+routeBehaviors.get.myArticlesMore.v2 = function (req, res) {
+
+	var paginationLogic = new PaginationLogic({
+		startNumber : req.params.number,
+		size : webfrontArticleConfig.pagination.myArticles.size
+	});
+
+	userArticles.getUserArticles({
+		startIndex : paginationLogic.getStartIndex(),
+		size       : paginationLogic.getSize(),
+		authorId   : req.user._id
+	}, function (err, articles) {
+		if (err) {
+			req.flash('message', webfrontArticleConfig.notificationMessages.getMyArticlesFailed);
+			res.json([]);
+		} else {
+			res.json(articles);
+		}
+	});
+}
+routeBehaviors.get.getArticleById.v1 = function (req, res) {
+	Article.getArticleById(req.params.articleId, function (err, article) {
+		if (err) {
+			return res.redirect('/');
+		}
+		if (article) {
+			res.locals.pageUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+			res.locals.facebookShare = true;
+			res.locals.articleId = article.id;
+			res.locals.pageTitle = article.title;
+			res.locals.pageThumbnail = article.thumbnail;
+			res.locals.pageDescription = '';
+		}
+		res.render('article/view', {
+			article : article
+		});
+	});
+}
+routeBehaviors.get.getArticleById.v2 = function (req, res) {
+
+}
 
 routeBehaviors.post = {};
 routeBehaviors.post.create = {};
+
 routeBehaviors.post.create.v1 = function (req, res) {
 	if (!req.body.title ||
 		!req.body.thumbnail ||
@@ -80,7 +130,7 @@ routeBehaviors.post.create.v1 = function (req, res) {
 }
 
 routeBehaviors.post.create.v2 = function (req, res) {
-	var article = new MongoArticle({
+	var article = new Article({
 		authorName  : req.user.facebook.name || req.user.google.name || req.user.local.name,
 		authorEmail : req.user.facebook.email || req.user.google.email || req.user.local.email,
 		authorId    : req.user._id,

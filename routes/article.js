@@ -17,15 +17,11 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 });
  
 router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
-	Article.getUserArticles(req.user, 0, webFrontIndexConfig.articlesSize, function (articles) {
-		res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
-	});
+	articleRoutesBehaviors.get.myArticles.v2(req, res);
 });
 
 router.get('/my-articles/more/:number', authMiddlewares.isLoggedIn, function (req, res) {
-	Article.getUserArticles(req.user, req.params.number, webFrontIndexConfig.articlesSize, function (articles) {
-		res.json(articles);
-	});
+	articleRoutesBehaviors.get.myArticlesMore.v2(req, res);
 });
 
 router.get('/random/:number?', function (req, res) {
@@ -36,22 +32,8 @@ router.get('/random/:number?', function (req, res) {
 });
 
 router.get('/:articleId/:title?', function (req, res) {
-	Article.getArticleById(req.params.articleId, function (err, article) {
-		if (err) {
-			return res.redirect('/');
-		}
-		if (article) {
-			res.locals.pageUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-			res.locals.facebookShare = true;
-			res.locals.articleId = article.id;
-			res.locals.pageTitle = article.title;
-			res.locals.pageThumbnail = article.thumbnail;
-			res.locals.pageDescription = '';
-		}
-		res.render('article/view', { 
-			article : article
-		});
-	});
+	articleRoutesBehaviors.get.getArticleById.v2(req, res);
+
 });
 
 router.post('/delete', authMiddlewares.isLoggedIn, authMiddlewares.isArticleBelongedToUser, function (req, res) {

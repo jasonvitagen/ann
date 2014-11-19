@@ -9,23 +9,25 @@ var userArticlesSchema = mongoose.Schema({
 
 });
 
-userArticlesSchema.statics.addArticleToRelatedUser = function (doc) {
+userArticlesSchema.statics.addArticleToRelatedUser = function (doc, callback) {
 	this
 		.findOne({ userId : doc.authorId })
 		.exec(function (err, user) {
-			if (err) return err;
+			if (err) callback(err);
 			if (user) {
-				user.articles.push(doc);
+				user.articles.unshift(doc);
 				user.save(function (err) {
-					if (err) return err;
+					if (err) callback(err);
+					callback();
 				});
 			} else {
 				var user = new userArticlesModel({
 					userId : doc.authorId
 				});
-				user.articles.push(doc);
+				user.articles.unshift(doc);
 				user.save(function (err) {
-					if (err) return err;
+					if (err) callback(err);
+					callback();
 				});
 			}
 		});
@@ -34,26 +36,32 @@ userArticlesSchema.statics.addArticleToRelatedUser = function (doc) {
 userArticlesSchema.statics.getUserArticles = function (args, callback) {
 
 	if (!args) {
-		callback('No arguments');
-		return;
+		return callback('No arguments');
 	}
 
 	var startIndex = args.startIndex
 		, size = args.size;
 
-	userArticlesModel
-		.find()
-		.skip(startIndex)
-		.limit(size)
-		.exec(function (err, articles) {
+	this.findOne(
+		{ 
+			'userId' : args.authorId 
+		},
+		{
+			articles : { $slice : [startIndex, size] }
+		}, 
+		function (err, userArticles) {
 			if (err) {
-				callback(err);
+				return callback(err);
 			} else {
-				callback(null, articles);
+				if (!userArticles) {
+					return callback(null, []);
+				} else {
+					console.log('return jor');
+					return callback(null, userArticles.articles);
+				}
 			}
-		});
-
-
+		}
+	);
 
 }
 
