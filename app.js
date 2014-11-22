@@ -4,6 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var currentPageUrl = require('./middlewares/currentPageUrl');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -49,15 +50,15 @@ var authRoutes = require('./routes/auth.js')(passport);
 // setup webfront variables
 require('./setup/webFront.js')(app);;
 
-require('./helpers/categoriesTranslator').translate('dancing');
-
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(currentPageUrl());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
+
 
 // setup passport middlewares
 app.use(session({secret : 'iLoveAnn'}));

@@ -13,8 +13,9 @@
 					<%
 						function getCategoryRecursively (categories, parentKey, selectedCategory) {
 							for (categoryKey in categories) {
+
 								if (categories[categoryKey] == null) {
-									var optionValue = parentKey != null && parentKey + mongoConfig.categoriesHierarchyDelimiter + categoryKey || categoryKey;
+									var optionValue = parentKey != null &&  categoriesTranslator.translate(parentKey) + mongoConfig.categoriesHierarchyDelimiter +  categoriesTranslator.translate(categoryKey) ||  categoriesTranslator.translate(categoryKey);
 
 					%>
 									<option value="<%= optionValue %>"
@@ -30,7 +31,7 @@
 									</option>
 					<%
 								} else if (typeof categories[categoryKey] == "object") {
-									var optionValue = parentKey != null && parentKey + mongoConfig.categoriesHierarchyDelimiter + categoryKey || categoryKey;
+									var optionValue = parentKey != null &&  categoriesTranslator.translate(parentKey) + mongoConfig.categoriesHierarchyDelimiter +  categoriesTranslator.translate(categoryKey) ||  categoriesTranslator.translate(categoryKey);
 					%>
 									<option value="<%= optionValue %>"
 					<%

@@ -86,12 +86,12 @@
 								'<div class="item-tags">' +
 								'</div>' +
 								'<div class="item-date">' +
-									article.createdShort +
+									article.createdBeautified +
 								'</div>' +
 								'<div class="clear"></div>' +
-								'<div>' +
-									article.views +
-								'</div>' +
+								'<div><!--' +
+									article.view +
+								'--></div>' +
 								'<div class="clear"></div>' +
 							'</div>' +
 						'</div>';
@@ -132,7 +132,7 @@
 								'<div class="item-tags">' +
 								'</div>' +
 								'<div class="item-date">' +
-									article.createdShort +
+									article.createdBeautified +
 								'</div>' +
 								'<div>' +
 									'<form method="post" action="delete">' +
@@ -146,9 +146,9 @@
 									'</form>' +
 								'</div>' +
 								'<div class="clear"></div>' +
-								'<div>' +
-									article.views +
-								'</div>' +
+								'<div><!--' +
+									article.view +
+								'--></div>' +
 								'<div class="clear"></div>' +
 							'</div>' +
 						'</div>';

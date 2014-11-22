@@ -26,7 +26,7 @@ routeBehaviors.get.myArticles.v1 = function (req, res) {
 	});
 }
 routeBehaviors.get.myArticles.v2 = function (req, res) {
-	console.log('gonggong');
+
 	var paginationLogic = new PaginationLogic({
 		startNumber : webfrontArticleConfig.pagination.myArticles.startNumber,
 		size : webfrontArticleConfig.pagination.myArticles.size
@@ -37,12 +37,11 @@ routeBehaviors.get.myArticles.v2 = function (req, res) {
 		size       : paginationLogic.getSize(),
 		authorId   : req.user._id
 	}, function (err, articles) {
-		console.log('adada');
+
 		if (err) {
 			req.flash('message', webfrontArticleConfig.notificationMessages.getMyArticlesFailed);
 			res.render('article/my-articles.ejs', { articles : [], message : req.flash('message') });
 		} else {
-			console.log('sao gong');
 			res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
 		}
 	});
@@ -65,7 +64,6 @@ routeBehaviors.get.myArticlesMore.v2 = function (req, res) {
 		authorId   : req.user._id
 	}, function (err, articles) {
 		if (err) {
-			req.flash('message', webfrontArticleConfig.notificationMessages.getMyArticlesFailed);
 			res.json([]);
 		} else {
 			res.json(articles);

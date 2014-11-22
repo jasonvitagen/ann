@@ -1,23 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var Article = require('../models/redis/Article').Article;
-var webFrontIndexConfig = require('../config/webfront/index');
+var express = require('express')
+    , router = express.Router()
+    , Article = require('../models/redis/Article').Article
+    , webFrontIndexConfig = require('../config/webfront/index')
+    , indexRoutesBehaviors = require('./indexRoutesBehaviors');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  Article.getAllArticles(0, webFrontIndexConfig.articlesSize, function (articles) {
-  	res.render('index', { 
-  		title: 'Express',
-  		pageUrl : req.protocol + '://' + req.get('host') + req.originalUrl,
-  		articles : articles, 
-  		message : req.flash('message') });
-  });
+  indexRoutesBehaviors.get.index.v2(req, res);
 });
 
 router.get('/more/:number', function (req, res) {
-  Article.getAllArticles(req.params.number, webFrontIndexConfig.articlesSize, function (articles) {
-    res.json(articles);
-  });
+  indexRoutesBehaviors.get.indexMore.v2(req, res);
 });
 
 module.exports = router;

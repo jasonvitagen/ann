@@ -58,6 +58,16 @@ module.exports = {
 		myArticles : {
 			startNumber : 0,
 			size : 9
+		},
+
+		index : {
+			startNumber : 0,
+			size : 9
+		},
+
+		categoryArticles : {
+			startNumber : 0,
+			size : 9
 		}
 
 	},

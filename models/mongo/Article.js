@@ -63,6 +63,8 @@ var articleSchema = mongoose.Schema({
 
 // Define indexes
 articleSchema.index({ authorId : 1 });
+articleSchema.index({ created : 1 });
+articleSchema.index({ category : 1 });
 
 articleSchema.statics.getArticleById = function (args, callback) {
 
@@ -91,6 +93,64 @@ articleSchema.statics.getUserArticles = function (args, callback) {
 		.find({ 'authorId' : args.authorId })
 		.skip(startIndex)
 		.limit(size)
+		.sort({ created : -1 })
+		.exec(function (err, articles) {
+			if (err) {
+				return callback(err);
+			} else {
+				if (!articles) {
+					return callback(null, []);
+				} else {
+					return callback(null, articles);
+				}
+			}
+		});
+
+}
+
+articleSchema.statics.getAllArticles = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	var startIndex = args.startIndex
+		, size = args.size;
+
+	this
+		.find()
+		.skip(startIndex)
+		.limit(size)
+		.sort({ created : -1 })
+		.exec(function (err, articles) {
+			if (err) {
+				return callback(err);
+			} else {
+				if (!articles) {
+					return callback(null, []);
+				} else {
+					return callback(null, articles);
+				}
+			}
+		});
+
+}
+
+articleSchema.statics.getArticlesByCategory = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	var startIndex = args.startIndex
+		, size = args.size
+		, categoryId = args.categoryId;
+	
+	this
+		.find({ category : categoryId })
+		.skip(startIndex)
+		.limit(size)
+		.sort({ created : -1 })
 		.exec(function (err, articles) {
 			if (err) {
 				return callback(err);

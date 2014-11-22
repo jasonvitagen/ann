@@ -1,6 +1,6 @@
 module.exports = {
 
-	siteName : '',
+	siteName : 'jagung',
 
 	articlesSize : 9,
 
@@ -8,6 +8,6 @@ module.exports = {
 
 	categoryBaseUrlName : 'category',
 
-	categoriesLanguage : 'en' // use value from categories2.js --> categoriesTranslations
+	categoriesLanguage : 'cn' // use value from categories2.js --> categoriesTranslations
 
 }
