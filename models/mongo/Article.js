@@ -38,7 +38,8 @@ var articleSchema = mongoose.Schema({
 		type     : String,
 		required : webfrontArticleConfig.save.validationMessages.articleThumbnailRequiredMsg,
 		validate : [
-			{ validator : mongoConfig.validators.maxLength(webfrontArticleConfig.save.articleThumbnailAllowedLength), msg : webfrontArticleConfig.save.articleThumbnailLengthExceeds }
+			{ validator : mongoConfig.validators.maxLength(webfrontArticleConfig.save.articleThumbnailAllowedLength), msg : webfrontArticleConfig.save.articleThumbnailLengthExceeds },
+			{ validator : mongoConfig.validators.validImagePath }
 		]
 	},
 	category : {
@@ -60,6 +61,8 @@ var articleSchema = mongoose.Schema({
 
 });
 
+// Define indexes
+articleSchema.index({ authorId : 1 });
 
 articleSchema.statics.getArticleById = function (args, callback) {
 
@@ -72,6 +75,33 @@ articleSchema.statics.getArticleById = function (args, callback) {
 
 		}
 	);
+
+}
+
+articleSchema.statics.getUserArticles = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	var startIndex = args.startIndex
+		, size = args.size;
+
+	this
+		.find({ 'authorId' : args.authorId })
+		.skip(startIndex)
+		.limit(size)
+		.exec(function (err, articles) {
+			if (err) {
+				return callback(err);
+			} else {
+				if (!articles) {
+					return callback(null, []);
+				} else {
+					return callback(null, articles);
+				}
+			}
+		});
 
 }
 

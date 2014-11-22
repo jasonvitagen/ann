@@ -3,7 +3,6 @@ var RedisArticle = require('../models/redis/Article').Article
 	, category = require('../config/webfront/categories2')
 	, mongoConfig = require('../config/mongo')
 	, PaginationLogic = require('../helpers/PaginationLogic')
-	, userArticles = require('../models/mongo/UserArticles').model
 	, webfrontArticleConfig = require('../config/webfront/article')
 	, routeBehaviors = {};
 	
@@ -18,22 +17,27 @@ routeBehaviors.get.create.v1 = function (req, res) {
 	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 }
 routeBehaviors.get.myArticles.v1 = function (req, res) {
-	Article.getUserArticles(req.user, 0, webFrontIndexConfig.articlesSize, function (articles) {
-		res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
+	Article.getUserArticles(req.user, 0, webFrontIndexConfig.articlesSize, function (err, articles) {
+		if (err) {
+			console.log('error while getting my articles');
+		} else {
+			res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });	
+		}
 	});
 }
 routeBehaviors.get.myArticles.v2 = function (req, res) {
-
+	console.log('gonggong');
 	var paginationLogic = new PaginationLogic({
 		startNumber : webfrontArticleConfig.pagination.myArticles.startNumber,
 		size : webfrontArticleConfig.pagination.myArticles.size
 	});
 
-	userArticles.getUserArticles({
+	Article.getUserArticles({
 		startIndex : paginationLogic.getStartIndex(),
 		size       : paginationLogic.getSize(),
 		authorId   : req.user._id
 	}, function (err, articles) {
+		console.log('adada');
 		if (err) {
 			req.flash('message', webfrontArticleConfig.notificationMessages.getMyArticlesFailed);
 			res.render('article/my-articles.ejs', { articles : [], message : req.flash('message') });
@@ -55,7 +59,7 @@ routeBehaviors.get.myArticlesMore.v2 = function (req, res) {
 		size : webfrontArticleConfig.pagination.myArticles.size
 	});
 
-	userArticles.getUserArticles({
+	Article.getUserArticles({
 		startIndex : paginationLogic.getStartIndex(),
 		size       : paginationLogic.getSize(),
 		authorId   : req.user._id
@@ -141,6 +145,7 @@ routeBehaviors.post.create.v2 = function (req, res) {
 	});
 	article.save(function (err) {
 		if (err) {
+			console.log(err);
 			req.flash('message', webfrontArticleConfig.save.failedMessage);
 		} else {
 			req.flash('message', webfrontArticleConfig.save.successMessage);
