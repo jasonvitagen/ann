@@ -16,12 +16,12 @@ categoryArticlesSchema.statics.addArticleToRelatedCategory = function (doc, call
 	this
 		.findOne({ name : doc.category })
 		.exec(function (err, category) {
-			if (err) callback(err);
+			if (err) return callback(err);
 			if (category) {
 				category.articles.unshift(doc);
 				category.save(function (err) {
-					if (err) callback(err);
-					callback();
+					if (err) return callback(err);
+					return callback();
 				});
 			} else {
 				var category = new categoryArticlesModel({
@@ -29,8 +29,8 @@ categoryArticlesSchema.statics.addArticleToRelatedCategory = function (doc, call
 				});
 				category.articles.unshift(doc);
 				category.save(function (err) {
-					if (err) callback(err);
-					callback();
+					if (err) return callback(err);
+					return callback();
 				});
 			}
 		});

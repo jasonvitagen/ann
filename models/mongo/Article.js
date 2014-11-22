@@ -60,8 +60,6 @@ var articleSchema = mongoose.Schema({
 
 });
 
-articlePrePostSaveBehaviors.setupPreSave(articleSchema);
-articlePrePostSaveBehaviors.setupPostSave(articleSchema);
 
 articleSchema.statics.getArticleById = function (args, callback) {
 
@@ -77,7 +75,12 @@ articleSchema.statics.getArticleById = function (args, callback) {
 
 }
 
+var articleModel = mongoose.model('Article', articleSchema);
+
+articlePrePostSaveBehaviors.setupPreSave(articleSchema, articleModel);
+articlePrePostSaveBehaviors.setupPostSave(articleSchema, articleModel);
+
 module.exports = {
 	schema : articleSchema,
-	model  : mongoose.model('Article', articleSchema)
+	model  : articleModel
 };

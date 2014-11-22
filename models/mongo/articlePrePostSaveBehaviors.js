@@ -5,7 +5,7 @@ var webfrontConfig = require('../../config/webfront/index')
 	, async = require('async');
 
 
-function setupPreSave (schema) {
+function setupPreSave (schema, articleModel) {
 
 	schema.pre('save', function (next) {
 		this.categoryUrl = '/' + webfrontConfig.categoryBaseUrlName + '/' + this.category.replace(':', '/');
@@ -14,43 +14,85 @@ function setupPreSave (schema) {
 
 }
 
-function setupPostSave (schema) {
+function setupPostSave (schema, articleModel) {
 
-	function saveArticleId (done) {
-		schema.post('save', function (doc) {
+	schema.post('save', function (doc) {
+
+		console.log('lala');
+
+		function saveArticleId (done) {
+
 			if (!doc.articleId) {
-				doc.articleId = shortId(doc._id);
-				doc.save(function (err) {
-					done();
-				});
+
+				var articleId = shortId(doc._id);
+				doc.articleId = articleId;
+
+				articleModel.findByIdAndUpdate(
+					doc._id, 
+					{ 
+						$set : { articleId : articleId }
+					},
+					{},
+					function (err, doc) {
+						if (err) {
+							done(err);
+						} else {
+							done();
+						}
+					}
+				);
 			} else {
+				console.log('a-2');
 				done();
 			}
-		});
-	}
 
-	function addArticleToRelatedCategory (done) {
-		schema.post('save', function (doc) {
-			categoryArticles.addArticleToRelatedCategory(doc, done);
-		});
-	}
-
-	function addArticleToRelatedUser (done) {
-		schema.post('save', function (doc) {
-			userArticles.addArticleToRelatedUser(doc, done);
-		});
-	}
-
-	function asyncTasks (done) {
-		async.parallel([addArticleToRelatedCategory, addArticleToRelatedUser], function (err, results) {
-			done();
-		});
-	}
-
-	async.series([saveArticleId, asyncTasks], function (err, results) {
-		if (!err) {
-			console.log('Post save article successful');
 		}
+
+		function addArticleToRelatedCategory (done) {
+			console.log('b');
+			categoryArticles.addArticleToRelatedCategory(doc, function (err) {
+				if (err) {
+					done(err);
+				} else {
+					done();
+				}
+			});
+
+		}
+
+		function addArticleToRelatedUser (done) {
+			console.log('c');
+			userArticles.addArticleToRelatedUser(doc, function (err) {
+				if (err) {
+					done(err);
+				} else {
+					done();
+				}
+			});
+
+		}
+
+		
+		function asyncTasks (done) {
+			async.parallel([addArticleToRelatedCategory, addArticleToRelatedUser], function (err, results) {
+				if (err) {
+					done(err);
+				} else {
+					console.log('d');
+					done();
+				}
+			});
+		}
+
+		async.series([saveArticleId, asyncTasks], function (err, results) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log('post save article successful');
+			}
+		});
+
+
 	});
 
 }

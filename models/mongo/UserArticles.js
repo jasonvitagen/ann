@@ -13,12 +13,12 @@ userArticlesSchema.statics.addArticleToRelatedUser = function (doc, callback) {
 	this
 		.findOne({ userId : doc.authorId })
 		.exec(function (err, user) {
-			if (err) callback(err);
+			if (err) return callback(err);
 			if (user) {
 				user.articles.unshift(doc);
 				user.save(function (err) {
 					if (err) callback(err);
-					callback();
+					return callback();
 				});
 			} else {
 				var user = new userArticlesModel({
@@ -26,8 +26,8 @@ userArticlesSchema.statics.addArticleToRelatedUser = function (doc, callback) {
 				});
 				user.articles.unshift(doc);
 				user.save(function (err) {
-					if (err) callback(err);
-					callback();
+					if (err) return callback(err);
+					return callback();
 				});
 			}
 		});
