@@ -119,8 +119,6 @@ routeBehaviors.get.edit.v1 = function (req, res) {
 			req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
 			res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
 		} else {
-			console.log(article);
-
 			req.body = article;
 			res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 		}
@@ -219,6 +217,7 @@ routeBehaviors.post.delete.v2 = function (req, res) {
 routeBehaviors.post.edit.v1 = function (req, res) {
 	Article.findById(req.body.id, function (err, article) {
 		if (err) {
+			console.log(err);
 			req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
 			res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
 		} else {
