@@ -73,7 +73,8 @@ module.exports = {
 	},
 
 	notificationMessages : {
-		getMyArticlesFailed : "Something's wrong while retrieving your articles"
+		getMyArticlesFailed : "Something's wrong while retrieving your articles",
+		articleNotFound : "Sorry we could not find that"
 	}
 
 

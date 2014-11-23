@@ -89,7 +89,25 @@ routeBehaviors.get.getArticleById.v1 = function (req, res) {
 	});
 }
 routeBehaviors.get.getArticleById.v2 = function (req, res) {
-
+	Article.getArticleById({
+		articleId : req.params.articleId
+	}, function (err, article) {
+		if (err) {
+			res.status(404).send(webfrontArticleConfig.notificationMessages.articleNotFound);
+		} else {
+			res.render('article/view', {
+				article : article,
+				articleId : req.params.articleId,
+				pageUrl : req.currentPageUrl,
+				facebookShare : {
+					pageUrl : req.currentPageUrl,
+					pageTitle : article.title,
+					pageDescription : article.title,
+					pageThumbnail : article.thumbnail
+				}
+			});
+		}
+	});
 }
 
 routeBehaviors.post = {};

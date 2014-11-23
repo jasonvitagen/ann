@@ -165,6 +165,26 @@ articleSchema.statics.getArticlesByCategory = function (args, callback) {
 
 }
 
+articleSchema.statics.getArticleById = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	var articleId = args.articleId;
+
+	this
+		.where({ articleId : articleId })
+		.findOne(function (err, article) {
+			if (err) {
+				callback(err);
+			} else {
+				callback(null, article);
+			}
+		});
+
+}
+
 var articleModel = mongoose.model('Article', articleSchema);
 
 articlePrePostSaveBehaviors.setupPreSave(articleSchema, articleModel);

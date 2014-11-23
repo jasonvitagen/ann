@@ -26,7 +26,7 @@
 							'<div class="item">' +
 							 	'<div class="thumbnail">' +
 							 		'<a href="/article/' +
-							 			article.id +
+							 			article.articleId +
 							 			'/' +
 							 			article.title +
 							 		'">' +
@@ -37,7 +37,7 @@
 							 	'</div>' +
 							 	'<div class="item-title">' +
 							 		'<a href="/article/' +
-							 			article.id +
+							 			article.articleId +
 							 			'/' +
 							 			article.title +
 							 		'">' +
@@ -63,7 +63,7 @@
 							'<div class="item">' +
 								'<div class="thumbnail">' +
 									'<a href="/article/' +
-										article.id +
+										article.articleId +
 										'/' +
 										article.title +
 									'">' +
@@ -74,7 +74,7 @@
 								'</div>' +
 								'<div class="item-title">' +
 									'<a href="/article/' +
-										article.id + 
+										article.articleId + 
 										'/' + 
 										article.title +
 									'">' +
@@ -109,7 +109,7 @@
 							'<div class="item">' +
 								'<div class="thumbnail">' +
 									'<a href="/article/' +
-										article.id +
+										article.articleId +
 										'/' +
 										article.title +
 									'">' +
@@ -120,7 +120,7 @@
 								'</div>' +
 								'<div class="item-title">' +
 									'<a href="/article/' +
-										article.id + 
+										article.articleId + 
 										'/' + 
 										article.title +
 									'">' +
@@ -137,7 +137,7 @@
 								'<div>' +
 									'<form method="post" action="delete">' +
 										'<input type="hidden" name="articleId" value="' +
-											article.id +
+											article.articleId +
 										'">' +
 										'<input type="hidden" name="articleCategory" value="' +
 											article.category +

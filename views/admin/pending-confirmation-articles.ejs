@@ -7,12 +7,12 @@
 		<div class="unit w-1-3">
 			<div class="item">
 				<div class="thumbnail">
-					<a href="/article/<%= article.id %>/<%= article.title %>">
+					<a href="/article/<%= article.articleId %>/<%= article.title %>">
 						<img src="<%= article.thumbnail %>" alt="">
 					</a>
 				</div>
 				<div class="item-title">
-					<a href="/article/<%= article.id %>/<%= article.title %>">
+					<a href="/article/<%= article.articleId %>/<%= article.title %>">
 						<h2><%= article.title %></h2>
 					</a>
 				</div>
@@ -24,7 +24,7 @@
 				</div>
 				<div>
 					<form method="post" action="confirm-article">
-						<input type="hidden" name="articleId" value="<%= article.id %>">
+						<input type="hidden" name="articleId" value="<%= article.articleId %>">
 						<input type="hidden" name="articleCategory" value="<%= article.category %>">
 						<button type="submit">Confirm</button>
 					</form>

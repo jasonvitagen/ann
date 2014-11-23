@@ -33,7 +33,6 @@ router.get('/random/:number?', function (req, res) {
 
 router.get('/:articleId/:title?', function (req, res) {
 	articleRoutesBehaviors.get.getArticleById.v2(req, res);
-
 });
 
 router.post('/delete', authMiddlewares.isLoggedIn, authMiddlewares.isArticleBelongedToUser, function (req, res) {
