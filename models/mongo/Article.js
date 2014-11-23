@@ -185,6 +185,53 @@ articleSchema.statics.getArticleById = function (args, callback) {
 
 }
 
+articleSchema.statics.deleteArticleById = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	var articleId = args.articleId;
+
+	this
+		.where({ articleId : articleId })
+		.findOneAndRemove(function (err, article) {
+			if (err) {
+				callback(err);
+			} else {
+				callback(null, article);
+			}
+		});
+
+}
+
+articleSchema.statics.doesUserHaveArticle = function (args, callback) {
+
+	if (!args) {
+		return callback('No arguments');
+	}
+
+	var authorId = args.authorId
+		, articleId = args.articleId;
+
+	this
+		.findOne()
+		.where({ authorId : authorId })
+		.where({ articleId : articleId })
+		.exec(function (err, article) {
+			if (err) {
+				callback(err);
+			} else {
+				if (!article) {
+					callback(null, false);
+				} else {
+					callback(null, true);
+				}
+			}
+		});
+
+}
+
 var articleModel = mongoose.model('Article', articleSchema);
 
 articlePrePostSaveBehaviors.setupPreSave(articleSchema, articleModel);

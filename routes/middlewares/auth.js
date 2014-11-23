@@ -1,4 +1,5 @@
-var Article = require('../../models/redis/Article').Article;
+var Article = require('../../models/mongo/Article').model
+	, webfrontArticleConfig = require('../../config/webfront/article');
 
 
 // Route middleware to make sure user is logged in
@@ -39,9 +40,28 @@ function isArticleBelongedToUser (req, res, next) {
 	});
 }
 
+function doesArticleBelongToMongoUser (req, res, next) {
+	Article.doesUserHaveArticle({
+		authorId  : req.user.id,
+		articleId : req.body.articleId || req.params.articleId
+	}, function (err, answer) {
+		if (err) {
+			return next(err);
+		} else {
+			if (answer) {
+				return next();
+			} else {
+				req.flash('message', webfrontArticleConfig.notificationMessages.noPermission);
+				res.redirect(webfrontArticleConfig.delete.redirections.articleDoesNotBelongToUser);
+			}
+		}
+	});
+}
+
 module.exports = {
 	isLoggedIn : isLoggedIn,
 	isNotLoggedIn : isNotLoggedIn,
 	isAdmin : isAdmin,
-	isArticleBelongedToUser : isArticleBelongedToUser
+	isArticleBelongedToUser : isArticleBelongedToUser,
+	doesArticleBelongToMongoUser : doesArticleBelongToMongoUser
 }

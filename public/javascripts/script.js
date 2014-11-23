@@ -134,6 +134,7 @@
 								'<div class="item-date">' +
 									article.createdBeautified +
 								'</div>' +
+								'<br>' +
 								'<div>' +
 									'<form method="post" action="delete">' +
 										'<input type="hidden" name="articleId" value="' +
@@ -144,6 +145,13 @@
 										'">' +
 										'<button type="submit">Delete</button>' +
 									'</form>' +
+								'</div>' +
+								'<div>' +
+									'<a href="/article/edit/' +
+										article.articleId +
+									'">' +
+										'<button type="button">Edit</button>' +
+									'</a>' +
 								'</div>' +
 								'<div class="clear"></div>' +
 								'<div><!--' +

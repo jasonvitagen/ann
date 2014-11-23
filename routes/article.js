@@ -31,13 +31,21 @@ router.get('/random/:number?', function (req, res) {
 	});
 });
 
+router.get('/edit/:articleId', authMiddlewares.isLoggedIn, authMiddlewares.doesArticleBelongToMongoUser, function (req, res) {
+	articleRoutesBehaviors.get.edit.v1(req, res);
+});
+
 router.get('/:articleId/:title?', function (req, res) {
 	articleRoutesBehaviors.get.getArticleById.v2(req, res);
 });
 
-router.post('/delete', authMiddlewares.isLoggedIn, authMiddlewares.isArticleBelongedToUser, function (req, res) {
-	Article.delete(req.user, req.body.articleId, req.body.articleCategory);
-	res.redirect('/article/my-articles');
+router.post('/edit/:title?', authMiddlewares.isLoggedIn, function (req, res) {
+	articleRoutesBehaviors.post.edit.v1(req, res);
 });
+
+router.post('/delete', authMiddlewares.isLoggedIn, authMiddlewares.doesArticleBelongToMongoUser, function (req, res) {
+	articleRoutesBehaviors.post.delete.v2(req, res);
+});
+
 
 module.exports = router;

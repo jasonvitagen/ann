@@ -4,8 +4,6 @@ var indexConfig = require('../config/webfront/index'),
 	categoriesTranslation = categoriesConfig.categoriesTranslations[categoriesLanguage];
 
 function translate (word) {
-	console.log(categoriesTranslation);
-	console.log(categoriesTranslation[word]);
 	return categoriesTranslation[word];
 }
 

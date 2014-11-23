@@ -4,6 +4,7 @@
 	<div class="unit w-1-1">
 		<form method="post">
 			<label for="title">Title</label><br>
+			<input type="hidden" name="id" id="id" value="<%= typeof formBody.id != 'undefined' && formBody.id || '' %>">
 			<input type="text" name="title" id="title" value="<%= typeof formBody.title != 'undefined' && formBody.title || '' %>"><br><br>
 			<label for="thumbnail">Thumbnail</label><br>
 			<input type="text" name="thumbnail" id="thumbnail" value="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>"><br><br>

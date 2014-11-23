@@ -53,6 +53,25 @@ module.exports = {
 
 	},
 
+	delete : {
+
+		redirections : {
+			articleDeletedFailed : '/article/my-articles',
+			articleDeletedSuccessful : '/article/my-articles',
+			articleDoesNotBelongToUser : '/article/my-articles'
+		}
+
+	},
+
+	edit : {
+
+		redirections : {
+			articleEditedFailed : '/article/my-articles',
+			articleEditedSuccessful : '/article/my-articles'
+		}
+
+	},
+
 	pagination : {
 
 		myArticles : {
@@ -74,7 +93,12 @@ module.exports = {
 
 	notificationMessages : {
 		getMyArticlesFailed : "Something's wrong while retrieving your articles",
-		articleNotFound : "Sorry we could not find that"
+		articleNotFound : "Sorry we could not find that",
+		deleteArticleFailed : "Something's wrong while deleting your article",
+		deleteArticleSuccessful : "Article has been deleted successfully",
+		noPermission : "You do not have permission for this operation",
+		editArticleFailed : "Something's wrong while editing your article",
+		editArticleSuccessful : "Article has been edited successfully"
 	}
 
 

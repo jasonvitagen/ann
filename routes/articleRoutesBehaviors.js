@@ -12,6 +12,7 @@ routeBehaviors.get.create = {};
 routeBehaviors.get.myArticles = {};
 routeBehaviors.get.myArticlesMore = {};
 routeBehaviors.get.getArticleById = {};
+routeBehaviors.get.edit = {};
 
 routeBehaviors.get.create.v1 = function (req, res) {
 	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
@@ -89,6 +90,7 @@ routeBehaviors.get.getArticleById.v1 = function (req, res) {
 	});
 }
 routeBehaviors.get.getArticleById.v2 = function (req, res) {
+
 	Article.getArticleById({
 		articleId : req.params.articleId
 	}, function (err, article) {
@@ -109,9 +111,26 @@ routeBehaviors.get.getArticleById.v2 = function (req, res) {
 		}
 	});
 }
+routeBehaviors.get.edit.v1 = function (req, res) {
+	Article.getArticleById({
+		articleId : req.params.articleId
+	}, function (err, article) {
+		if (err) {
+			req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
+			res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
+		} else {
+			console.log(article);
+
+			req.body = article;
+			res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
+		}
+	});
+}
 
 routeBehaviors.post = {};
 routeBehaviors.post.create = {};
+routeBehaviors.post.delete = {};
+routeBehaviors.post.edit = {};
 
 routeBehaviors.post.create.v1 = function (req, res) {
 	if (!req.body.title ||
@@ -163,6 +182,8 @@ routeBehaviors.post.create.v2 = function (req, res) {
 		if (err) {
 			console.log(err);
 			req.flash('message', webfrontArticleConfig.save.failedMessage);
+			res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
+			return;
 		} else {
 			req.flash('message', webfrontArticleConfig.save.successMessage);
 		}
@@ -170,5 +191,54 @@ routeBehaviors.post.create.v2 = function (req, res) {
 	});
 	return;
 }
+
+routeBehaviors.post.delete.v1 = function (req, res) {
+	Article.delete(req.user, req.body.articleId, req.body.articleCategory);
+	res.redirect('/article/my-articles');
+}
+
+routeBehaviors.post.delete.v2 = function (req, res) {
+	Article.deleteArticleById({
+		articleId : req.body.articleId
+	}, function (err, article) {
+		if (err) {
+			req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleFailed);
+			res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedFailed);
+		} else {
+			if (!article) {
+				req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleFailed);
+				res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedFailed);
+			} else {
+				req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleSuccessful);
+				res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedSuccessful);
+			}
+		}
+	});
+}
+
+routeBehaviors.post.edit.v1 = function (req, res) {
+	Article.findById(req.body.id, function (err, article) {
+		if (err) {
+			req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
+			res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
+		} else {
+			article.title     = req.body.title;
+			article.content   = req.body.content;
+			article.category  = req.body.category;
+			article.thumbnail = req.body.thumbnail;
+
+			article.save(function (err) {
+				if (err) {
+					req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
+					res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
+				} else {
+					req.flash('message', webfrontArticleConfig.notificationMessages.editArticleSuccessful);
+					res.redirect(webfrontArticleConfig.edit.redirections.articleEditedSuccessful);
+				}
+			})
+		}
+	});
+}
+
 
 module.exports = routeBehaviors;
