@@ -1,5 +1,6 @@
 var webfrontConfig = require('../../config/webfront/index')
 	, shortId = require('short-mongo-id')
+	, inputSanitizer = require('../../helpers/inputSanitizer.js')
 	, async = require('async');
 
 
@@ -7,6 +8,13 @@ function setupPreSave (schema, articleModel) {
 
 	schema.pre('save', function (next) {
 		this.categoryUrl = '/' + webfrontConfig.categoryBaseUrlName + '/' + this.category.replace(':', '/');
+		next();
+	});
+
+	schema.pre('save', function (next) {
+		this.title	 = inputSanitizer.scriptTagsRemove(this.title);
+		this.thumbnail	 = inputSanitizer.scriptTagsRemove(this.thumbnail);
+		this.content = inputSanitizer.scriptTagsRemove(this.content);
 		next();
 	});
 
