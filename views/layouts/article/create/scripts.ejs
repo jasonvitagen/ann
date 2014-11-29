@@ -6,7 +6,8 @@
 			CKEDITOR.plugins.addExternal( 'youtube', '/javascripts/ckeditor/plugins/youtube/', 'plugin.js' );
 			CKEDITOR.replace('content', {
 				extraPlugins : 'youtube',
-				youtube_responsive : true
+				youtube_responsive : true,
+				youtube_related : false
 			});
 			CKEDITOR.on('instanceReady', function (event) {
 				CKEDITOR.instances.content.setData('<%- typeof formBody.content != 'undefined' && formBody.content.replace(/(\n|\r)/gm, '') || '' %>');
