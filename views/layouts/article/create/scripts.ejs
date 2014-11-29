@@ -1,5 +1,12 @@
 <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
 
 <script>
-	CKEDITOR.replace('content');
+	document.onreadystatechange = function () {
+		if (document.readyState) {
+			CKEDITOR.replace('content');
+			CKEDITOR.on('instanceReady', function (event) {
+				CKEDITOR.instances.content.setData('<%- typeof formBody.content != 'undefined' && formBody.content.replace(/(\n|\r)/gm, '') || '' %>');
+			});
+		}
+	}
 </script>
