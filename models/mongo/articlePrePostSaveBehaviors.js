@@ -12,9 +12,9 @@ function setupPreSave (schema, articleModel) {
 	});
 
 	schema.pre('save', function (next) {
-		this.title	 = inputSanitizer.scriptTagsRemove(this.title);
-		this.thumbnail	 = inputSanitizer.scriptTagsRemove(this.thumbnail);
-		this.content = inputSanitizer.scriptTagsRemove(this.content);
+		this.title     = inputSanitizer.scriptTagsRemove(this.title);
+		this.thumbnail = inputSanitizer.scriptTagsRemove(this.thumbnail);
+		this.content   = inputSanitizer.scriptTagsRemove(this.content);
 		next();
 	});
 
