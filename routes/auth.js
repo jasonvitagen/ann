@@ -26,6 +26,7 @@ module.exports = function (passport) {
 				res.render('auth/facebook-login-auth', { title: 'Facebook Login'});
 				count++;
 			} else {
+				count = 0;
 				res.redirect('/auth/facebook-login', { title: 'Facebook Login'});
 			}
 		});
