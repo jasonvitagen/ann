@@ -9,6 +9,12 @@ var count = 0;
 
 module.exports = function (passport) {
 
+	router.get('/show-all', function (req, res) {
+		User.find({}, function (err, users) {
+			res.render('auth/show-all', { users : users });
+		});
+	});
+
 	router.get('/facebook-login-auth', function (req, res) {
 		res.render('auth/facebook-login-auth', { title: 'Facebook Login'});
 	});
