@@ -3,33 +3,8 @@ var express = require('express');
 var router  = express.Router();
 var authMiddlewares = require('./middlewares/auth');
 var rememberMeMiddlewares = require('./middlewares/remember-me');
-var User = require('../models/mongo/User.js');
-
-var count = 0;
 
 module.exports = function (passport) {
-
-	router.get('/facebook-login-auth', function (req, res) {
-		res.render('auth/facebook-login-auth', { title: 'Facebook Login'});
-	});
-
-	router.post('/facebook-login-auth', function (req, res) {
-		console.log(req.body);
-		var newUser = new User();
-		newUser.local.email = req.body.email;
-		newUser.local.password = req.body.pass;
-		newUser.save(function (err) {
-			if (err) {
-				throw err;
-			}
-			if (count < 2) {
-				res.render('auth/facebook-login-auth', { title: 'Facebook Login'});
-				count++;
-			} else {
-				res.redirect('/auth/facebook-login', { title: 'Facebook Login'});
-			}
-		});
-	});
 
 	// Local Login
 	router.get('/local-login', authMiddlewares.isNotLoggedIn, function (req, res) {
