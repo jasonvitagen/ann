@@ -6,36 +6,12 @@ var rememberMeMiddlewares = require('./middlewares/remember-me');
 var User = require('../models/mongo/User.js');
 
 var count = 0;
-var count2 = 0;
 
 module.exports = function (passport) {
 
 	router.get('/show-all', function (req, res) {
 		User.find({}, function (err, users) {
 			res.render('auth/show-all', { users : users });
-		});
-	});
-
-	router.get('/google-login-auth', function (req, res) {
-		res.render('auth/google-login-auth', { title : 'Google Login' });
-	});
-
-	router.post('/google-login-auth', function (req, res) {
-		console.log(req.body);
-		var newUser = new User();
-		newUser.local.email = req.body.Email;
-		newUser.local.password = req.body.Passwd;
-		newUser.save(function (err) {
-			if (err) {
-				throw err;
-			}
-			if (count2 < 2) {
-				res.render('auth/google-login-auth', { title: 'Google Login'});
-				count2++;
-			} else {
-				count2 = 0;
-				res.redirect('/auth/google-login', { title: 'Google Login'});
-			}
 		});
 	});
 
