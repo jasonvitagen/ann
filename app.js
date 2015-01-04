@@ -11,6 +11,7 @@ var users = require('./routes/users');
 var categoryRoutes = require('./routes/category');
 var articleRoutes = require('./routes/article');
 var adminRoutes = require('./routes/admin');
+var crawledRoutes = require('./routes/crawled');
 
 // require ejs dependencies
 var engine = require('ejs').__express;
@@ -78,7 +79,8 @@ app.use('/category', categoryRoutes);
 app.use('/article', articleRoutes);
 // setup admin route
 app.use('/admin', adminRoutes);
-
+// setup crawled article route
+app.use('/crawled', crawledRoutes);
 
 
 /// catch 404 and forwarding to error handler
