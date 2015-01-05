@@ -1,0 +1,15 @@
+<% include ../layouts/header.ejs %>
+
+<div class="grid no-gutters">
+
+	<ul>
+		<% crawledArticles.forEach(function (crawledArticle) { %>
+
+			<li><a href="/admin/list-crawled-article/<%= crawledArticle._id %>"><%= crawledArticle.title %></a></li>
+
+		<% }) %>
+	</ul>
+
+</div>
+
+<% include ../layouts/footer.ejs %>
