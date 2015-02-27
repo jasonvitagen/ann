@@ -1,13 +1,50 @@
 <% include ../layouts/article/create/header.ejs %>
 
-<div class="grid" id="article-create">
+<style>
+	.selected-thumbnail img {
+		max-width: 150px;
+	}
+	.thumbnail-selector ul {
+		list-style-type: none;
+	}
+	.thumbnail-selector li {
+		display: inline-block;
+		margin: 0 5px 5px 0;
+	}
+	.thumbnail-selector img {
+		max-width: 150px;
+		border: 5px solid white;
+	}
+	.thumbnail-selector img.active {
+		border: 5px solid gold;
+	}
+</style>
+
+<div class="grid" id="article-create" ng-app="ann">
 	<div class="unit w-1-1">
-		<form method="post">
+		<form action="#" method="post">
 			<label for="title">Title</label><br>
 			<input type="hidden" name="id" id="id" value="<%= typeof formBody.id != 'undefined' && formBody.id || '' %>">
 			<input type="text" name="title" id="title" value="<%= typeof formBody.title != 'undefined' && formBody.title || '' %>"><br><br>
 			<label for="thumbnail">Thumbnail</label><br>
-			<input type="text" name="thumbnail" id="thumbnail" value="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>"><br><br>
+			<input type="text" name="thumbnail" id="thumbnail" value="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>" ng-model="selectedThumbnail" ng-init="selectedThumbnail = '<%= typeof formBody.thumbnail != "undefined" && formBody.thumbnail || "" %>'">
+			<br>
+			<br>
+			<div class="selected-thumbnail">
+				<img ng-src="{{ selectedThumbnail }}">
+			</div>
+			<br>
+			<br>
+			<label for="category">Thumbnail Selector</label><br>
+			<div thumbnail-selector ng-model="selectedThumbnail" options="<%= typeof formBody.images != 'undefined' && JSON.stringify(formBody.images) || '' %>" default-thumbnail="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>" class="thumbnail-selector">
+				<ul>
+					<li ng-repeat="item in items">
+						<img ng-src="{{ item }}" alt="">
+					</li>
+				</ul>
+			</div>
+			<br>
+			<br>
 			<label for="category">Category</label><br>
 			<div class="select">
 				<select name="category" id="category">

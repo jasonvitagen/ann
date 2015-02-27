@@ -4,6 +4,7 @@ var Article = require('../models/redis/Article').Article;
 var authMiddlewares = require('./middlewares/auth');
 var CrawledArticleModel = require('../models/mongo/CrawledArticle');
 var articleRoutesBehaviors = require('./articleRoutesBehaviors');
+var imgSrcReplacer = require('../helpers/imageSrcReplacer');
 
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
@@ -35,6 +36,7 @@ router.get('/list-crawled-articles', authMiddlewares.isLoggedIn, authMiddlewares
 });
 
 router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
+
 	CrawledArticleModel
 		.find()
 		.where({ _id : req.params.id })
@@ -43,11 +45,29 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 			req.body.title = crawledArticle.title;
 			req.body.thumbnail = crawledArticle.thumbnail;
 			req.body.content = crawledArticle.content;
-			articleRoutesBehaviors.get.create.v1(req, res);
+			req.body.images = crawledArticle.images;
+			
+			console.log(req.body.content);
+			imgSrcReplacer.uploadAndReplaceAll({
+
+				content : req.body.content
+
+			}, function (err) {
+
+				if (err) {
+					console.log(err);
+				}
+				articleRoutesBehaviors.get.create.v1(req, res);
+
+			});
 		});
+
+
+
 });
 
 router.post('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
+	console.log(req.body);
 	articleRoutesBehaviors.post.create.v2(req, res);
 });
 

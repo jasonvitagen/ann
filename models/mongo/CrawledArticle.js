@@ -8,6 +8,7 @@ var crawledArticleSchema = mongoose.Schema({
 	title       : String,
 	crawledLink : String,
 	thumbnail   : String,
+	images		: [String],
 	content     : String
 });
 

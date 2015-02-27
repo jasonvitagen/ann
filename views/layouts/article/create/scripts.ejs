@@ -1,6 +1,11 @@
 <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
+<script src="/javascripts/external/angular.min.js"></script>
 
 <script>
+
+	angular
+		.module('ann', []);
+
 	document.onreadystatechange = function () {
 		if (document.readyState) {
 			CKEDITOR.plugins.addExternal( 'youtube', '/javascripts/ckeditor/plugins/youtube/', 'plugin.js' );
@@ -15,3 +20,5 @@
 		}
 	}
 </script>
+
+<script src="/javascripts/angular/thumbnailSelector.js"></script>
