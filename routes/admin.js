@@ -4,7 +4,11 @@ var Article = require('../models/redis/Article').Article;
 var authMiddlewares = require('./middlewares/auth');
 var CrawledArticleModel = require('../models/mongo/CrawledArticle');
 var articleRoutesBehaviors = require('./articleRoutesBehaviors');
-var imgSrcReplacer = require('../helpers/imageSrcReplacer');
+var Imgur = new require('../plugins/imgur/imgur');
+var imgur = new Imgur({
+	clientId : 'fe831b31baf537f'
+});
+var async = require('async');
 
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
@@ -30,7 +34,6 @@ router.get('/list-crawled-articles', authMiddlewares.isLoggedIn, authMiddlewares
 		.sort({ created : -1 })
 		.select({ title : 1, _id : 1 })
 		.exec(function (err, crawledArticles) {
-			console.log(crawledArticles);
 			res.render('admin/list-crawled-articles', { crawledArticles : crawledArticles });
 		});
 });
@@ -46,20 +49,68 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 			req.body.thumbnail = crawledArticle.thumbnail;
 			req.body.content = crawledArticle.content;
 			req.body.images = crawledArticle.images;
-			
-			console.log(req.body.content);
-			imgSrcReplacer.uploadAndReplaceAll({
 
-				content : req.body.content
+			async.parallel([
 
-			}, function (err) {
+				function (done) {
 
-				if (err) {
-					console.log(err);
+					imgur.uploadUrl({
+						imageUrl : req.body.thumbnail
+					}, function (err, response) {
+
+						if (!err) {
+							req.body.thumbnail = response.body.data.link;
+						}
+
+						done();
+
+					});
+
+				},
+
+				function (done) {
+
+					var i = 0;
+
+					async.each(req.body.images, function (img, done2) {
+
+						imgur.uploadUrl({
+							imageUrl : img
+						}, function (err, response) {
+
+							if (!err) {
+								req.body.images.splice(i++, 1, response.body.data.link);
+							}
+
+							done2();
+
+						});
+
+					}, function (err) {
+
+						done();
+
+					});
+
+				},
+
+				function (done) {
+
+					imgur.uploadAndReplace({
+						content : req.body.content
+					}, function (err, html) {
+						req.body.content = html;
+						done();
+					});
+
 				}
+
+			], function (err, results) {
+
 				articleRoutesBehaviors.get.create.v1(req, res);
 
 			});
+
 		});
 
 
@@ -67,7 +118,6 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 });
 
 router.post('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
-	console.log(req.body);
 	articleRoutesBehaviors.post.create.v2(req, res);
 });
 

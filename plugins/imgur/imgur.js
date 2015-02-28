@@ -1,5 +1,7 @@
 var config = require('./config')
 	, request = require('request')
+	, cheerio = require('cheerio')
+	, async   = require('async')
 	, Imgur;
 
 Imgur = function (args) { // Constructor
@@ -43,6 +45,47 @@ Imgur.prototype.uploadUrl = function (args, callback) {
 				body     : JSON.parse(body)
 			});
 		}
+	});
+
+}
+
+Imgur.prototype.uploadAndReplace = function (args, callback) {
+
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.content) {
+		return callback('No "content" arg');
+	}
+
+	var $ = cheerio.load(args.content)
+		, imgs = $('img').toArray()
+		, obj  = this;
+
+	async.each(imgs, function (img, done) {
+
+		obj.uploadUrl({
+			imageUrl : img.attribs.src
+		}, function (err, response) {
+
+			if (!err) {
+
+				$('img[src="' + img.attribs.src + '"]').attr('src', response.body.data.link);
+
+			}
+
+			done();
+
+		});
+
+	}, function (err) {
+
+		if (err) {
+			return callback(err);
+		}
+		
+		return callback(null, $.html());
+
 	});
 
 }
