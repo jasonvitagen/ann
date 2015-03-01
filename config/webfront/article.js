@@ -24,7 +24,7 @@ module.exports = {
 
 		articleTitleAllowedLength     : 200,
 		articleThumbnailAllowedLength : 500,
-		articleContentAllowedLength   : 4000,
+		articleContentAllowedLength   : 10000,
 
 		maxArticleContentLength       : 2000,
 

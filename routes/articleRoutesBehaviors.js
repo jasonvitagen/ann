@@ -166,7 +166,7 @@ routeBehaviors.post.create.v1 = function (req, res) {
 	}
 }
 
-routeBehaviors.post.create.v2 = function (req, res) {
+routeBehaviors.post.create.v2 = function (req, res, cbForError) {
 	var article = new Article({
 		authorName  : req.user.facebook.name || req.user.google.name || req.user.local.name,
 		authorEmail : req.user.facebook.email || req.user.google.email || req.user.local.email,
@@ -178,7 +178,9 @@ routeBehaviors.post.create.v2 = function (req, res) {
 	});
 	article.save(function (err) {
 		if (err) {
-			console.log(err);
+			if (cbForError) {
+				return cbForError();
+			}
 			req.flash('message', webfrontArticleConfig.save.failedMessage);
 			res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 			return;

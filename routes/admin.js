@@ -79,7 +79,11 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 						}, function (err, response) {
 
 							if (!err) {
-								req.body.images.splice(i++, 1, response.body.data.link);
+								try {
+									req.body.images.splice(i++, 1, response.body.data.link);
+								} catch (ex) {
+									console.log(ex);
+								}
 							}
 
 							done2();
@@ -118,7 +122,11 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 });
 
 router.post('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
-	articleRoutesBehaviors.post.create.v2(req, res);
+	var id = req.params.id;
+	articleRoutesBehaviors.post.create.v2(req, res, function () {
+		req.flash('message', 'Save crawled article failed');
+		res.redirect('./' + id);
+	});
 });
 
 module.exports = router;

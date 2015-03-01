@@ -28,24 +28,31 @@ Imgur.prototype.uploadUrl = function (args, callback) {
 		return callback('No image url');
 	}
 
-	request.post({
-		url : config.imgurApis.v3.image_upload.route,
-		headers : {
-			Authorization : this.clientId
-		},
-		form : {
-			image : args.imageUrl
-		}
-	}, function (err, response, body) {
-		if (err) {
-			return callback(err);
-		} else {
-			return callback(null, {
-				response : response,
-				body     : JSON.parse(body)
-			});
-		}
-	});
+	try {
+
+		request.post({
+			url : config.imgurApis.v3.image_upload.route,
+			headers : {
+				Authorization : this.clientId
+			},
+			form : {
+				image : args.imageUrl
+			}
+		}, function (err, response, body) {
+			if (err) {
+				return callback(err);
+			} else {
+				return callback(null, {
+					response : response,
+					body     : JSON.parse(body)
+				});
+			}
+		});
+		
+	} catch (ex) {
+		console.log(ex);
+	}
+
 
 }
 
@@ -70,7 +77,11 @@ Imgur.prototype.uploadAndReplace = function (args, callback) {
 
 			if (!err) {
 
-				$('img[src="' + img.attribs.src + '"]').attr('src', response.body.data.link);
+				try {
+					$('img[src="' + img.attribs.src + '"]').attr('src', response.body.data.link);
+				} catch (ex) {
+					console.log(ex);
+				}
 
 			}
 

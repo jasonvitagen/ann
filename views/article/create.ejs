@@ -36,7 +36,7 @@
 			<br>
 			<br>
 			<label for="category">Thumbnail Selector</label><br>
-			<div thumbnail-selector ng-model="selectedThumbnail" options="<%= typeof formBody.images != 'undefined' && JSON.stringify(formBody.images) || '' %>" default-thumbnail="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>" class="thumbnail-selector">
+			<div thumbnail-selector ng-model="selectedThumbnail" options="<%= typeof formBody.images != 'undefined' && JSON.stringify(formBody.images) || '[]' %>" default-thumbnail="<%= typeof formBody.thumbnail != 'undefined' && formBody.thumbnail || '' %>" class="thumbnail-selector">
 				<ul>
 					<li ng-repeat="item in items">
 						<img ng-src="{{ item }}" alt="">
