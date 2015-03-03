@@ -9,6 +9,7 @@ var imgur = new Imgur({
 	clientId : 'fe831b31baf537f'
 });
 var async = require('async');
+var cacher = require('../plugins/articleCacher');
 
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
@@ -50,70 +51,73 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 			req.body.content = crawledArticle.content;
 			req.body.images = crawledArticle.images;
 
-			async.parallel([
+			// async.parallel([
 
-				function (done) {
+			// 	function (done) {
 
-					imgur.uploadUrl({
-						imageUrl : req.body.thumbnail
-					}, function (err, response) {
+			// 		imgur.uploadUrl({
+			// 			imageUrl : req.body.thumbnail
+			// 		}, function (err, response) {
 
-						if (!err) {
-							req.body.thumbnail = response.body.data.link;
-						}
+			// 			if (!err) {
+			// 				req.body.thumbnail = response.body.data.link;
+			// 			}
 
-						done();
+			// 			done();
 
-					});
+			// 		});
 
-				},
+			// 	},
 
-				function (done) {
+			// 	function (done) {
 
-					var i = 0;
+			// 		var i = 0;
 
-					async.each(req.body.images, function (img, done2) {
+			// 		async.each(req.body.images, function (img, done2) {
 
-						imgur.uploadUrl({
-							imageUrl : img
-						}, function (err, response) {
+			// 			imgur.uploadUrl({
+			// 				imageUrl : img
+			// 			}, function (err, response) {
 
-							if (!err) {
-								try {
-									req.body.images.splice(i++, 1, response.body.data.link);
-								} catch (ex) {
-									console.log(ex);
-								}
-							}
+			// 				if (!err) {
+			// 					try {
+			// 						req.body.images.splice(i++, 1, response.body.data.link);
+			// 					} catch (ex) {
+			// 						console.log(ex);
+			// 					}
+			// 				}
 
-							done2();
+			// 				done2();
 
-						});
+			// 			});
 
-					}, function (err) {
+			// 		}, function (err) {
 
-						done();
+			// 			done();
 
-					});
+			// 		});
 
-				},
+			// 	},
 
-				function (done) {
+			// 	function (done) {
 
-					imgur.uploadAndReplace({
-						content : req.body.content
-					}, function (err, html) {
-						req.body.content = html;
-						done();
-					});
+			// 		imgur.uploadAndReplace({
+			// 			content : req.body.content
+			// 		}, function (err, html) {
+			// 			req.body.content = html;
+			// 			done();
+			// 		});
 
-				}
+			// 	}
 
-			], function (err, results) {
+			// ], function (err, results) {
 
-				articleRoutesBehaviors.get.create.v1(req, res);
+			// 	articleRoutesBehaviors.get.create.v1(req, res);
 
-			});
+			// });
+
+			articleRoutesBehaviors.get.create.v1(req, res);
+
 
 		});
 

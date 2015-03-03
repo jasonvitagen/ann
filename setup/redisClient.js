@@ -15,6 +15,7 @@ function setup (redisClient) {
 	
 }
 
+
 module.exports = {
 	setup : setup
 };

@@ -11,7 +11,7 @@ var article = {};
 
 function setup (redisClient) {
 	client = redisClient;
-	client.setnx(config.keyNames.global.article.key, config.keyNames.global.article.value);
+	// client.setnx(config.keyNames.global.article.key, config.keyNames.global.article.value);
 	return Article;
 }
 
