@@ -16,6 +16,8 @@ module.exports = {
 		clientID     : 'e834917ff1c9450486bc878dae9ded48',
 		clientSecret : '0940202e5a16472b840911026b937f30',
 		callbackURL  : 'http://mobile360.net/auth/renren/callback'
-	}
+	},
+
+	secretKey1 : '07X09K2VS9P384myEVg9dyw9NAiucgIaj'
 
 };

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Article = require('../models/redis/Article').Article;
 var authMiddlewares = require('./middlewares/auth');
+var tokenBasedAuthenticationMiddlewares = require('./middlewares/tokenBasedAuthentication');
 var CrawledArticleModel = require('../models/mongo/CrawledArticle');
 var articleRoutesBehaviors = require('./articleRoutesBehaviors');
 var Imgur = new require('../plugins/imgur/imgur');
@@ -29,7 +30,8 @@ router.post('/confirm-article', authMiddlewares.isLoggedIn, authMiddlewares.isAd
 	});
 });
 
-router.get('/list-crawled-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
+router.get('/list-crawled-articles', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+
 	CrawledArticleModel
 		.find()
 		.sort({ created : -1 })
@@ -39,7 +41,7 @@ router.get('/list-crawled-articles', authMiddlewares.isLoggedIn, authMiddlewares
 		});
 });
 
-router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
+router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 
 	CrawledArticleModel
 		.find()
@@ -125,7 +127,7 @@ router.get('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewa
 
 });
 
-router.post('/list-crawled-article/:id', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
+router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 	var id = req.params.id;
 	articleRoutesBehaviors.post.create.v2(req, res, function () {
 		req.flash('message', 'Save crawled article failed');

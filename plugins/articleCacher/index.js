@@ -7,6 +7,9 @@ apis.cacheArticleToPool = function (args, callback) {
 	if (!args) {
 		return callback('No args');
 	}
+	if (!args.command) {
+		return callback('No "command" arg');
+	}
 	if (!args.key) {
 		return callback('No "key" arg');
 	}
@@ -19,23 +22,29 @@ apis.cacheArticleToPool = function (args, callback) {
 
 	var input = [args.key].concat(args.items);
 
-	client.zadd(input, function (err, response) {
-		if (err) {
-			return callback(err);
-		}
-		return callback(null, response);
-	});
+	try {
+
+		client[args.command](input, function (err, response) {
+			if (err) {
+				return callback(err);
+			}
+			return callback(null, response);
+		});
+
+	} catch (ex) {
+		return callback(ex);
+	}
 
 }
 
 apis.cacheArticleToPool({
+	command : 'zaddd',
 	key : 'articlesPool',
 	items : [200, 'Elisabeth', 300, 'Ann']
 }, function (err, response) {
 	if (err) {
 		console.log(err);
 	}
-	console.log(response);
 });
 
 apis.getCachedArticlesFromPool = function (args, callback) {
