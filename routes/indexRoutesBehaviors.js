@@ -38,8 +38,7 @@ routeBehaviors.get.index.v2 = function (req, res) {
 			});
 		} else {
 			res.render('index', {
-				articles : articles,
-				message : req.flash('message')
+				articles : articles
 			});
 		}
 	});

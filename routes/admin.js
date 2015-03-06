@@ -10,7 +10,8 @@ var imgur = new Imgur({
 	clientId : 'fe831b31baf537f'
 });
 var async = require('async');
-var cacher = require('../plugins/articleCacher');
+var dummy = require('./middlewares/dummy');
+var adminCachingBehaviors = require('./behaviors/adminCache');
 
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
@@ -30,15 +31,19 @@ router.post('/confirm-article', authMiddlewares.isLoggedIn, authMiddlewares.isAd
 	});
 });
 
-router.get('/list-crawled-articles', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+router.get('/list-crawled-articles', function (req, res) {
 
 	CrawledArticleModel
 		.find()
 		.sort({ created : -1 })
 		.select({ title : 1, _id : 1 })
 		.exec(function (err, crawledArticles) {
+			if (err) {
+				return res.status(500).send("Something's wrong");
+			}
 			res.render('admin/list-crawled-articles', { crawledArticles : crawledArticles });
 		});
+
 });
 
 router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
@@ -127,11 +132,21 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 
 });
 
-router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, dummy.randomizeUserName, function (req, res) {
+	
 	var id = req.params.id;
-	articleRoutesBehaviors.post.create.v2(req, res, function () {
-		req.flash('message', 'Save crawled article failed');
-		res.redirect('./' + id);
+
+
+	articleRoutesBehaviors.post.create.v2(req, res, function (err, args, callback) {
+
+		if (!args
+			|| !args.article) {
+			console.log('No args');
+			return callback('No "args"');
+		}
+
+		adminCachingBehaviors.cacheCrawledArticle(err, args, callback);
+
 	});
 });
 

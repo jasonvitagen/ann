@@ -20,14 +20,16 @@ var engine = require('ejs').__express;
 var redis = require('redis');
 
 // require passport dependencies
-var session  = require('cookie-session');
-var passport = require('passport');
-var flash    = require('connect-flash');
+// var session  = require('cookie-session');
+// var passport = require('passport');
+// var flash    = require('connect-flash');
+
 var mongoose = require('mongoose');
 
 var app = express();
 app.set('trust proxy', true);
 
+var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var secret = require('./config/auth');
 var token = jwt.sign({ 
@@ -35,7 +37,7 @@ var token = jwt.sign({
         scopes: ['approveCrawledArticle']
     }, secret.secretKey1);
 
-console.log(token);
+// fs.writeFileSync('token.txt', token);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,9 +55,10 @@ var Article = require('./models/redis/Article').setup(redisClient);
 var Category = require('./models/redis/Category').setup(redisClient);
 
 // setup passport
-require('./setup/passport.js')(passport);
+// require('./setup/passport.js')(passport);
+// var authRoutes = require('./routes/auth.js')(passport);
+
 mongoose.connect('mongodb://localhost:27017/ann');
-var authRoutes = require('./routes/auth.js')(passport);
 
 // setup webfront variables
 require('./setup/webFront.js')(app);;
@@ -71,17 +74,17 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 
 
 // setup passport middlewares
-app.use(session({secret : 'iLoveAnn'}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(passport.authenticate('remember-me'));
-app.use(flash());
+// app.use(session({secret : 'iLoveAnn'}));
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(passport.authenticate('remember-me'));
+// app.use(flash());
 
 app.use('/', routes);
 app.use('/users', users);
 
 // Setup passport route
-app.use('/auth', authRoutes);
+// app.use('/auth', authRoutes);
 // setup category route
 app.use('/category', categoryRoutes);
 // setup article route
@@ -116,6 +119,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+    console.log('bye');
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

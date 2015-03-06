@@ -38,7 +38,7 @@ apis.cacheArticleToPool = function (args, callback) {
 }
 
 apis.cacheArticleToPool({
-	command : 'zaddd',
+	command : 'zadd',
 	key : 'articlesPool',
 	items : [200, 'Elisabeth', 300, 'Ann']
 }, function (err, response) {
@@ -91,7 +91,7 @@ apis.cacheArticle = function (args, callback) {
 		return callback('No "key" arg');
 	}
 	if (!args.items) {
-		return callback('No "item" arg');
+		return callback('No "items" arg');
 	}
 
 	client.hmset(args.key, args.items, function (err, response) {

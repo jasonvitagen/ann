@@ -15,7 +15,7 @@ routeBehaviors.get.getArticleById = {};
 routeBehaviors.get.edit = {};
 
 routeBehaviors.get.create.v1 = function (req, res) {
-	res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
+	res.render('article/create', { categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 }
 routeBehaviors.get.myArticles.v1 = function (req, res) {
 	Article.getUserArticles(req.user, 0, webFrontIndexConfig.articlesSize, function (err, articles) {
@@ -166,30 +166,32 @@ routeBehaviors.post.create.v1 = function (req, res) {
 	}
 }
 
-routeBehaviors.post.create.v2 = function (req, res, cbForError) {
+routeBehaviors.post.create.v2 = function (req, res, callback) {
 	var article = new Article({
-		authorName  : req.user.facebook.name || req.user.google.name || req.user.local.name,
-		authorEmail : req.user.facebook.email || req.user.google.email || req.user.local.email,
-		authorId    : req.user._id,
+		authorName  : req.decoded.user,
+		authorEmail : req.decoded.user,
+		authorId    : req.decoded.user,
 		title       : req.body.title,
 		thumbnail   : req.body.thumbnail,
 		category    : req.body.category,
 		content     : req.body.content
 	});
+
 	article.save(function (err) {
 		if (err) {
-			if (cbForError) {
-				return cbForError();
-			}
-			req.flash('message', webfrontArticleConfig.save.failedMessage);
-			res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
+			res.render('article/create', { categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 			return;
-		} else {
-			req.flash('message', webfrontArticleConfig.save.successMessage);
 		}
-		res.redirect(webfrontArticleConfig.save.redirections.articleCreatedSuccessful);
+		callback && callback(null, {
+			article : article
+		}, function (err) {
+			if (err) {
+				res.status(500).send(err);
+			} else {
+				res.redirect(webfrontArticleConfig.save.redirections.articleCreatedSuccessful);
+			}
+		});
 	});
-	return;
 }
 
 routeBehaviors.post.delete.v1 = function (req, res) {

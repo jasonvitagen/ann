@@ -6,22 +6,20 @@ var jwt = require('jsonwebtoken')
 middlewares.canApproveCrawledArticle = function (req, res, next) {
 
 	if (!req.cookies.Authentication) {
-		return next('Not allowed');
+		return res.status(500).send('Not allowed');
 	}
 
 	jwt.verify(req.cookies.Authentication, secret, function (err, decoded) {
-		console.log(err, decoded);
-		if (err) {
-			return next('Wrong authorization');
+
+		if (err
+			|| !decoded.scopes
+			|| ! (decoded.scopes.indexOf('approveCrawledArticle') > -1)) {
+			return res.status(500).send('Not allowed');
 		}
 
-		if (!decoded.scopes) {
-			return next('No "scopes" arg');
-		}
+		req.decoded = decoded;
 
-		if (decoded.scopes.indexOf('approveCrawledArticle') > -1) {
-			next();
-		}
+		next();
 
 	});
 
@@ -29,3 +27,4 @@ middlewares.canApproveCrawledArticle = function (req, res, next) {
 
 
 module.exports = middlewares;
+
