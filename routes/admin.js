@@ -31,7 +31,7 @@ router.post('/confirm-article', authMiddlewares.isLoggedIn, authMiddlewares.isAd
 	});
 });
 
-router.get('/list-crawled-articles', function (req, res) {
+router.get('/list-crawled-articles', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 
 	CrawledArticleModel
 		.find()
@@ -132,7 +132,7 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 
 });
 
-router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, dummy.randomizeUserName, function (req, res) {
+router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, dummy.randomizeUserName, dummy.createArticleId, function (req, res) {
 	
 	var id = req.params.id;
 

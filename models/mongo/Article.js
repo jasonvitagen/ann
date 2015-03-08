@@ -63,6 +63,7 @@ var articleSchema = mongoose.Schema({
 
 // Define indexes
 articleSchema.index({ authorId : 1 });
+articleSchema.index({ articleId : 1 });
 articleSchema.index({ created : 1 });
 articleSchema.index({ category : 1 });
 
@@ -235,7 +236,7 @@ articleSchema.statics.doesUserHaveArticle = function (args, callback) {
 var articleModel = mongoose.model('Article', articleSchema);
 
 articlePrePostSaveBehaviors.setupPreSave(articleSchema, articleModel);
-articlePrePostSaveBehaviors.setupPostSave(articleSchema, articleModel);
+// articlePrePostSaveBehaviors.setupPostSave(articleSchema, articleModel);
 
 module.exports = {
 	schema : articleSchema,

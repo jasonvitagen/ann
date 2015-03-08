@@ -168,6 +168,7 @@ routeBehaviors.post.create.v1 = function (req, res) {
 
 routeBehaviors.post.create.v2 = function (req, res, callback) {
 	var article = new Article({
+		articleId   : req.body.articleId,
 		authorName  : req.decoded.user,
 		authorEmail : req.decoded.user,
 		authorId    : req.decoded.user,

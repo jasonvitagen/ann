@@ -13,7 +13,17 @@ angular
 
 			return function (scope, element, attrs, ctrl) {
 
-				scope.items = JSON.parse(attrs['options']);
+				var images = JSON.parse(attrs['options'])
+					, items = [];
+
+				for (var i = 0; i < images.length; i++) {
+					var item = {};
+					item.link = images[i];
+					item.trackId = Date.now() + Math.round(Math.random() * 1000);
+					items.push(item);
+				}
+
+				scope.items = items;
 
 				var highlightThumbnail = function (value) {
 					var imgs = element.find('img');

@@ -1,6 +1,8 @@
 var redis = require('redis')
 	, apis = {}
-	, client = redis.createClient();
+	, client = redis.createClient()
+	, Lazy = require('lazy.js')
+	, async = require('async');
 
 apis.cacheArticleToPool = function (args, callback) {
 
@@ -37,15 +39,15 @@ apis.cacheArticleToPool = function (args, callback) {
 
 }
 
-apis.cacheArticleToPool({
-	command : 'zadd',
-	key : 'articlesPool',
-	items : [200, 'Elisabeth', 300, 'Ann']
-}, function (err, response) {
-	if (err) {
-		console.log(err);
-	}
-});
+// apis.cacheArticleToPool({
+// 	command : 'zadd',
+// 	key : 'articlesPool',
+// 	items : [200, 'Elisabeth', 300, 'Ann']
+// }, function (err, response) {
+// 	if (err) {
+// 		console.log(err);
+// 	}
+// });
 
 apis.getCachedArticlesFromPool = function (args, callback) {
 
@@ -73,12 +75,62 @@ apis.getCachedArticlesFromPool = function (args, callback) {
 			if (err) {
 				return callback(err);
 			}
-			return callback(response);
+			return callback(null, response);
 		});
 		
 	} catch (ex) {
 		return callback(ex);
 	}
+
+}
+
+apis.trimCachedArticlesInPool = function (args, callback) {
+
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.key) {
+		return callback('No "key" arg');
+	}
+	if (!args.trimSize) {
+		return callback('No "trim size" arg');
+	}
+
+	client.zrange([args.key, args.trimSize, -1], function (err, response) {
+		if (err) {
+			return callback(err);
+		}
+
+		async.each(response, function (item, done) {
+
+			Lazy(item)
+				.split('||')
+				.take(1)
+				.each(function (id) {
+					client.del('article:' + id, function (err, response) {
+						if (err) {
+							return done(err);
+						}
+						return done();
+					});
+				});
+
+		}, function (err) {
+
+			if (err) {
+				return callback(err);
+			}
+			
+			client.zremrangebyrank([args.key, args.trimSize, -1], function (err, response) {
+				if (err) {
+					return callback(err);
+				}
+				return callback(null, response);
+			});
+
+		});
+
+	});
 
 }
 

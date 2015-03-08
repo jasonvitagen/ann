@@ -5,7 +5,8 @@ var express  = require('express')
 	, mongoConfig = require('../config/mongo')
 	, authMiddlewares = require('./middlewares/auth')
 	, webFrontIndexConfig = require('../config/webfront/index')
-	, articleRoutesBehaviors = require('./articleRoutesBehaviors');
+	, articleRoutesBehaviors = require('./articleRoutesBehaviors')
+	, getArticlesViaCache = require('./behaviors/getArticlesViaCache');
 
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
@@ -33,6 +34,35 @@ router.get('/random/:number?', function (req, res) {
 
 router.get('/edit/:articleId', authMiddlewares.isLoggedIn, authMiddlewares.doesArticleBelongToMongoUser, function (req, res) {
 	articleRoutesBehaviors.get.edit.v1(req, res);
+});
+
+router.get('/json/latest/:number', function (req, res) {
+	getArticlesViaCache.getCachedLatestArticles({
+		number : req.params.number
+	}, function (err,response) {
+		if (err) {
+			return res.json({ status : 'error' });
+		}
+		res.json({
+			status : 'ok',
+			data : response
+		});
+	});
+});
+
+router.get('/json/:articleId', function (req, res) {
+	getArticlesViaCache.getCachedArticle({
+		articleId : req.params.articleId
+	}, function (err, response) {
+
+		if (err) {
+			return res.json({ status : 'error' });
+		}
+		res.json({
+			status : 'ok',
+			data : response
+		});
+	});
 });
 
 router.get('/:articleId/:title?', function (req, res) {

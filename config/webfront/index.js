@@ -1,6 +1,6 @@
 module.exports = {
 
-	siteName : '',
+	siteName : 'ZBB',
 
 	articlesSize : 9,
 

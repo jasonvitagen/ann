@@ -71,7 +71,11 @@ app.use(cookieParser());
 app.use(currentPageUrl());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
-
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
 
 // setup passport middlewares
 // app.use(session({secret : 'iLoveAnn'}));

@@ -8,7 +8,7 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 		cacher.cacheArticleToPool({
 			command : 'zadd',
 			key : 'articlesPool',
-			items : [Date.now(), args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
+			items : [Date.now(), args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
 		}, function (err, response) {
 			if (err) {
 				console.log(err);
@@ -19,8 +19,9 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 
 	var t2 = function (done) {
 		cacher.cacheArticle({
-			key : 'article:' + args.article._id,
+			key : 'article:' + args.article.articleId,
 			items : {
+				'articleId' : args.article.articleId,
 				'title' : args.article.title,
 				'authorName' : args.article.authorName,
 				'category' : args.article.category,

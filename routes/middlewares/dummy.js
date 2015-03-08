@@ -8,5 +8,12 @@ middlewares.randomizeUserName = function (req, res, next) {
 
 }
 
+middlewares.createArticleId = function (req, res, next) {
+
+	req.body.articleId = Date.now();
+	next();
+
+}
+
 module.exports = middlewares;
 
