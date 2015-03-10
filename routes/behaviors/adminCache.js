@@ -4,6 +4,14 @@ var cacher = require('../../plugins/articleCacher')
 
 apis.cacheCrawledArticle = function (err, args, callback) {
 
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.article
+		|| !args.article.category) {
+		return callback('No "article or article category" arg');
+	}
+
 	var t1 = function (done) {
 		cacher.cacheArticleToPool({
 			command : 'zadd',
@@ -18,6 +26,19 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 	}
 
 	var t2 = function (done) {
+		cacher.cacheArticleToPool({
+			command : 'zadd',
+			key : args.article.category,
+			items : [Date.now(), args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
+		}, function (err, response) {
+			if (err) {
+				console.log(err);
+			}
+			done();
+		});
+	}
+
+	var t3 = function (done) {
 		cacher.cacheArticle({
 			key : 'article:' + args.article.articleId,
 			items : {
@@ -33,7 +54,7 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 		});
 	}
 	
-	async.parallel([t1, t2], function (err, results) {
+	async.parallel([t1, t2, t3], function (err, results) {
 		return callback(null);
 	});
 

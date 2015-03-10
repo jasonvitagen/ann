@@ -47,7 +47,7 @@
 			<br>
 			<label for="category">Category</label><br>
 			<div class="select">
-				<select name="category" id="category">
+				<select name="category" id="category" value="<%= typeof formBody.category != 'undefined' && formBody.category || '' %>">
 					<%
 						function getCategoryRecursively (categories, parentKey, selectedCategory) {
 							for (categoryKey in categories) {

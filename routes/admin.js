@@ -12,6 +12,7 @@ var imgur = new Imgur({
 var async = require('async');
 var dummy = require('./middlewares/dummy');
 var adminCachingBehaviors = require('./behaviors/adminCache');
+var uploadImagesToImgur = require('./behaviors/uploadImagesToImgur');
 
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
@@ -57,74 +58,21 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 			req.body.thumbnail = crawledArticle.thumbnail;
 			req.body.content = crawledArticle.content;
 			req.body.images = crawledArticle.images;
+			req.body.category = crawledArticle.category;
 
-			// async.parallel([
-
-			// 	function (done) {
-
-			// 		imgur.uploadUrl({
-			// 			imageUrl : req.body.thumbnail
-			// 		}, function (err, response) {
-
-			// 			if (!err) {
-			// 				req.body.thumbnail = response.body.data.link;
-			// 			}
-
-			// 			done();
-
-			// 		});
-
-			// 	},
-
-			// 	function (done) {
-
-			// 		var i = 0;
-
-			// 		async.each(req.body.images, function (img, done2) {
-
-			// 			imgur.uploadUrl({
-			// 				imageUrl : img
-			// 			}, function (err, response) {
-
-			// 				if (!err) {
-			// 					try {
-			// 						req.body.images.splice(i++, 1, response.body.data.link);
-			// 					} catch (ex) {
-			// 						console.log(ex);
-			// 					}
-			// 				}
-
-			// 				done2();
-
-			// 			});
-
-			// 		}, function (err) {
-
-			// 			done();
-
-			// 		});
-
-			// 	},
-
-			// 	function (done) {
-
-			// 		imgur.uploadAndReplace({
-			// 			content : req.body.content
-			// 		}, function (err, html) {
-			// 			req.body.content = html;
-			// 			done();
-			// 		});
-
-			// 	}
-
-			// ], function (err, results) {
-
-			// 	articleRoutesBehaviors.get.create.v1(req, res);
-
-			// });
-
-			articleRoutesBehaviors.get.create.v1(req, res);
-
+			uploadImagesToImgur.uploadImagesOfCrawledArticle({
+				thumbnail : req.body.thumbnail,
+				images : req.body.images,
+				content : req.body.content
+			}, function (err, response) {
+				if (err) {
+					return console.log(err);
+				}
+				req.body.thumbnail = response.thumbnail;
+				req.body.images = response.images;
+				req.body.content = response.content;
+				articleRoutesBehaviors.get.create.v1(req, res);
+			});
 
 		});
 
