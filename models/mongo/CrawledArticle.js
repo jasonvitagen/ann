@@ -9,7 +9,8 @@ var crawledArticleSchema = mongoose.Schema({
 	crawledLink : String,
 	thumbnail   : String,
 	images		: [String],
-	content     : String
+	content     : String,
+	category    : String
 });
 
 // Define indexes
