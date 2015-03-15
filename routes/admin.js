@@ -13,6 +13,7 @@ var async = require('async');
 var dummy = require('./middlewares/dummy');
 var adminCachingBehaviors = require('./behaviors/adminCache');
 var uploadImagesToImgur = require('./behaviors/uploadImagesToImgur');
+var fs = require('fs');
 
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
@@ -68,6 +69,7 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 				if (err) {
 					return console.log(err);
 				}
+
 				req.body.thumbnail = response.thumbnail;
 				req.body.images = response.images;
 				req.body.content = response.content;

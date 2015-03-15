@@ -61,7 +61,8 @@ apis.getCachedLatestArticles = function (args, callback) {
 
 			Article.getAllArticles({
 				startIndex : startIndex,
-				size : size
+				size : size,
+				fields : 'title thumbnail category authorName articleId'
 			}, function (err, response) {
 				if (err) {
 					return callback(err);

@@ -114,12 +114,16 @@ articleSchema.statics.getAllArticles = function (args, callback) {
 	if (!args) {
 		return callback('No arguments');
 	}
+	if (!args.fields) {
+		args.fields = '';
+	}
 
 	var startIndex = args.startIndex
 		, size = args.size;
 
 	this
 		.find()
+		.select(args.fields)
 		.skip(startIndex)
 		.limit(size)
 		.sort({ created : -1 })
