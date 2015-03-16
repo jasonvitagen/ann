@@ -46,6 +46,9 @@ apis.getCachedLatestArticles = function (args, callback) {
 	if (!args.number) {
 		return callback('No "number" arg');
 	}
+	if (!args.category) {
+		args.category = 'articlesPool';
+	}
 
 	var size = 10
 		, startIndex = size * args.number
@@ -53,16 +56,22 @@ apis.getCachedLatestArticles = function (args, callback) {
 
 	articleCacher.getCachedArticlesFromPool({
 		command : 'zrevrange',
-		key : 'articlesPool',
+		key : args.category,
 		options : [startIndex, endIndex]
 	}, function (err, response) {
 
 		if (err || response.length < 10) {
 
+			var query = {};
+			if (! (args.category == 'articlesPool')) {
+				query.category = args.category;
+			}
+
 			Article.getAllArticles({
 				startIndex : startIndex,
 				size : size,
-				fields : 'title thumbnail category authorName articleId'
+				fields : 'title thumbnail category authorName articleId',
+				query: query
 			}, function (err, response) {
 				if (err) {
 					return callback(err);

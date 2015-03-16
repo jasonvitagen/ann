@@ -6,7 +6,8 @@ var express  = require('express')
 	, authMiddlewares = require('./middlewares/auth')
 	, webFrontIndexConfig = require('../config/webfront/index')
 	, articleRoutesBehaviors = require('./articleRoutesBehaviors')
-	, getArticlesViaCache = require('./behaviors/getArticlesViaCache');
+	, getArticlesViaCache = require('./behaviors/getArticlesViaCache')
+	, tokenBasedAuthenticationMiddlewares = require('./middlewares/tokenBasedAuthentication');
 
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
@@ -17,11 +18,11 @@ router.post('/create', authMiddlewares.isLoggedIn, function (req, res) {
 	articleRoutesBehaviors.post.create.v2(req, res);
 });
  
-router.get('/my-articles', authMiddlewares.isLoggedIn, function (req, res) {
+router.get('/my-articles', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle, function (req, res) {
 	articleRoutesBehaviors.get.myArticles.v2(req, res);
 });
 
-router.get('/my-articles/more/:number', authMiddlewares.isLoggedIn, function (req, res) {
+router.get('/my-articles/more/:number', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle, function (req, res) {
 	articleRoutesBehaviors.get.myArticlesMore.v2(req, res);
 });
 
@@ -36,9 +37,10 @@ router.get('/edit/:articleId', authMiddlewares.isLoggedIn, authMiddlewares.doesA
 	articleRoutesBehaviors.get.edit.v1(req, res);
 });
 
-router.get('/json/latest/:number', function (req, res) {
+router.get('/json/latest/:category/:number', function (req, res) {
 	getArticlesViaCache.getCachedLatestArticles({
-		number : req.params.number
+		number : req.params.number,
+		category : null
 	}, function (err,response) {
 		if (err) {
 			return res.json({ status : 'error' });

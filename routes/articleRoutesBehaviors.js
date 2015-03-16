@@ -36,14 +36,13 @@ routeBehaviors.get.myArticles.v2 = function (req, res) {
 	Article.getUserArticles({
 		startIndex : paginationLogic.getStartIndex(),
 		size       : paginationLogic.getSize(),
-		authorId   : req.user._id
 	}, function (err, articles) {
 
 		if (err) {
 			req.flash('message', webfrontArticleConfig.notificationMessages.getMyArticlesFailed);
-			res.render('article/my-articles.ejs', { articles : [], message : req.flash('message') });
+			res.render('article/my-articles.ejs', { articles : [] });
 		} else {
-			res.render('article/my-articles.ejs', { articles : articles, message : req.flash('message') });
+			res.render('article/my-articles.ejs', { articles : articles });
 		}
 	});
 }
@@ -62,7 +61,6 @@ routeBehaviors.get.myArticlesMore.v2 = function (req, res) {
 	Article.getUserArticles({
 		startIndex : paginationLogic.getStartIndex(),
 		size       : paginationLogic.getSize(),
-		authorId   : req.user._id
 	}, function (err, articles) {
 		if (err) {
 			res.json([]);

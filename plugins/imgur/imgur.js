@@ -28,8 +28,10 @@ Imgur.prototype.uploadUrl = function (args, callback) {
 		return callback('No image url');
 	}
 
-	args.imageUrl = args.imageUrl.match(/(http:\/\/.+?\/)(.+)/); // encode path
-	args.imageUrl = args.imageUrl[1] + encodeURIComponent(args.imageUrl[2]); // encode path
+	var matchedImageUrl = args.imageUrl.match(/(http:\/\/.+?\/)(.+)/); // encode path
+	if (matchedImageUrl.length >= 3) {
+		args.imageUrl = matchedImageUrl[1] + encodeURIComponent(matchedImageUrl[2]); // encode path
+	}
 
 	try {
 

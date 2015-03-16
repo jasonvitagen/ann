@@ -91,7 +91,7 @@ articleSchema.statics.getUserArticles = function (args, callback) {
 		, size = args.size;
 
 	this
-		.find({ 'authorId' : args.authorId })
+		.find()
 		.skip(startIndex)
 		.limit(size)
 		.sort({ created : -1 })
@@ -117,12 +117,15 @@ articleSchema.statics.getAllArticles = function (args, callback) {
 	if (!args.fields) {
 		args.fields = '';
 	}
+	if (!args.query) {
+		args.query = {};
+	}
 
 	var startIndex = args.startIndex
 		, size = args.size;
 
 	this
-		.find()
+		.find(args.query)
 		.select(args.fields)
 		.skip(startIndex)
 		.limit(size)

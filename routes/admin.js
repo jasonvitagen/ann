@@ -84,8 +84,6 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 
 router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, dummy.randomizeUserName, dummy.createArticleId, function (req, res) {
 	
-	var id = req.params.id;
-
 
 	articleRoutesBehaviors.post.create.v2(req, res, function (err, args, callback) {
 
