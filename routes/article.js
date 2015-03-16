@@ -7,7 +7,9 @@ var express  = require('express')
 	, webFrontIndexConfig = require('../config/webfront/index')
 	, articleRoutesBehaviors = require('./articleRoutesBehaviors')
 	, getArticlesViaCache = require('./behaviors/getArticlesViaCache')
-	, tokenBasedAuthenticationMiddlewares = require('./middlewares/tokenBasedAuthentication');
+	, tokenBasedAuthenticationMiddlewares = require('./middlewares/tokenBasedAuthentication')
+	, adminCachingBehaviors = require('./behaviors/adminCache');
+
 
 
 router.get('/create', authMiddlewares.isLoggedIn, function (req, res) {
@@ -75,8 +77,19 @@ router.post('/edit/:title?', authMiddlewares.isLoggedIn, function (req, res) {
 	articleRoutesBehaviors.post.edit.v1(req, res);
 });
 
-router.post('/delete', authMiddlewares.isLoggedIn, authMiddlewares.doesArticleBelongToMongoUser, function (req, res) {
-	articleRoutesBehaviors.post.delete.v2(req, res);
+router.post('/delete', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle, function (req, res) {
+	articleRoutesBehaviors.post.delete.v2(req, res, function (err, callback) {
+
+		if (err) {
+			callback(err);
+		}
+
+		adminCachingBehaviors.removeCachedArticles({
+			articleId : req.body.articleId,
+			category  : req.body.articleCategory
+		}, callback);
+
+	});
 });
 
 

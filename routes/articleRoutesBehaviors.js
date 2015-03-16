@@ -198,7 +198,7 @@ routeBehaviors.post.delete.v1 = function (req, res) {
 	res.redirect('/article/my-articles');
 }
 
-routeBehaviors.post.delete.v2 = function (req, res) {
+routeBehaviors.post.delete.v2 = function (req, res, callback) {
 	Article.deleteArticleById({
 		articleId : req.body.articleId
 	}, function (err, article) {
@@ -210,8 +210,12 @@ routeBehaviors.post.delete.v2 = function (req, res) {
 				req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleFailed);
 				res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedFailed);
 			} else {
-				req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleSuccessful);
-				res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedSuccessful);
+				callback && callback(null, function (err) {
+					if (err) {
+						return res.status(500).send(err);
+					}
+					res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedSuccessful);
+				});
 			}
 		}
 	});

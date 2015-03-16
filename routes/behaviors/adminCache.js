@@ -16,7 +16,7 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 		cacher.cacheArticleToPool({
 			command : 'zadd',
 			key : 'articlesPool',
-			items : [Date.now(), args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
+			items : [args.article.articleId, args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
 		}, function (err, response) {
 			if (err) {
 				console.log(err);
@@ -29,7 +29,7 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 		cacher.cacheArticleToPool({
 			command : 'zadd',
 			key : args.article.category,
-			items : [Date.now(), args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
+			items : [args.article.articleId, args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
 		}, function (err, response) {
 			if (err) {
 				console.log(err);
@@ -59,5 +59,57 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 	});
 
 }
+
+apis.removeCachedArticles = function (args, callback) {
+
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.articleId) {
+		return callback('No "articleId" arg');
+	}
+	if (!args.category) {
+		return callback('No "category" arg');
+	}
+
+	var t1 = function (done) {
+
+		cacher.removeArticleFromCachedPool({
+			key : 'articlesPool',
+			articleId : args.articleId
+		}, function (err, response) {
+			done();
+		});
+
+	}
+
+	var t2 = function (done) {
+
+		cacher.removeArticleFromCachedPool({
+			key : args.category,
+			articleId : args.articleId
+		}, function (err, response) {
+			done();
+		});
+
+	}
+
+	var t3 = function (done) {
+
+		cacher.removeArticleFromCache({
+			key : 'article:' + args.articleId
+		}, function (err, response) {
+			done();
+		});
+
+	}
+
+	async.parallel([t1, t2, t3], function (err, results) {
+		return callback(null);
+	});
+
+}
+
+
 
 module.exports = apis;

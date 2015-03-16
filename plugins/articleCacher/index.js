@@ -184,5 +184,44 @@ apis.getCachedArticle = function (args, callback) {
 
 }
 
+apis.removeArticleFromCachedPool = function (args, callback) {
+
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.key) {
+		return callback('No "key" arg');
+	}
+	if (!args.articleId) {
+		return callback('No "articleId" arg');
+	}
+
+	client.zremrangebyscore([args.key, args.articleId, args.articleId], function (err, response) {
+		if (err) {
+			return callback(err);
+		}
+		return callback(null, response);
+	});
+
+}
+
+apis.removeArticleFromCache = function (args, callback) {
+
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.key) {
+		return callback('No "key" arg');
+	}
+
+	client.del([args.key], function (err, response) {
+		if (err) {
+			return callback(err);
+		}
+		return callback(response);
+	});
+
+}
+
 
 module.exports = apis;
