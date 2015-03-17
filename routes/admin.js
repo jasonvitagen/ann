@@ -60,6 +60,7 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 			req.body.content = crawledArticle.content;
 			req.body.images = crawledArticle.images;
 			req.body.category = crawledArticle.category;
+			req.body.id = crawledArticle._id;
 
 			uploadImagesToImgur.uploadImagesOfCrawledArticle({
 				thumbnail : req.body.thumbnail,
@@ -87,13 +88,21 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 	articleRoutesBehaviors.post.create.v2(req, res, function (err, args, callback) {
 
+		if (err) {
+			return callback(err);
+		}
+
 		if (!args
 			|| !args.article) {
 			console.log('No args');
 			return callback('No "args"');
 		}
 
-		adminCachingBehaviors.cacheCrawledArticle(err, args, callback);
+		CrawledArticleModel
+			.where({ _id : req.body.id })
+			.findOneAndRemove(function () {
+				adminCachingBehaviors.cacheCrawledArticle(err, args, callback);
+			});
 
 	});
 });

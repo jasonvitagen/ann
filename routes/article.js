@@ -35,7 +35,7 @@ router.get('/random/:number?', function (req, res) {
 	});
 });
 
-router.get('/edit/:articleId', authMiddlewares.isLoggedIn, authMiddlewares.doesArticleBelongToMongoUser, function (req, res) {
+router.get('/edit/:articleId', function (req, res) {
 	articleRoutesBehaviors.get.edit.v1(req, res);
 });
 
@@ -73,8 +73,28 @@ router.get('/:articleId/:title?', function (req, res) {
 	articleRoutesBehaviors.get.getArticleById.v2(req, res);
 });
 
-router.post('/edit/:title?', authMiddlewares.isLoggedIn, function (req, res) {
-	articleRoutesBehaviors.post.edit.v1(req, res);
+router.post('/edit/:title?', function (req, res) {
+	articleRoutesBehaviors.post.edit.v1(req, res, function (err, args, callback) {
+
+		if (err) {
+			return callback(err);
+		}
+		if (!args
+			|| !args.article) {
+			return callback('No args');
+		}
+
+		adminCachingBehaviors.removeCachedArticles({
+			articleId : args.article.articleId,
+			category  : args.article.oldCategory
+		}, function (err) {
+
+			adminCachingBehaviors.cacheCrawledArticle(null, args, callback);
+
+		});
+
+
+	});
 });
 
 router.post('/delete', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle, function (req, res) {

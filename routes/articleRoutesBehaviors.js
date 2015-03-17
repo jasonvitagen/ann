@@ -118,7 +118,7 @@ routeBehaviors.get.edit.v1 = function (req, res) {
 			res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
 		} else {
 			req.body = article;
-			res.render('article/create', { message : req.flash('message'), categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
+			res.render('article/create', { categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 		}
 	});
 }
@@ -181,7 +181,7 @@ routeBehaviors.post.create.v2 = function (req, res, callback) {
 			res.render('article/create', { categoriesStructure : category.categoriesStructure, mongoConfig : mongoConfig, formBody : req.body });
 			return;
 		}
-		callback && callback(null, {
+		callback && callback(err, {
 			article : article
 		}, function (err) {
 			if (err) {
@@ -203,14 +203,12 @@ routeBehaviors.post.delete.v2 = function (req, res, callback) {
 		articleId : req.body.articleId
 	}, function (err, article) {
 		if (err) {
-			req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleFailed);
 			res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedFailed);
 		} else {
 			if (!article) {
-				req.flash('message', webfrontArticleConfig.notificationMessages.deleteArticleFailed);
 				res.redirect(webfrontArticleConfig.delete.redirections.articleDeletedFailed);
 			} else {
-				callback && callback(null, function (err) {
+				callback && callback(err, function (err) {
 					if (err) {
 						return res.status(500).send(err);
 					}
@@ -221,7 +219,7 @@ routeBehaviors.post.delete.v2 = function (req, res, callback) {
 	});
 }
 
-routeBehaviors.post.edit.v1 = function (req, res) {
+routeBehaviors.post.edit.v1 = function (req, res, callback) {
 	Article.findById(req.body.id, function (err, article) {
 		if (err) {
 			console.log(err);
@@ -232,14 +230,20 @@ routeBehaviors.post.edit.v1 = function (req, res) {
 			article.content   = req.body.content;
 			article.category  = req.body.category;
 			article.thumbnail = req.body.thumbnail;
+			article.oldCategory = req.body.oldCategory;
 
 			article.save(function (err) {
 				if (err) {
-					req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
 					res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
 				} else {
-					req.flash('message', webfrontArticleConfig.notificationMessages.editArticleSuccessful);
-					res.redirect(webfrontArticleConfig.edit.redirections.articleEditedSuccessful);
+					callback && callback(err, {
+						article : article
+					}, function (err) {
+						if (err) {
+							return res.status(500).send(err);
+						}
+						res.redirect(webfrontArticleConfig.edit.redirections.articleEditedSuccessful);
+					})
 				}
 			})
 		}
