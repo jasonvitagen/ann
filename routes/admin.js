@@ -12,6 +12,7 @@ var imgur = new Imgur({
 var async = require('async');
 var dummy = require('./middlewares/dummy');
 var adminCachingBehaviors = require('./behaviors/adminCache');
+var categoryCachingBehaviors = require('./behaviors/categoryCache');
 var uploadImagesToImgur = require('./behaviors/uploadImagesToImgur');
 var fs = require('fs');
 
@@ -55,12 +56,15 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 		.where({ _id : req.params.id })
 		.exec(function (err, crawledArticle) {
 			crawledArticle = crawledArticle[0];
-			req.body.title = crawledArticle.title;
-			req.body.thumbnail = crawledArticle.thumbnail;
-			req.body.content = crawledArticle.content;
-			req.body.images = crawledArticle.images;
-			req.body.category = crawledArticle.category;
-			req.body.id = crawledArticle._id;
+
+			if (crawledArticle) {
+				req.body.title = crawledArticle.title;
+				req.body.thumbnail = crawledArticle.thumbnail;
+				req.body.content = crawledArticle.content;
+				req.body.images = crawledArticle.images;
+				req.body.category = crawledArticle.category;
+				req.body.id = crawledArticle._id;
+			}
 
 			uploadImagesToImgur.uploadImagesOfCrawledArticle({
 				thumbnail : req.body.thumbnail,
@@ -98,11 +102,41 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 			return callback('No "args"');
 		}
 
-		CrawledArticleModel
-			.where({ _id : req.body.id })
-			.findOneAndRemove(function () {
-				adminCachingBehaviors.cacheCrawledArticle(err, args, callback);
+		var t1 = function (done) {
+
+			CrawledArticleModel
+				.where({ _id : req.body.id })
+				.findOneAndRemove(function () {
+					done();
+					
+				});
+
+		}
+
+		var t2 = function (done) {
+
+			adminCachingBehaviors.cacheCrawledArticle(null, args, function () {
+
+				done();
+
 			});
+
+		}
+
+		var t3 = function (done) {
+
+			categoryCachingBehaviors.updateCategoryCache(null, function () {
+				done();
+			});
+
+		}
+
+		async.parallel([t1, t2, t3], function (err, results) {
+
+			callback(null);
+
+		});
+
 
 	});
 });

@@ -15,7 +15,7 @@ apis.cacheCrawledArticle = function (err, args, callback) {
 	var t1 = function (done) {
 		cacher.cacheArticleToPool({
 			command : 'zadd',
-			key : 'articlesPool',
+			key : '首页',
 			items : [args.article.articleId, args.article.articleId + '||' + args.article.title + '||' + args.article.thumbnail + '||' + args.article.authorName + '||' + args.article.category + '||' + Date.now()]
 		}, function (err, response) {
 			if (err) {
@@ -75,7 +75,7 @@ apis.removeCachedArticles = function (args, callback) {
 	var t1 = function (done) {
 
 		cacher.removeArticleFromCachedPool({
-			key : 'articlesPool',
+			key : '首页',
 			articleId : args.articleId
 		}, function (err, response) {
 			done();

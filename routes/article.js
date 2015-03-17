@@ -8,7 +8,10 @@ var express  = require('express')
 	, articleRoutesBehaviors = require('./articleRoutesBehaviors')
 	, getArticlesViaCache = require('./behaviors/getArticlesViaCache')
 	, tokenBasedAuthenticationMiddlewares = require('./middlewares/tokenBasedAuthentication')
-	, adminCachingBehaviors = require('./behaviors/adminCache');
+	, adminCachingBehaviors = require('./behaviors/adminCache')
+	, categoryCachingBehaviors = require('./behaviors/categoryCache');
+
+
 
 
 
@@ -35,14 +38,14 @@ router.get('/random/:number?', function (req, res) {
 	});
 });
 
-router.get('/edit/:articleId', function (req, res) {
+router.get('/edit/:articleId', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle, function (req, res) {
 	articleRoutesBehaviors.get.edit.v1(req, res);
 });
 
 router.get('/json/latest/:category/:number', function (req, res) {
 	getArticlesViaCache.getCachedLatestArticles({
 		number : req.params.number,
-		category : null
+		category : req.params.category
 	}, function (err,response) {
 		if (err) {
 			return res.json({ status : 'error' });
@@ -73,7 +76,7 @@ router.get('/:articleId/:title?', function (req, res) {
 	articleRoutesBehaviors.get.getArticleById.v2(req, res);
 });
 
-router.post('/edit/:title?', function (req, res) {
+router.post('/edit/:title?', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle, function (req, res) {
 	articleRoutesBehaviors.post.edit.v1(req, res, function (err, args, callback) {
 
 		if (err) {
@@ -84,12 +87,38 @@ router.post('/edit/:title?', function (req, res) {
 			return callback('No args');
 		}
 
-		adminCachingBehaviors.removeCachedArticles({
-			articleId : args.article.articleId,
-			category  : args.article.oldCategory
-		}, function (err) {
+		var t1 = function (done) {
 
-			adminCachingBehaviors.cacheCrawledArticle(null, args, callback);
+			adminCachingBehaviors.removeCachedArticles({
+				articleId : args.article.articleId,
+				category  : args.article.oldCategory
+			}, function (err) {
+				done();
+			});
+
+		}
+
+		var t2 = function (done) {
+
+			adminCachingBehaviors.cacheCrawledArticle(null, args, function () {
+
+				done();
+
+			});
+
+		}
+
+		var t3 = function (done) {
+
+			categoryCachingBehaviors.updateCategoryCache(null, function () {
+				done();
+			});
+
+		}
+
+		async.series([t1, t2, t3], function (err, results) {
+
+			callback(null);
 
 		});
 

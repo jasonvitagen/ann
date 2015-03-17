@@ -47,7 +47,7 @@ apis.getCachedLatestArticles = function (args, callback) {
 		return callback('No "number" arg');
 	}
 	if (!args.category) {
-		args.category = 'articlesPool';
+		args.category = '首页';
 	}
 
 	var size = 10
@@ -63,7 +63,7 @@ apis.getCachedLatestArticles = function (args, callback) {
 		if (err || response.length < 10) {
 
 			var query = {};
-			if (! (args.category == 'articlesPool')) {
+			if (! (args.category == '首页')) {
 				query.category = args.category;
 			}
 
