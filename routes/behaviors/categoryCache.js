@@ -7,7 +7,7 @@ apis.updateCategoryCache = function (args, callback) {
 
 	ArticleModel
 		.distinct('category', function (err, response) {
-		
+			client.del('categories');
 			async.each(response, function (item, done) {
 
 				client.sadd(['categories', item], function (err) {
