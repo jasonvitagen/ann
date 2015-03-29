@@ -9,6 +9,7 @@ var Imgur = new require('../plugins/imgur/imgur');
 var imgur = new Imgur({
 	clientId : 'fe831b31baf537f'
 });
+var articleCacher = new require('../plugins/articleCacher');
 var async = require('async');
 var dummy = require('./middlewares/dummy');
 var adminCachingBehaviors = require('./behaviors/adminCache');
@@ -139,6 +140,41 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 
 	});
+});
+
+router.get('/control-panel', function (req, res) {
+
+	res.render('admin/control-panel', { title : 'Super Admin' });
+
+});
+
+router.post('/update-category-cache', tokenBasedAuthenticationMiddlewares.canAccessControlPanel, function (req, res) {
+
+	categoryCachingBehaviors.updateCategoryCache(null, function () {
+		res.json({
+			status : 'Success'
+		});
+	});
+
+});
+
+router.post('/trim-cached-articles-in-pool', tokenBasedAuthenticationMiddlewares.canAccessControlPanel, function (req, res) {
+
+	articleCacher.trimCachedArticlesInPool({
+		key : req.body.key,
+		trimSize : req.body.size
+	}, function (err, response) {
+		if (err) {
+			res.json({
+				status : err
+			});
+		} else {
+			res.json({
+				status : 'Success'
+			});
+		}
+	});
+
 });
 
 module.exports = router;

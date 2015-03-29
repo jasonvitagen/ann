@@ -34,7 +34,7 @@ var jwt = require('jsonwebtoken');
 var secret = require('./config/auth');
 var token = jwt.sign({ 
         user: 'qishen.cheng',
-        scopes: ['approveCrawledArticle', 'canEditDeleteArticle']
+        scopes: ['approveCrawledArticle', 'canEditDeleteArticle', 'canAccessControlPanel']
     }, secret.secretKey1);
 
 // fs.writeFileSync('token.txt', token);

@@ -34,7 +34,7 @@ h1 {
 
 .pull-left { float: left; }
 
-input[type=text], input[type=password], textarea {
+input[type=text], input[type=password], input[type=number], textarea {
 	display: inline-block;
 	vertical-align: top;
 	padding: 0 8px;
@@ -118,6 +118,12 @@ select:focus {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+.button-green {
+  color: white;
+  text-shadow: 0 1px rgba(0,0,0,0.08);
+  background: #4ebd4a;
 }
 	
 .category-badge {
@@ -368,6 +374,11 @@ footer {
 
 
 /* Local Login */
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=number] {
 	width: 70%;
+}
+
+/* Control Panel */
+#control-panel {
+	padding: 20px;
 }

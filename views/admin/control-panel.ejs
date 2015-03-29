@@ -1,0 +1,46 @@
+<% include ../layouts/admin/header.ejs %>
+
+	<div class="wrap" ng-app="ngAdmin" ng-controller="adminCtrl" id="control-panel" ng-cloak>
+	
+		<div class="grid">
+			<div class="unit-w-1-1">
+				<h1>Control Panel</h1>
+			</div>
+		</div>
+
+		<div class="grid">
+
+			<div class="unit-w-1-1">
+				<label>Update Category Cache</label>
+				<br>
+				<br>
+				<button class="button button-green" ng-click="updateCategoryCache()">Update Category Cache</button>
+				<h3>{{ status.updateCategoryCache }}</h3>
+			</div>
+
+		</div>
+
+		<br>
+
+		<div class="grid">
+
+			<div class="unit-w-1-1">
+				<label>
+					Trim Cached Article
+					<br>
+					<input type="text" ng-model="key" placeholder="key">
+					<br>
+					<br>
+					<input type="number" ng-model="size" placeholder="size">
+				</label>
+				<br>
+				<br>
+				<button class="button button-green" ng-click="trimCachedArticlesInPool({ key : key, size : size })">Trim Cached Articles In Pool</button>
+				<h3>{{ status.trimCachedArticlesInPool }}</h3>
+			</div>
+
+		</div>
+
+	</div>
+
+<% include ../layouts/admin/footer.ejs %>
