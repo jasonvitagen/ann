@@ -133,10 +133,26 @@ router.post('/delete', tokenBasedAuthenticationMiddlewares.canEditDeleteArticle,
 			callback(err);
 		}
 
-		adminCachingBehaviors.removeCachedArticles({
-			articleId : req.body.articleId,
-			category  : req.body.articleCategory
-		}, callback);
+		var t1 = function (done) {
+
+			adminCachingBehaviors.removeCachedArticles({
+				articleId : req.body.articleId,
+				category  : req.body.articleCategory
+			}, function () {
+				done();
+			});
+			
+		}
+
+		var t2 = function (done) {
+			categoryCachingBehaviors.updateCategoryCache(null, function () {
+				done();
+			});
+		}
+
+		async.series([t1, t2], function (err, results) {
+			return callback(null);
+		});
 
 	});
 });
