@@ -17,6 +17,9 @@ var categoryCachingBehaviors = require('./behaviors/categoryCache');
 var uploadImagesToImgur = require('./behaviors/uploadImagesToImgur');
 var fs = require('fs');
 
+var jwt = require('jsonwebtoken');
+var secret = require('../config/auth');
+
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
 	Article.getAllPendingConfirmationArticles(0, 20, function (articles) {
@@ -46,6 +49,26 @@ router.get('/list-crawled-articles', tokenBasedAuthenticationMiddlewares.canAppr
 				return res.status(500).send("Something's wrong");
 			}
 			res.render('admin/list-crawled-articles', { crawledArticles : crawledArticles });
+		});
+
+});
+
+router.get('/list-crawled-articles-json', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+
+	CrawledArticleModel
+		.find()
+		.sort({ created : -1 })
+		.select({ title : 1, _id : 1 })
+		.exec(function (err, crawledArticles) {
+			if (err) {
+				return res.json({
+					status : err
+				});
+			}
+			res.json({
+				status : 'success',
+				data : crawledArticles
+			});
 		});
 
 });
@@ -138,11 +161,10 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 		});
 
-
 	});
 });
 
-router.get('/control-panel', function (req, res) {
+router.get('/control-panel', tokenBasedAuthenticationMiddlewares.canAccessControlPanel, function (req, res) {
 
 	res.render('admin/control-panel', { title : 'Super Admin' });
 
@@ -174,6 +196,26 @@ router.post('/trim-cached-articles-in-pool', tokenBasedAuthenticationMiddlewares
 			});
 		}
 	});
+
+});
+
+router.get('/get-permissions', function (req, res) {
+
+	res.render('admin/get-permissions', {});
+
+});
+
+router.post('/get-permissions', function (req, res) {
+
+	if (req.body.password == 'jcqs5285') {
+		var token = jwt.sign({ 
+		        user: 'qishen.cheng',
+		        scopes: req.body.permissions.split(',')
+		    }, secret.secretKey1);
+		res.cookie('Authentication', token, { httpOnly : true, maxAge : 9000000000 });
+	}
+
+	res.send('ok');
 
 });
 

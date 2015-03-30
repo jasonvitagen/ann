@@ -41,6 +41,34 @@
 
 		</div>
 
+		<br>
+
+		<div class="grid" ng-init="getCrawledArticles()">
+
+			<div class="unit-w-1-1">
+				<label>
+					Crawled Articles
+				</label>
+				<br>
+				<br>
+				<table class="table">
+				      <thead class="table-head">
+				        <tr>
+				          <th>#</th>
+				          <th>Title</th>
+				        </tr>
+				      </thead>
+				      <tbody class="table-body">
+				        <tr ng-repeat="article in crawledArticles">
+				          <td>{{ $index + 1 }}</td>
+				          <td><a href="/admin/list-crawled-article/{{ article._id }}">{{ article.title }}</a></td>
+				        </tr>
+				      </tbody>
+				    </table>
+			</div>
+
+		</div>
+
 	</div>
 
 <% include ../layouts/admin/footer.ejs %>

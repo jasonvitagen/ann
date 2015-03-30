@@ -2,7 +2,8 @@ angular
 	.module('ngAdmin', [])
 	.constant('updateCategoryCacheUrl', './update-category-cache')
 	.constant('trimCachedArticlesInPoolUrl', './trim-cached-articles-in-pool')
-	.factory('adminService', ['$http', 'updateCategoryCacheUrl', 'trimCachedArticlesInPoolUrl', function ($http, updateCategoryCacheUrl, trimCachedArticlesInPoolUrl) {
+	.constant('crawledArticlesUrl', './list-crawled-articles-json')
+	.factory('adminService', ['$http', 'updateCategoryCacheUrl', 'trimCachedArticlesInPoolUrl', 'crawledArticlesUrl', function ($http, updateCategoryCacheUrl, trimCachedArticlesInPoolUrl, crawledArticlesUrl) {
 
 		var apis = {};
 
@@ -30,6 +31,14 @@ angular
 				.post(trimCachedArticlesInPoolUrl, args)
 				.success(function (response) {
 					callback(response);
+				});
+		}
+
+		apis.getCrawledArticles = function (args, callback) {
+			$http
+				.get(crawledArticlesUrl)
+				.success(function (response) {
+					callback(null, response.data);
 				});
 		}
 
@@ -67,6 +76,14 @@ angular
 				$timeout(function () {
 					$scope.status = {};
 				}, 3000);
+			});
+
+		}
+
+		$scope.getCrawledArticles = function () {
+
+			adminService.getCrawledArticles({}, function (err, response) {
+				$scope.crawledArticles = response;
 			});
 
 		}

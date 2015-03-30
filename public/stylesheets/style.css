@@ -382,3 +382,39 @@ input[type=text], input[type=password], input[type=number] {
 #control-panel {
 	padding: 20px;
 }
+
+table {
+	border-spacing: 0;
+}
+
+.table {
+  width: 100%;
+  line-height: 33px;
+  text-align: left;
+  background: #FFF;
+  border: 2px solid #D7EBF8;
+  border-collapse: separate;
+  border-radius: 2px;
+}
+
+.table th:first-child,
+.table td:first-child {
+  width: 7%;
+  text-align: center;
+}
+
+.table-head>tr>th {
+  line-height: 31px;
+  padding: 0 11px 2px;
+  font-weight: bold;
+  text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+  background: #D7EBF8;
+}
+
+.table-body>tr>td {
+  padding: 0 11px;
+}
+
+.table-body>tr:nth-child(2n) {
+  background: #F6F9FB;
+}
