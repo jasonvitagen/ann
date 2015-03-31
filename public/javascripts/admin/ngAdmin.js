@@ -160,4 +160,9 @@ angular
 
 		}
 
+		$scope.refreshAllCrawledArticles = function () {
+			$scope.getCrawledArticles();
+			$scope.getArchivedCrawledArticles();
+		}
+
 	}]);

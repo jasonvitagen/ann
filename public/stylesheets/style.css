@@ -415,6 +415,10 @@ table {
   padding: 0 11px;
 }
 
+.table-body>tr>td:nth-last-child(1) {
+	padding: 3px 3px 3px 11px;
+}
+
 .table-body>tr:nth-child(2n) {
   background: #F6F9FB;
 }
