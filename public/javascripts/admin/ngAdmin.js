@@ -3,8 +3,9 @@ angular
 	.constant('updateCategoryCacheUrl', './update-category-cache')
 	.constant('trimCachedArticlesInPoolUrl', './trim-cached-articles-in-pool')
 	.constant('crawledArticlesUrl', './list-crawled-articles-json')
+	.constant('archivedCrawledArticlesUrl', './list-archived-crawled-articles-json')
 	.constant('deleteCrawledArticleUrl', './delete-crawled-article')
-	.factory('adminService', ['$http', 'updateCategoryCacheUrl', 'trimCachedArticlesInPoolUrl', 'crawledArticlesUrl', 'deleteCrawledArticleUrl', function ($http, updateCategoryCacheUrl, trimCachedArticlesInPoolUrl, crawledArticlesUrl, deleteCrawledArticleUrl) {
+	.factory('adminService', ['$http', 'updateCategoryCacheUrl', 'trimCachedArticlesInPoolUrl', 'crawledArticlesUrl', 'deleteCrawledArticleUrl', 'archivedCrawledArticlesUrl', function ($http, updateCategoryCacheUrl, trimCachedArticlesInPoolUrl, crawledArticlesUrl, deleteCrawledArticleUrl, archivedCrawledArticlesUrl) {
 
 		var apis = {};
 
@@ -38,6 +39,14 @@ angular
 		apis.getCrawledArticles = function (args, callback) {
 			$http
 				.get(crawledArticlesUrl)
+				.success(function (response) {
+					callback(null, response.data);
+				});
+		}
+
+		apis.getArchivedCrawledArticles = function (args, callback) {
+			$http
+				.get(archivedCrawledArticlesUrl)
 				.success(function (response) {
 					callback(null, response.data);
 				});
@@ -102,6 +111,17 @@ angular
 			$scope.status.getCrawledArticles = 'Updating...';
 			adminService.getCrawledArticles({}, function (err, response) {
 				$scope.crawledArticles = response;
+				$timeout(function () {
+					$scope.status = {};
+				}, 3000);
+			});
+
+		}
+
+		$scope.getArchivedCrawledArticles = function () {
+			$scope.status.getArchivedCrawledArticles = 'Updating...';
+			adminService.getArchivedCrawledArticles({}, function (err, response) {
+				$scope.archivedCrawledArticles = response;
 				$timeout(function () {
 					$scope.status = {};
 				}, 3000);

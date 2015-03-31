@@ -30,8 +30,7 @@ behaviors.filterOutDuplicateArticleLinks = function (args, callback) {
 		if (err) {
 			return callback(err);
 		}
-		console.log('yippy');
-		console.log(articleLinks);
+
 		return callback(null, articleLinks);
 	});
 

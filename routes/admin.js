@@ -42,6 +42,28 @@ router.get('/list-crawled-articles-json', tokenBasedAuthenticationMiddlewares.ca
 
 	CrawledArticleModel
 		.find()
+		.where({ state : 'new' })
+		.sort({ created : -1 })
+		.select({ title : 1, _id : 1, category : 1 })
+		.exec(function (err, crawledArticles) {
+			if (err) {
+				return res.json({
+					status : err
+				});
+			}
+			res.json({
+				status : 'success',
+				data : crawledArticles
+			});
+		});
+
+});
+
+router.get('/list-archived-crawled-articles-json', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+
+	CrawledArticleModel
+		.find()
+		.where({ state : 'approved' })
 		.sort({ created : -1 })
 		.select({ title : 1, _id : 1, category : 1 })
 		.exec(function (err, crawledArticles) {
@@ -113,12 +135,22 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 		var t1 = function (done) {
 
-			CrawledArticleModel
-				.where({ _id : req.body.id })
-				.findOneAndRemove(function () {
+			CrawledArticleModel.findById(req.params.id, function (err, article) {
+
+				if (err) {
+					return done(err);
+				}
+
+				article.state = 'approved';
+
+				article.save(function (err) {
+					if (err) {
+						return done(err);
+					}
 					done();
-					
 				});
+
+			});
 
 		}
 
