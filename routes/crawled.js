@@ -32,7 +32,7 @@ router.post('/filter-out-duplicate-article-links', function (req, res) {
 });
 
 router.post('/get-crawled-articles', function (req, res) {
-	console.log(req.body);
+	
 	if (!req.body) {
 		return res.json({
 			err : 'No form data'

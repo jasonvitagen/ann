@@ -38,27 +38,12 @@ router.post('/confirm-article', authMiddlewares.isLoggedIn, authMiddlewares.isAd
 	});
 });
 
-router.get('/list-crawled-articles', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
-
-	CrawledArticleModel
-		.find()
-		.sort({ created : -1 })
-		.select({ title : 1, _id : 1 })
-		.exec(function (err, crawledArticles) {
-			if (err) {
-				return res.status(500).send("Something's wrong");
-			}
-			res.render('admin/list-crawled-articles', { crawledArticles : crawledArticles });
-		});
-
-});
-
 router.get('/list-crawled-articles-json', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 
 	CrawledArticleModel
 		.find()
 		.sort({ created : -1 })
-		.select({ title : 1, _id : 1 })
+		.select({ title : 1, _id : 1, category : 1 })
 		.exec(function (err, crawledArticles) {
 			if (err) {
 				return res.json({
@@ -162,6 +147,25 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 		});
 
 	});
+});
+
+router.post('/delete-crawled-article', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+	
+	CrawledArticleModel.deleteArticleById({
+		articleId : req.body.articleId
+	}, function (err, response) {
+		if (err) {
+			res.json({
+				status : err
+			});
+		} else {
+			res.json({
+				status : 'Success',
+				data : response
+			});
+		}
+	});
+
 });
 
 router.get('/control-panel', tokenBasedAuthenticationMiddlewares.canAccessControlPanel, function (req, res) {

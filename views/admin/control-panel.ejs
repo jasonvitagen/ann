@@ -3,14 +3,14 @@
 	<div class="wrap" ng-app="ngAdmin" ng-controller="adminCtrl" id="control-panel" ng-cloak>
 	
 		<div class="grid">
-			<div class="unit-w-1-1">
+			<div class="unit w-1-1">
 				<h1>Control Panel</h1>
 			</div>
 		</div>
 
 		<div class="grid">
 
-			<div class="unit-w-1-1">
+			<div class="unit w-1-1">
 				<label>Update Category Cache</label>
 				<br>
 				<br>
@@ -24,7 +24,7 @@
 
 		<div class="grid">
 
-			<div class="unit-w-1-1">
+			<div class="unit w-1-1">
 				<label>
 					Trim Cached Article
 					<br>
@@ -45,23 +45,39 @@
 
 		<div class="grid" ng-init="getCrawledArticles()">
 
-			<div class="unit-w-1-1">
-				<label>
-					Crawled Articles
-				</label>
+			<div class="unit w-1-1">
+				<div class="grid">
+					<div class="unit w-4-5">
+						Crawled Articles
+						<div>
+							{{ status.getCrawledArticles }}
+						</div>
+					</div>
+					<div class="unit w-1-5">
+						<a href="" ng-click="getCrawledArticles()" class="refresh-crawled-articles"><i class="fa fa-refresh"></i> Refresh</a>
+					</div>
+				</div>
+
 				<br>
 				<br>
+				{{ status.deleteCrawledArticle }}
 				<table class="table">
 				      <thead class="table-head">
 				        <tr>
 				          <th>#</th>
 				          <th>Title</th>
+				          <th>Category</th>
+				          <th>Delete</th>
 				        </tr>
 				      </thead>
 				      <tbody class="table-body">
 				        <tr ng-repeat="article in crawledArticles">
 				          <td>{{ $index + 1 }}</td>
 				          <td><a href="/admin/list-crawled-article/{{ article._id }}">{{ article.title }}</a></td>
+				          <td>{{ article.category }}</td>
+				          <td>
+				          	<button class="button" ng-click="deleteCrawledArticle({ articleId : article._id, index: $index })">Delete</button>
+				          </td>
 				        </tr>
 				      </tbody>
 				    </table>

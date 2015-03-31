@@ -3,7 +3,8 @@ angular
 	.constant('updateCategoryCacheUrl', './update-category-cache')
 	.constant('trimCachedArticlesInPoolUrl', './trim-cached-articles-in-pool')
 	.constant('crawledArticlesUrl', './list-crawled-articles-json')
-	.factory('adminService', ['$http', 'updateCategoryCacheUrl', 'trimCachedArticlesInPoolUrl', 'crawledArticlesUrl', function ($http, updateCategoryCacheUrl, trimCachedArticlesInPoolUrl, crawledArticlesUrl) {
+	.constant('deleteCrawledArticleUrl', './delete-crawled-article')
+	.factory('adminService', ['$http', 'updateCategoryCacheUrl', 'trimCachedArticlesInPoolUrl', 'crawledArticlesUrl', 'deleteCrawledArticleUrl', function ($http, updateCategoryCacheUrl, trimCachedArticlesInPoolUrl, crawledArticlesUrl, deleteCrawledArticleUrl) {
 
 		var apis = {};
 
@@ -42,6 +43,21 @@ angular
 				});
 		}
 
+		apis.deleteCrawledArticle = function (args, callback) {
+			if (!args) {
+				return callback('No args');
+			}
+			if (!args.articleId) {
+				return callback('No "articleId" arg');
+			}
+
+			$http
+				.post(deleteCrawledArticleUrl, { articleId : args.articleId })
+				.success(function (response) {
+					callback(null, response);
+				});
+		}
+
 		return apis;
 
 	}])
@@ -60,7 +76,7 @@ angular
 		}
 
 		$scope.trimCachedArticlesInPool = function (args) {
-			$scope.status.trimCachedArticlesInPool = 'Updating...';
+			
 			if (!args) {
 				return $scope.status.trimCachedArticlesInPool = 'No args';
 			}
@@ -70,6 +86,8 @@ angular
 			if (!args.size) {
 				return $scope.status.trimCachedArticlesInPool = 'No "size" arg';
 			}
+
+			$scope.status.trimCachedArticlesInPool = 'Updating...';
 
 			adminService.trimCachedArticlesInPool(args, function (response) {
 				$scope.status.trimCachedArticlesInPool = response.status;
@@ -81,9 +99,43 @@ angular
 		}
 
 		$scope.getCrawledArticles = function () {
-
+			$scope.status.getCrawledArticles = 'Updating...';
 			adminService.getCrawledArticles({}, function (err, response) {
 				$scope.crawledArticles = response;
+				$timeout(function () {
+					$scope.status = {};
+				}, 3000);
+			});
+
+		}
+
+		$scope.deleteCrawledArticle = function (args) {
+
+			if (!args) {
+				return console.log('No args');
+			}
+			if (!args.articleId) {
+				return console.log('No "articleId" arg');
+			}
+			if (args.index == undefined) {
+				return console.log('No "index" arg');
+			}
+
+			$scope.status.deleteCrawledArticle = 'Deleting...';
+
+			adminService.deleteCrawledArticle({
+				articleId : args.articleId
+			}, function (err, response) {
+				if (err) {
+					return $scope.status.deleteCrawledArticle = err;
+				}
+				if (response) {
+					$scope.crawledArticles.splice(args.index, 1);
+				}
+				$scope.status.deleteCrawledArticle = response.status;
+				$timeout(function () {
+					$scope.status = {};
+				}, 3000);
 			});
 
 		}
