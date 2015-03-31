@@ -1,7 +1,8 @@
 var express = require('express')
 	, router = express.Router()
 	, CrawledArticleModel = require('../models/mongo/CrawledArticle')
-	, behaviors = require('./crawledRoutesBehaviors');
+	, behaviors = require('./crawledRoutesBehaviors')
+	, tokenBasedAuthenticationMiddlewares = require('./middlewares/tokenBasedAuthentication');
 
 router.post('/filter-out-duplicate-article-links', function (req, res) {
 
@@ -31,7 +32,7 @@ router.post('/filter-out-duplicate-article-links', function (req, res) {
 	});
 });
 
-router.post('/get-crawled-articles', function (req, res) {
+router.post('/get-crawled-articles', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 	
 	if (!req.body) {
 		return res.json({
