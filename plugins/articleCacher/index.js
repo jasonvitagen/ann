@@ -223,5 +223,21 @@ apis.removeArticleFromCache = function (args, callback) {
 
 }
 
+apis.getRandomCachedArticles = function (args, callback) {
+
+	if (!args) {
+		return callback('No args');
+	}
+	if (!args.key) {
+		return callback('No "key" arg');
+	}
+	if (!args.number) {
+		return callback('No "number" arg');
+	}
+
+
+
+}
+
 
 module.exports = apis;

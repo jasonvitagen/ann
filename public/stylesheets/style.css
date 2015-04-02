@@ -422,3 +422,8 @@ table {
 .table-body>tr:nth-child(2n) {
   background: #F6F9FB;
 }
+
+.article-post {
+font-size: 125%;
+line-height: 160%;
+}

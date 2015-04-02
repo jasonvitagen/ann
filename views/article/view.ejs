@@ -2,7 +2,7 @@
 
 
 <div class="grid" id="article-view">
-	<div class="unit golden-large">
+	<div class="unit w-1-1">
 		<h1><%= article.title %></h1>
 		由 <%= article.authorName %>
 		<br>
@@ -10,33 +10,36 @@
 		发于<%= article.createdBeautified || '' %>
 		<br>
 		<br>
-		<a href="<%= article.categoryUrl %>" class="category-badge"><%= article.category %></a>
+		<a href="<%= article.categoryUrl %>" class="category-badge"><%= article.category.split(':').pop() %></a>
 		<br>
 		<br>
 		<div class="fb-share-button" data-href="<%= pageUrl %>"></div>
 		<br>
 		<br>
-		<%- article.content %>
+		<div class="article-post">
+			<%- article.content %>
+		</div>
 		<br>
 		<br>
 		<div id="prev-and-next-related-articles" class="hidden"></div>
 		<br>
 		<br>
+<!--
 		<h3>不能错过这些热门新闻！</h3>
-		<div id="bottom-related-articles"></div>
+		<div id="bottom-related-articles"></div> -->
 		<br>
 		<br>
-		<div class="fb-comments" 
+		<!-- <div class="fb-comments" 
 			 data-href="<%= pageUrl %>"
 			 data-numposts="8"
 			 data-width="100%"
 			 data-colorscheme="light">
-		</div>
+		</div> -->
 	</div>
-
+<!-- 
 	<div class="unit golden-small">
 		<% include sidebar.ejs %>
-	</div>
+	</div> -->
 </div>
 
 
