@@ -74,13 +74,17 @@ angular
 
 		$scope.status = {};
 
+		var resetStatus = function () {
+			$timeout(function () {
+				$scope.status = {};
+			}, 1000);
+		}
+
 		$scope.updateCategoryCache = function () {
 			$scope.status.updateCategoryCache = 'Updating...';
 			adminService.updateCategoryCache(function (response) {
 				$scope.status.updateCategoryCache = response.status;
-				$timeout(function () {
-					$scope.status = {};
-				}, 3000);	
+				resetStatus();
 			});
 		}
 
@@ -100,9 +104,7 @@ angular
 
 			adminService.trimCachedArticlesInPool(args, function (response) {
 				$scope.status.trimCachedArticlesInPool = response.status;
-				$timeout(function () {
-					$scope.status = {};
-				}, 3000);
+				resetStatus();
 			});
 
 		}
@@ -111,9 +113,7 @@ angular
 			$scope.status.getCrawledArticles = 'Updating...';
 			adminService.getCrawledArticles({}, function (err, response) {
 				$scope.crawledArticles = response;
-				$timeout(function () {
-					$scope.status = {};
-				}, 3000);
+				resetStatus();
 			});
 
 		}
@@ -122,9 +122,7 @@ angular
 			$scope.status.getArchivedCrawledArticles = 'Updating...';
 			adminService.getArchivedCrawledArticles({}, function (err, response) {
 				$scope.archivedCrawledArticles = response;
-				$timeout(function () {
-					$scope.status = {};
-				}, 3000);
+				resetStatus();
 			});
 
 		}
@@ -153,9 +151,8 @@ angular
 					$scope.crawledArticles.splice(args.index, 1);
 				}
 				$scope.status.deleteCrawledArticle = response.status;
-				$timeout(function () {
-					$scope.status = {};
-				}, 3000);
+				$scope.refreshAllCrawledArticles();
+				resetStatus();
 			});
 
 		}

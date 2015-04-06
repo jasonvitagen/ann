@@ -46,52 +46,8 @@
 			<br>
 			<br>
 			<label for="category">Category</label><br>
-			<div class="select">
-				<input type="hidden" name="oldCategory" value="<%= typeof formBody.category != 'undefined' && formBody.category || '' %>">
-				<select name="category" id="category" value="<%= typeof formBody.category != 'undefined' && formBody.category || '' %>">
-					<%
-						function getCategoryRecursively (categories, parentKey, selectedCategory) {
-							for (categoryKey in categories) {
-
-								if (categories[categoryKey] == null) {
-									var optionValue = parentKey != null &&  categoriesTranslator.translate(parentKey) + mongoConfig.categoriesHierarchyDelimiter +  categoriesTranslator.translate(categoryKey) ||  categoriesTranslator.translate(categoryKey);
-
-					%>
-									<option value="<%= optionValue %>"
-					<%
-										if (selectedCategory == optionValue) {
-					%>
-											selected
-					<%
-										}
-					%>
-									>
-										<%= categoriesTranslator.translate(categoryKey) %>
-									</option>
-					<%
-								} else if (typeof categories[categoryKey] == "object") {
-									var optionValue = parentKey != null &&  categoriesTranslator.translate(parentKey) + mongoConfig.categoriesHierarchyDelimiter +  categoriesTranslator.translate(categoryKey) ||  categoriesTranslator.translate(categoryKey);
-					%>
-									<option value="<%= optionValue %>"
-					<%
-										if (selectedCategory == optionValue) {
-					%>
-											selected
-					<%
-										}
-					%>
-									>
-										<%= categoriesTranslator.translate(categoryKey) %>
-									</option>
-					<%
-									getCategoryRecursively(categories[categoryKey], categoryKey, selectedCategory);
-								}
-							}
-						}
-						getCategoryRecursively(categoriesStructure, null, formBody.category || '');
-					%>
-				</select>
-			</div>
+			<input type="hidden" name="oldCategory" value="<%= typeof formBody.category != 'undefined' && formBody.category || '' %>">
+			<input type="text" name="category" id="category" value="<%= typeof formBody.category != 'undefined' && formBody.category || '' %>">
 			<br><br>
 			<label for="content" class="margin-bottom-16">Content</label><br><br>
 			<textarea name="content" id="content" class="editable" cols="30" rows="10"></textarea>

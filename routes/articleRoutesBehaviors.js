@@ -115,7 +115,6 @@ routeBehaviors.get.edit.v1 = function (req, res) {
 		articleId : req.params.articleId
 	}, function (err, article) {
 		if (err) {
-			req.flash('message', webfrontArticleConfig.notificationMessages.editArticleFailed);
 			res.redirect(webfrontArticleConfig.edit.redirections.articleEditedFailed);
 		} else {
 			req.body = article;
