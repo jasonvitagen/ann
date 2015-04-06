@@ -20,6 +20,8 @@ var fs = require('fs');
 var jwt = require('jsonwebtoken');
 var secret = require('../config/auth');
 
+var conzh = require('../plugins/conzh');
+
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
 	Article.getAllPendingConfirmationArticles(0, 20, function (articles) {
@@ -135,6 +137,14 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 		var t1 = function (done) {
 
+			args.article.title = conzh(args.article.title);
+			args.article.content = conzh(args.article.content);
+			done();
+
+		}
+
+		var t2 = function (done) {
+
 			CrawledArticleModel.findById(req.params.id, function (err, article) {
 
 				if (err) {
@@ -154,7 +164,7 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 		}
 
-		var t2 = function (done) {
+		var t3 = function (done) {
 
 			adminCachingBehaviors.cacheCrawledArticle(null, args, function () {
 
@@ -164,7 +174,7 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 		}
 
-		var t3 = function (done) {
+		var t4 = function (done) {
 
 			categoryCachingBehaviors.updateCategoryCache(null, function () {
 				done();
@@ -172,7 +182,7 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 
 		}
 
-		async.parallel([t1, t2, t3], function (err, results) {
+		async.series([t1, t2, t3, t4], function (err, results) {
 
 			callback(null);
 

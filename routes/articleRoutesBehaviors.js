@@ -4,7 +4,8 @@ var RedisArticle = require('../models/redis/Article').Article
 	, mongoConfig = require('../config/mongo')
 	, PaginationLogic = require('../helpers/PaginationLogic')
 	, webfrontArticleConfig = require('../config/webfront/article')
-	, routeBehaviors = {};
+	, routeBehaviors = {}
+	, conzh = require('../plugins/conzh');
 	
 
 routeBehaviors.get = {};
@@ -175,6 +176,9 @@ routeBehaviors.post.create.v2 = function (req, res, callback) {
 		category    : req.body.category,
 		content     : req.body.content
 	});
+
+	article.title = conzh(article.title);
+	article.content = conzh(article.content);
 
 	article.save(function (err) {
 		if (err) {
