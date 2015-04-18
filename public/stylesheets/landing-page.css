@@ -19,6 +19,7 @@ h1.title {
 .description {
 	margin: 70px 0 0 0;
 	padding: 0 16px;
+	line-height: 140%;
 }
 .jie-jie {
 	-webkit-transform: rotate(-4deg);
