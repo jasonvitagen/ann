@@ -1,0 +1,38 @@
+<% include layouts/header.ejs %>
+
+<div id="article-list" class="grid no-gutters">
+	<% articles.forEach(function (article) {
+		if (article) {
+	%>
+		<div class="unit w-1-3">
+			<div class="item">
+				<div class="thumbnail">
+					<a href="/article/<%= article.articleId %>/<%= article.title %>">
+						<img src="<%= article.thumbnail %>" alt="">
+					</a>
+				</div>
+				<div class="item-title">
+					<a href="/article/<%= article.articleId %>/<%= article.title %>">
+						<h2><%= article.title %></h2>
+					</a>
+				</div>
+				<div class="item-tags">
+
+				</div>
+				<div class="item-date">
+					<%= article.createdBeautified || '' %>
+				</div>
+				<div class="clear"></div>
+				<!-- <div>
+					<%= article.view %>
+				</div> -->
+				
+				<div class="clear"></div>
+			</div>
+		</div>
+	<% }}) %>
+</div>
+
+<script src="/javascripts/indexArticles.js"></script>
+
+<% include layouts/footer.ejs %>

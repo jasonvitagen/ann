@@ -13,6 +13,7 @@ behaviors.filterOutDuplicateArticleLinks = function (args, callback) {
 	var articleLinks = [];
 
 	async.each(args.articleLinks, function (articleLink, done) {
+		console.log(articleLink);
 		CrawledArticleModel
 			.findOne({ crawledLink : articleLink.link })
 			.exec(function (err, crawledArticle) {

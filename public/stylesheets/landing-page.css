@@ -1,0 +1,54 @@
+body {
+	background: #F6403F;
+	color: white;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+.page-top-padding {
+	margin: 140px 0 0 0;
+}
+h1.title {
+	font-size: 72px;
+	margin: 20px;
+}
+.subtitle {
+	font-size: 36px;
+}
+.description {
+	margin: 70px 0 0 0;
+	padding: 0 16px;
+}
+.jie-jie {
+	-webkit-transform: rotate(-4deg);
+	 -ms-transform: rotate(-4deg);
+	transform: rotate(-4deg);
+	display: inline-block;
+	margin: 0 0 0 -2px;
+}
+.phone {
+	margin: 0 auto;
+	width: 330px;
+	height: 645px;
+	background: url(/images/phone_01.png);
+}
+.phone-wallpaper {
+	padding: 60px 17px 0px 17px;
+	overflow: hidden;
+}
+.phone-wallpaper img {
+	width: 100%;
+	border-radius: 5px;
+}
+.p-indent {
+	text-indent: 16px;
+}
+
+@media (max-width: 767px) {
+
+	.page-top-padding {
+		margin: 50px 0 0;
+	}
+
+}

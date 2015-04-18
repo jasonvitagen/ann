@@ -1,38 +1,49 @@
-<% include layouts/header.ejs %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>叫我姐姐</title>
 
-<div id="article-list" class="grid no-gutters">
-	<% articles.forEach(function (article) {
-		if (article) {
-	%>
-		<div class="unit w-1-3">
-			<div class="item">
-				<div class="thumbnail">
-					<a href="/article/<%= article.articleId %>/<%= article.title %>">
-						<img src="<%= article.thumbnail %>" alt="">
-					</a>
-				</div>
-				<div class="item-title">
-					<a href="/article/<%= article.articleId %>/<%= article.title %>">
-						<h2><%= article.title %></h2>
-					</a>
-				</div>
-				<div class="item-tags">
+	<link rel="stylesheet" href="/stylesheets/landing-page.css">
 
-				</div>
-				<div class="item-date">
-					<%= article.createdBeautified || '' %>
-				</div>
-				<div class="clear"></div>
-				<!-- <div>
-					<%= article.view %>
-				</div> -->
-				
-				<div class="clear"></div>
-			</div>
+</head>
+<body>
+	
+	<div class="page-top-padding">
+
+	</div>
+
+	
+	<h1 class="title">
+		叫我<span class="jie-jie">姐</span><span class="jie-jie">姐</span>
+	</h1>
+
+	<div class="subtitle">
+		极致体验，尽在这儿
+	</div>
+
+	<div class="description">
+		<p>“叫我姐姐”酷炫来袭！！</p>
+		<p class="p-indent">要知道这姐姐葫芦里到底卖的是什么药，就请您高台贵手轻松点击如下链接即可获得360°的全方位惊喜，还等什么，先下手为强才是秘籍，快！快！快！</p>
+	</div>
+
+	<br>
+	<br>
+
+	<div>
+		<img src="/images/en_generic_rgb_wo_45.png">
+	</div>
+
+	<br>
+	<br>
+	<br>
+
+	<div class="phone">
+		<div class="phone-wallpaper">
+			<img src="/images/app_screen_01.jpg">
 		</div>
-	<% }}) %>
-</div>
+	</div>
 
-<script src="/javascripts/indexArticles.js"></script>
-
-<% include layouts/footer.ejs %>
+</body>
+</html>
