@@ -4,13 +4,15 @@
 <div class="grid" id="article-view">
 	<div class="unit w-1-1">
 		<h1><%= article.title %></h1>
-		由 <%= article.authorName %>
+		<%= article.authorName %>
 		<br>
 		<br>
-		发于<%= article.createdBeautified || '' %>
+		<!-- 发于<%= article.createdBeautified || '' %> -->
 		<br>
 		<br>
-		<a href="<%= article.categoryUrl %>" class="category-badge"><%= article.category.split(':').pop() %></a>
+		<!-- <a href="<%= article.categoryUrl %>" class="category-badge"> -->
+			<%= article.category.split(':').pop() %>
+		<!-- </a> -->
 		<br>
 		<br>
 		<div class="fb-share-button" data-href="<%= pageUrl %>"></div>
