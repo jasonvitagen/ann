@@ -4,7 +4,6 @@ body {
 	text-align: center;
 	padding: 0;
 	margin: 0;
-	overflow: hidden;
 }
 .page-top-padding {
 	margin: 140px 0 0 0;
@@ -35,6 +34,7 @@ h1.title {
 	background: url(/images/phone_01.png);
 }
 .phone-wallpaper {
+	position: relative;
 	padding: 60px 17px 0px 17px;
 	overflow: hidden;
 }
@@ -44,6 +44,17 @@ h1.title {
 }
 .p-indent {
 	text-indent: 16px;
+}
+
+.qr {
+	position: absolute;
+	top: 35%;
+	left: 0;
+}
+.qr img {
+	width: 40%;
+	border-radius: 0;
+	box-shadow: 0px 1px 6px 0 rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 767px) {
