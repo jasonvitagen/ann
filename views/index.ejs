@@ -3,6 +3,12 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<% if (typeof facebookShare!= 'undefined' && facebookShare) { %>
+		<meta property="og:url" content="<%= facebookShare.pageUrl %>" /> 
+		<meta property="og:title" content="<%= facebookShare.pageTitle %>" />
+		<meta property="og:description" content="<%= facebookShare.pageDescription %>" /> 
+		<meta property="og:image" content="<%= facebookShare.pageThumbnail %>" /> 
+	<% } %>
 	<title>叫我姐姐</title>
 
 	<link rel="stylesheet" href="/stylesheets/landing-page.css">
