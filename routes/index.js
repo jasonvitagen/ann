@@ -15,7 +15,7 @@ router.get('/', function (req, res) {
       pageUrl : 'http://jiaowojiejie.com',
       pageTitle : '叫我姐姐',
       pageDescription : '一款超简单信息量超大的实用趣味新闻游览器',
-      pageThumbnail : 'http://i.imgur.com/zyU0ChY.png'
+      pageThumbnail : '/images/screen.png'
     }
   });
 });
