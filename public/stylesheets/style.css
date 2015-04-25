@@ -427,3 +427,7 @@ table {
 font-size: 125%;
 line-height: 160%;
 }
+
+.article-post img {
+	display: block;
+}

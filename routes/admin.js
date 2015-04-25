@@ -82,7 +82,7 @@ router.get('/list-archived-crawled-articles-json', tokenBasedAuthenticationMiddl
 
 });
 
-router.get('/list-crawled-article/:id', timeout('20s'), tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+router.get('/list-crawled-article/:id', timeout('40s'), tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 
 	CrawledArticleModel
 		.find()
