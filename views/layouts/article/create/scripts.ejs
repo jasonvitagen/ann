@@ -18,8 +18,10 @@
 			});
 			CKEDITOR.on('instanceReady', function (event) {
 				CKEDITOR.instances.content.setData('<%- typeof formBody.content != 'undefined' && formBody.content.replace(/(\n|\r)/gm, '') || '' %>');
-				CKEDITOR.instances.content.setData(simpl(CKEDITOR.instances.content.getData()));
-				document.getElementById('title').value = simpl(document.getElementById('title').value);
+				setTimeout(function () {
+					CKEDITOR.instances.content.setData(simpl(CKEDITOR.instances.content.getData()));
+					document.getElementById('title').value = simpl(document.getElementById('title').value);
+				}, 0);
 			});
 		}
 	}
