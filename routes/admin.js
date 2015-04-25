@@ -21,7 +21,7 @@ var jwt = require('jsonwebtoken');
 var secret = require('../config/auth');
 
 var conzh = require('../plugins/conzh');
-
+var timeout = require('connect-timeout');
 
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
 	Article.getAllPendingConfirmationArticles(0, 20, function (articles) {
@@ -82,7 +82,7 @@ router.get('/list-archived-crawled-articles-json', tokenBasedAuthenticationMiddl
 
 });
 
-router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
+router.get('/list-crawled-article/:id', timeout('20s'), tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
 
 	CrawledArticleModel
 		.find()
@@ -98,7 +98,7 @@ router.get('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canA
 				req.body.category = crawledArticle.category;
 				req.body.id = crawledArticle._id;
 			}
-			console.log('Uploading images');
+
 			try {
 
 
