@@ -1,5 +1,6 @@
 <script src="//cdn.ckeditor.com/4.4.6/standard/ckeditor.js"></script>
 <script src="/javascripts/external/angular.min.js"></script>
+<script src="/javascripts/external/conzh.js"></script>
 
 <script>
 
@@ -17,6 +18,8 @@
 			});
 			CKEDITOR.on('instanceReady', function (event) {
 				CKEDITOR.instances.content.setData('<%- typeof formBody.content != 'undefined' && formBody.content.replace(/(\n|\r)/gm, '') || '' %>');
+				CKEDITOR.instances.content.setData(simpl(CKEDITOR.instances.content.getData()));
+				document.getElementById('title').value = simpl(document.getElementById('title').value);
 			});
 		}
 	}
