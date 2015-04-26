@@ -80,9 +80,9 @@ Imgur.prototype.uploadAndReplace = function (args, callback) {
 		obj.uploadUrl({
 			imageUrl : img.attribs.src
 		}, function (err, response) {
-			console.log(err);
+
 			if (!err) {
-				console.log(response);
+
 				try {
 					$('img[src="' + img.attribs.src + '"]').attr('src', response.body.data.link);
 				} catch (ex) {
