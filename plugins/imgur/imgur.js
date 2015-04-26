@@ -82,9 +82,11 @@ Imgur.prototype.uploadAndReplace = function (args, callback) {
 		}, function (err, response) {
 			console.log(err);
 			if (!err) {
-
+				console.log($('img[src="' + img.attribs.src + '"]'));
+				console.log(response.body.data.link);
 				try {
 					$('img[src="' + img.attribs.src + '"]').attr('src', response.body.data.link);
+					console.log($('img[src="' + img.attribs.src + '"]').attr('src'));
 				} catch (ex) {
 					console.log(ex);
 				}
