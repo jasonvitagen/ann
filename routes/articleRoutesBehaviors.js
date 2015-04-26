@@ -190,7 +190,9 @@ routeBehaviors.post.create.v2 = function (req, res, callback) {
 			if (err) {
 				res.status(500).send(err);
 			} else {
-				res.redirect(webfrontArticleConfig.save.redirections.articleCreatedSuccessful);
+				res.json({
+					'status' : 'ok'
+				});
 			}
 		});
 	});

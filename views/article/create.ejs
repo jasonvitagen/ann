@@ -52,9 +52,27 @@
 			<label for="content" class="margin-bottom-16">Content</label><br><br>
 			<textarea name="content" id="content" class="editable" cols="30" rows="10"></textarea>
 			<br>
+			<br>
+			<label for="remoteServer">Remote server</label><br><br>
+			<input type="text" name="remoteServer" id="remoteServer">
+			<br><br>
+			<label for="willPostToServer">Post to other server?</label>
+			<input type="checkbox" name="willPostToServer" id="willPostToServer" value="yes" checked="checked">
+			<br><br>
 			<input type="submit" value="Create" class="button">
 		</form>
 	</div>
 </div>
+
+<script>
+
+	var id = function (id) {
+		return document.getElementById(id);
+	}
+
+	id('remoteServer').value = 'http://jiaowojiejie.com' + window.location.pathname;
+
+
+</script>
 
 <% include ../layouts/article/create/footer.ejs %>

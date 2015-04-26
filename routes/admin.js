@@ -23,6 +23,8 @@ var secret = require('../config/auth');
 var conzh = require('../plugins/conzh');
 var timeout = require('connect-timeout');
 
+var willPostToRemoveServerMiddleware = require('./middlewares/willPostToRemoteServer').willPostToServer;
+
 router.get('/pending-confirmation-articles', authMiddlewares.isLoggedIn, authMiddlewares.isAdmin, function (req, res) {
 	Article.getAllPendingConfirmationArticles(0, 20, function (articles) {
 		res.render('admin/pending-confirmation-articles', { articles : articles, message : req.flash('message') });
@@ -99,27 +101,30 @@ router.get('/list-crawled-article/:id', timeout('40s'), tokenBasedAuthentication
 				req.body.id = crawledArticle._id;
 			}
 
-			try {
+			// try {
 
 
-				uploadImagesToImgur.uploadImagesOfCrawledArticle({
-					thumbnail : req.body.thumbnail,
-					images : req.body.images,
-					content : req.body.content
-				}, function (err, response) {
-					if (err) {
-						return console.log(err);
-					}
+			// 	uploadImagesToImgur.uploadImagesOfCrawledArticle({
+			// 		thumbnail : req.body.thumbnail,
+			// 		images : req.body.images,
+			// 		content : req.body.content
+			// 	}, function (err, response) {
+			// 		if (err) {
+			// 			return console.log(err);
+			// 		}
 
-					req.body.thumbnail = response.thumbnail;
-					req.body.images = response.images;
-					req.body.content = response.content;
-					articleRoutesBehaviors.get.create.v1(req, res);
-				});
+			// 		req.body.thumbnail = response.thumbnail;
+			// 		req.body.images = response.images;
+			// 		req.body.content = response.content;
+			// 		articleRoutesBehaviors.get.create.v1(req, res);
+			// 	});
 
-			} catch (err) {
-				console.log(err);
-			}
+			// } catch (err) {
+			// 	console.log(err);
+			// }
+
+			articleRoutesBehaviors.get.create.v1(req, res);
+			
 
 		});
 
@@ -127,8 +132,7 @@ router.get('/list-crawled-article/:id', timeout('40s'), tokenBasedAuthentication
 
 });
 
-router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, dummy.randomizeUserName, dummy.createArticleId, function (req, res) {
-	
+router.post('/list-crawled-article/:id', willPostToRemoveServerMiddleware, tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, dummy.randomizeUserName, dummy.createArticleId, function (req, res) {
 
 	articleRoutesBehaviors.post.create.v2(req, res, function (err, args, callback) {
 
@@ -196,6 +200,7 @@ router.post('/list-crawled-article/:id', tokenBasedAuthenticationMiddlewares.can
 		});
 
 	});
+
 });
 
 router.post('/delete-crawled-article', tokenBasedAuthenticationMiddlewares.canApproveCrawledArticle, function (req, res) {
