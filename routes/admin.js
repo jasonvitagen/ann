@@ -101,30 +101,28 @@ router.get('/list-crawled-article/:id', timeout('40s'), tokenBasedAuthentication
 				req.body.id = crawledArticle._id;
 			}
 
-			// try {
+			try {
 
 
-			// 	uploadImagesToImgur.uploadImagesOfCrawledArticle({
-			// 		thumbnail : req.body.thumbnail,
-			// 		images : req.body.images,
-			// 		content : req.body.content
-			// 	}, function (err, response) {
-			// 		if (err) {
-			// 			return console.log(err);
-			// 		}
+				uploadImagesToImgur.uploadImagesOfCrawledArticle({
+					thumbnail : req.body.thumbnail,
+					images : req.body.images,
+					content : req.body.content
+				}, function (err, response) {
+					console.log(response);
+					if (err) {
+						return console.log(err);
+					}
 
-			// 		req.body.thumbnail = response.thumbnail;
-			// 		req.body.images = response.images;
-			// 		req.body.content = response.content;
-			// 		articleRoutesBehaviors.get.create.v1(req, res);
-			// 	});
+					req.body.thumbnail = response.thumbnail;
+					req.body.images = response.images;
+					req.body.content = response.content;
+					articleRoutesBehaviors.get.create.v1(req, res);
+				});
 
-			// } catch (err) {
-			// 	console.log(err);
-			// }
-
-			articleRoutesBehaviors.get.create.v1(req, res);
-			
+			} catch (err) {
+				console.log(err);
+			}			
 
 		});
 
