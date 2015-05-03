@@ -1,6 +1,6 @@
 var Imgur = new require('../../plugins/imgur/imgur')
 	, imgur = new Imgur({
-		clientId : 'fe831b31baf537f'
+		clientId : 'bee3d39ff575914'
 	})
 	, async = require('async')
 	, apis = {};
